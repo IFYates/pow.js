@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "build": "yarn terser src/pow.js -c -m -o dist/pow.min.js --source-map"
+  },
+  "jest": {
+    "transform": {}
+  },
+  "dependencies": {
+    "terser": "^5.37.0"
+  }
+}
