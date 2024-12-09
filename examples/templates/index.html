@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module" src="app.js"></script>
+</head>
+
+<body>
+    [{{ text }}]
+    <div pow item="child">
+        {{ text }}:
+        <span pow array="values">
+            {{ *data }}<template pow ifnot="*last">, </template>
+        </span>
+        <button onclick="{{ *root.clicked }}">Click!</button>
+    </div>
+    <button onclick="location.reload()">Refresh</button>
+</body>
+
+</html>
