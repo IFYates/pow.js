@@ -13,5 +13,28 @@
   },
   "dependencies": {
     "terser": "^5.37.0"
-  }
+  },
+  
+  "name": "pow",
+  "version": "0.0.2",
+  "description": "An extremely small and lightweight templating framework",
+  "main": "pow.js/src/pow.js",
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IFYates/pow.js.git"
+  },
+  "keywords": [
+    "javascript",
+    "html",
+    "templating"
+  ],
+  "author": "IFYates",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IFYates/pow.js/issues"
+  },
+  "homepage": "https://github.com/IFYates/pow.js#readme"
 }

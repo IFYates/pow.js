@@ -5,19 +5,8 @@
 </head>
 
 <body>
-    <div id="main">
-        [
-        Current value: {{ count }}
-        <template pow>
-            {{ count }}
-        </template>
-        <div pow>
-            {{ count }}
-        </div>
-        {{ count }}
-        ]
-        <button onclick="increment()">Add 1</button>
-    </div>
+    Current value: {{ count + 1 }}
+    <button onclick="{{ increment }}">Add 1</button>
 </body>
 
 </html>

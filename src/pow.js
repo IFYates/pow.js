@@ -1,4 +1,3 @@
-// TODO: functions, recursive parsing?
 export default (() => {
     function findChildTemplates(element) {
         element.removeAttribute('pow')
@@ -6,34 +5,33 @@ export default (() => {
         return Array.from(dom.querySelectorAll('*[pow]:not([pow] [pow])'))
     }
 
-    function consumeBinding(element, state, resolve = false) {
+    function consumeBinding(element, state) {
         const attr = ['item', 'array', 'else', 'else-if', 'else-ifnot', 'if', 'ifnot'].find($ => element.hasAttribute($))
         const path = element.getAttribute(attr)
-        const value = path && resolve ? resolvePath(state, path) : undefined
-        console.debug(state?.path, element.tagName, attr, path, value)
         element.removeAttribute(attr)
-        return { attr, path, value }
+        return { attr, path, value: (path && state ? resolvePath(state, path) : undefined) }
     }
 
     function resolvePath(state, path) {
-        const parts = path?.split('.') ?? []
-        for (var i = 0; i < parts.length; ++i) {
-            const part = parts[i]
-            if (['*first', '*index', '*last', '*parent', '*path', '*root'].includes(part)) {
-                state = { data: state[part.slice(1)] }
-            } else if (part == '*index1') {
-                state = { data: state.index != null ? state.index + 1 : undefined }
-            } else if (part == '*true' || part == '*false') {
-                state = { data: part == '*true' }
-            } else if (part && state.data?.hasOwnProperty(part)) {
-                state = { data: state.data[part] }
-            } else if (part == 'length' && !Array.isArray(state.data)) {
-                state = { data: Object.keys(state.data).length }
-            } else if (part != '*data') {
-                return undefined
+        try {
+            var value
+            if (path[0] == '*') {
+                state = { ...state }
+                state.parent = state.parent?.data
+                value = (new Function('return this.' + path.slice(1))).call(state)
+            } else {
+                value = (new Function('return this.' + path)).call(state.data)
             }
+            if (typeof value == 'function') {
+                const fn = value
+                const uufn = `_${Math.random().toString(36).slice(2)}`
+                globalThis.$pow$[uufn] = (el) => fn.call(el, state.data, state.root)
+                return `$pow$.${uufn}(this)`
+            }
+            return value
+        } catch (e) {
+            console.warn('Interpolation failed', state.path, path, e)
         }
-        return path ? state.data : undefined
     }
 
     function updateSiblingCondition(sibling, value) {
@@ -50,7 +48,7 @@ export default (() => {
     }
 
     function processElement(element, state) {
-        const { attr, path, value } = consumeBinding(element, state, true)
+        const { attr, path, value } = consumeBinding(element, state)
         if (attr == 'if' || attr == 'ifnot') {
             const result = attr == 'if' ? !!value : !value
             while (updateSiblingCondition(element.nextElementSibling, result));
@@ -69,12 +67,12 @@ export default (() => {
                 return
             }
         } else if (attr == 'array' && typeof state.data == 'object') {
-            const array = value instanceof Array ? value
+            const array = Array.isArray(value) ? value
                 : Object.entries(value).map(([k, v]) => ({ $key: k, $value: v }))
-            const html = element.innerHTML
             for (var index = 0; index < array.length; ++index) {
-                element.innerHTML = html
-                processElement(element, {
+                const child = element.cloneNode(true)
+                element.parentNode.insertBefore(child, element)
+                processElement(child, {
                     path: state.path + '[' + index + ']',
                     index, first: index == 0, last: index == array.length - 1,
                     data: array[index],
@@ -88,49 +86,52 @@ export default (() => {
         const innerTemplates = findChildTemplates(element)
         for (const childTemplate of innerTemplates) {
             processElement(childTemplate, state)
-            childTemplate.remove()
         }
 
-        element.innerHTML = replacePlaceholders(element.innerHTML, state)
+        for (const { name, value } of element.attributes) {
+            element.setAttribute(name, parseText(value, state))
+        }
+        const html = parseText(element.innerHTML, state)
+        if (element instanceof HTMLTemplateElement) {
+            element.outerHTML = html
+        } else {
+            element.innerHTML = html
+        }
     }
 
-    const _regex = /\{\{\s*((?:\*)?[\$\w]+(?:\.(?:\*)?[\$\w]+)*)\s*\}\}/g
-    function replacePlaceholders(html, state) {
-        var match
-        while (match = _regex.exec(html)) {
-            var value = resolvePath(state, match[1])
+    const _regex = /\{\{\s*(\*?[\$\w]+(\.\*?[\$\w]+)*.*?)\s*\}\}/g
+    function parseText(text, state, match) {
+        while (match = _regex.exec(text)) {
+            const value = resolvePath(state, match[1])
             if (value === undefined) {
                 console.warn('Placeholder not resolved', state.path, match[1])
             } else {
-                if (typeof value == 'function' && match.index > 2 && html.slice(match.index - 2, match.index) == '="' && html[match.index + match[0].length] == '"') {
-                    const fn = value
-                    const uufn = `$pow$${Math.random().toString(36).slice(2)}`
-                    globalThis[uufn] = (el) => fn.call(el, state.data, state.root)
-                    value = `${uufn}(this)`
-                }
                 _regex.lastIndex = match.index + `${value}`.length
             }
-            html = html.substring(0, match.index) + (value != null ? value : '') + html.slice(match.index + match[0].length)
+            text = text.substring(0, match.index) + (value ?? '') + text.slice(match.index + match[0].length)
         }
-        return html
+        return text
     }
 
     function bind(element) {
         const originalHTML = element.innerHTML
-        // const range = document.createRange()
-        // range.setStart(element.parentNode, 0)
-        // range.setEndAfter(element.parentNode, element.parentNode.childNodes.length)
-        // console.log(range.toString())
-        // globalThis.R = range
+        const attributes = [...(element?.attributes || [])].map(({ name, value }) => [name, value])
         const binding = {
             remove: () => range?.deleteContents
         }
+        var applying = false
         binding.apply = (data) => {
-            // range?.deleteContents()
-            // range.insertNode(range.createContextualFragment(originalHtml))
+            if (applying) {
+                return console.warn('Binding already in progress')
+            }
+            applying = true
+            globalThis.$pow$ = {}
             element.innerHTML = originalHTML
+            for (const [name, value] of attributes) {
+                element.setAttribute(name, value)
+            }
             processElement(element, { path: '$', data, root: data })
-            // console.log(range.toString())
+            applying = false
             return binding
         }
         return binding
