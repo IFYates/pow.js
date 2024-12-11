@@ -57,22 +57,22 @@ pow.apply(document.body, data)
 * [Basic reactivity](#reactivity)
 
 ## Interpolations
-**_pow💥_** uses mustache-syntax interpolations: `{{ key }}`
+**_pow💥_** uses mustache-syntax interpolations (`{{ key }}`) and supports deep attributes (`{{ child.key }}`).
 
-In addition to any element of the current object, there are some in-built values:
+Interpolations use `eval` to allow for complex expressions, but must start with a reference to the binding context.
+
+In addition to any attribute of the current object, there are some in-built values:
 * `*data`: The entire current object
-* `*false`: Constant `false`
-* `*first`: If we are [looping](#Looping) through data, `true` when this is the first item
-* `*index`: If we are looping through data, the current loop 0-based index
-* `*index1`: If we are looping through data, the current loop 1-based index
-* `*last`: If we are looping through data, `true` when this is the last item
 * `*parent`: The parent object
 * `*path`: The current binding path, for debug help
-* `*true`: Constant `true`
-* `length`: The current array length, but it also works on objects, giving the number of keys
+* `*root`: The data passed to the `apply` call
+* If we are [looping](#loops) through data:
+  * `*first`: `true` when this is the first item
+  * `*index`: The 0-based index of the current item
+  * `*last`: `true` when this is the last item
 
 ### Functions
-Interpolations can be modified registering functions to the prepared binding.  Unregistered functions will result in an empty value.
+Interpolations can be modified registering functions to the prepared binding. Unregistered functions will result in an empty value.
 
 If the function is registered fully-named, the name does not need to be given explicitly.
 
@@ -113,7 +113,7 @@ const data = {
 ## Binding
 Any element can be used to control a binding, as long as it has the `pow` attribute.
 
-If the binding element is `template`, it will be replaced in its entirety. Other elements will only have their contents replaced.
+If the binding element is a `template`, it will be replaced in its entirety. Other elements will only have their contents replaced.
 
 The default context will be the `data` provided to the `apply()` function, but the context can be changed by binding to a child element.
 
@@ -122,7 +122,7 @@ The default context will be the `data` provided to the `apply()` function, but t
 <!-- pow.apply(document.body, data) -->
 <body><!-- *data = data -->
     <p><!-- *data = data -->
-        <template pow item="child"><!-- *data = data -->
+        <template pow item="child"><!-- *data = data.child -->
             <p><!-- *data = data.child -->
 ```
 
@@ -134,10 +134,10 @@ The default context will be the `data` provided to the `apply()` function, but t
 
 The `else*` conditions are only evaluated if placed as siblings to a lead `if` template.
 ```html
-<div pow if="*true">Always shown</div> <!-- Not part of following set -->
-<div pow if="*true">Always shown; new condition set</div>
-<div pow else-if="*true">Only show if prior sibling "if" was false</div>
-<div pow else-if="*true">Only show if all prior sibling "if" and "else-if"s were false</div>
+<div pow if="cond">Always shown</div> <!-- Not part of following set -->
+<div pow if="cond">Always shown; new condition set</div>
+<div pow else-if="cond">Only show if prior sibling "if" was false</div>
+<div pow else-if="cond">Only show if all prior sibling "if" and "else-if"s were false</div>
 <div pow else>Only shown if all prior sibling "if" and "else-if"s were false</div>
 ```
 
@@ -205,7 +205,17 @@ window.increment = () => {
 <!-- examples/reactivity/index.html -->
 <body>
     Current value: {{ count }}
-    <button click="increment">Add 1</button>
+    <button onclick="increment">Add 1</button>
 </body>
 ```
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/reactivity/)
+
+# Possible future features
+* Attributes
+    * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
+    * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)
+    * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
+* Recursive parsing?
+    * Example: `data: { text: '[{{ value }}]', value: 1 }`
+* HTML binding
+    * Possible syntax: `<source pow html="data" />`
