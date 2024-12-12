@@ -1,8 +1,8 @@
 {
-  "name": "pow",
-  "version": "0.1.0",
+  "name": "pow-templating",
+  "version": "0.1.2",
   "description": "An extremely small and lightweight templating framework",
-  "main": "pow.js/src/pow.js",
+  "main": "./dist/pow.min.js",
   "type": "module",
   "repository": {
     "type": "git",
@@ -19,10 +19,13 @@
     "url": "https://github.com/IFYates/pow.js/issues"
   },
   "homepage": "https://github.com/IFYates/pow.js#readme",
-
+  "files": [
+    "./dist"
+  ],
   "devDependencies": {
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "terser": "^5.37.0"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
@@ -30,8 +33,5 @@
   },
   "jest": {
     "transform": {}
-  },
-  "dependencies": {
-    "terser": "^5.37.0"
   }
 }
