@@ -1,6 +1,8 @@
 # pow.js 💥
 An extremely small and lightweight templating framework.
 
+[![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
+
 > 😲 Under 150 LOCs  
 > 🤏 <2.5 KiB minified script  
 > 🧩 No other dependencies  
@@ -12,16 +14,15 @@ An extremely small and lightweight templating framework.
 * Extensible functionality
 
 # Installation
-From any javascript module, simply import `pow`:
+Get [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
 ```js
 import pow from 'https://ifyates.github.io/pow.js/dist/pow.min.js'
-// TODO: CORS?
 ```
 
-Looking at NPM and CDN hosting soon.
+Looking at CDN hosting soon.
 
 # Example
-> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart/)
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart.html)
 ```html
 // examples/quickstart.html
 <script type="module">
