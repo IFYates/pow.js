@@ -2,34 +2,43 @@
 An extremely small and lightweight templating framework.
 
 > 😲 Under 150 LOCs  
-> 📦 ~2.5 KiB minified script  
+> 🤏 <2.5 KiB minified script  
+> 🧩 No other dependencies  
 > ✅ Fully tested
 
 # Goals
-* A very small library that can be included without external dependencies
+* A very small library that can be included without additional dependencies
 * Provides clear templating and interpolation
 * Extensible functionality
 
+# Installation
+From any javascript module, simply import `pow`:
+```js
+import pow from 'https://ifyates.github.io/pow.js/dist/pow.min.js'
+// TODO: CORS?
+```
+
+Looking at NPM and CDN hosting soon.
+
 # Example
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart/)
-```js
-// examples/quickstart/app.js
-const data = {
-    "url": "https://github.com/IFYates/pow.js",
-    "title": "pow.js",
-    "description": "An extremely small and lightweight templating framework.",
-    "tags": [ "javascript", "templating", "framework" ],
-    "creation": {
-        "author": "IFYates",
-        "date": "2024-12-09"
-    }
-}
-
-import pow from '../../src/pow.js'
-pow.apply(document.body, data)
-```
 ```html
-<!-- examples/quickstart/index.html -->
+// examples/quickstart.html
+<script type="module">
+    import pow from '../../src/pow.js'
+
+    const data = {
+        "url": "https://github.com/IFYates/pow.js",
+        "title": "pow.js",
+        "description": "An extremely small and lightweight templating framework.",
+        "tags": [ "javascript", "templating", "framework" ],
+        "creation": {
+            "author": "IFYates",
+            "date": "2024-12-09"
+        }
+    }
+    pow.apply(document.body, data)
+</script>
 <body>
     <h1>{{ title }}</h1>
     <h2>{{ description }}</h1>
@@ -59,7 +68,9 @@ pow.apply(document.body, data)
 ## Interpolations
 **_pow💥_** uses mustache-syntax interpolations (`{{ key }}`) and supports deep attributes (`{{ child.key }}`).
 
-Interpolations use `eval` to allow for complex expressions, but must start with a reference to the binding context.
+Interpolations can make use of complex expressions, but must start with a variable or function reference.
+
+It is important to be aware that values are not made HTML-safe, so any HTML tags will be inserted verbatim.
 
 In addition to any attribute of the current object, there are some in-built values:
 * `*data`: The entire current object
@@ -72,43 +83,75 @@ In addition to any attribute of the current object, there are some in-built valu
   * `*last`: `true` when this is the last item
 
 ### Functions
-Interpolations can be modified registering functions to the prepared binding. Unregistered functions will result in an empty value.
+Interpolations can make use of functions registered on the bound data hierarchy.
 
-If the function is registered fully-named, the name does not need to be given explicitly.
+The simplest way to access a function is to invoke them from the global scope.
 
 **Example:**
-```js
-function modify(value, data, root) {
-    // value: The value of the interpolation
-    // data: The current binding context
-    // root: The data used in `apply`
-    return value + 1
-}
-
-const binding = pow.bind(document.body)
-binding.register(modify) // Same as: binding.register('modify', modify)
-binding.apply({ value: 1 })
-```
 ```html
-{{ modify(value) }} <!-- Will show 2 -->
+<!-- examples/functions-global.html -->
+<script type="module">
+    import pow from '../src/pow.js'
+
+    const data = {
+        text: 'this is my text'
+    }
+    pow.apply(document.body, data)
+</script>
+<script>
+    // Global function
+    function wordCount(str) {
+        return str.split(' ').length
+    }
+</script>
+<body>
+    "{{ text }}" contains {{ wordCount(text) }} words
+</body>
 ```
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/functions-global.html)
+
+Functions can also be provided as part of the data hierarchy.
+
+**Example:**
+```html
+<!-- examples/functions-data.html -->
+<script type="module">
+    import pow from '../src/pow.js'
+
+    const data = {
+        text: 'this is my text',
+        wordCount: (str) => str.split(' ').length
+    }
+    pow.apply(document.body, data)
+</script>
+<body>
+    "{{ text }}" contains {{ *root.wordCount(text) }} words
+</body>
+```
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/functions-data.html)
 
 ### Events
 HTML events can be handled by binding the event attribute to a function in the data hierarchy.
 
 **Example:**
-```js
-const data = {
-    handler: function(arg, root) {
-        // this: The HTML element that raised the event
-        // arg: The current binding context
-        // root: The data used in `apply`
-    }
-}
-```
 ```html
-<button onclick="{{ handler }}">Click me</button>
+<!-- examples/interaction.html -->
+<script type="module">
+    const data = {
+        handler: function(arg, root) {
+            console.log('Clicked!',
+                this, // The HTML element that raised the event
+                arg, // The current binding context
+                root // The data used in `apply`
+            )
+        }
+    }
+</script>
+<body>
+    <button onclick="{{ handler }}">Click me</button>
+</body>
 ```
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.html)
 
 ## Binding
 Any element can be used to control a binding, as long as it has the `pow` attribute.
@@ -189,26 +232,28 @@ If an object is looped, the keys and values are iterated as `$key` and `$value`.
 # Reactivity
 **_pow💥_** does not provide true reactivity out-of-the-box, in the aim of keeping the library small.
 
-Some reactivity can be achieved through re-applying bindings:
-```js
-// examples/reactivity/app.js
-import pow from '../../src/pow.js'
-
-const data = { count: 0 }
-const binding = pow.apply(document.body, data)
-window.increment = () => {
-    data.count += 1
-    binding.apply(data)
-}
-```
+Some reactivity can be achieved through re-applying or refreshing a binding:
 ```html
 <!-- examples/reactivity/index.html -->
+<script type="module">
+    import pow from '../../src/pow.js'
+
+    const binding = pow.bind(document.body)
+    const data = {
+        count: 0,
+        increment: () => {
+            data.count += 1
+            binding.refresh()
+        }
+    }
+    binding.apply(data)
+</script>
 <body>
     Current value: {{ count }}
-    <button onclick="increment">Add 1</button>
+    <button onclick="{{ increment }}">Add 1</button>
 </body>
 ```
-> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/reactivity/)
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/reactivity.html)
 
 # Possible future features
 * Attributes
@@ -217,5 +262,3 @@ window.increment = () => {
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
 * Recursive parsing?
     * Example: `data: { text: '[{{ value }}]', value: 1 }`
-* HTML binding
-    * Possible syntax: `<source pow html="data" />`

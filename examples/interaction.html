@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../../src/pow.js'
+
+        const data = {
+            handler: function (arg, root) {
+                console.log('Clicked!',
+                    this, // The HTML element that raised the event
+                    arg, // The current binding context
+                    root // The data used in `apply`
+                )
+            }
+        }
+        pow.apply(document.body, arg)
+    </script>
+</head>
+
+<body>
+    <button onclick="{{ handler }}">Click me</button>
+</body>
+
+</html>

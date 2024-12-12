@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.js'
+        const data = {
+            value: 2
+        }
+        pow.apply(document.body, data)
+    </script>
+</head>
+
+<body>
+    <div>{{ value }}</div>
+    <div pow if="value < 5">'value' is less than 5</div>
+    <span pow if="value == 1">'value' must be 1</span>
+    <span pow else-if="value == 2">'value' must be 2</span>
+    <span pow else-if="value > 1">'value' is greater than 1</span>
+    <span pow else>'value' must be another number</span>
+</body>
+
+</html>

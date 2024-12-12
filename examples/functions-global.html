@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.js'
+        
+        const data = {
+            text: 'this is my text'
+        }
+        pow.apply(document.body, data)
+    </script>
+    <script>
+        // Global function
+        function wordCount(str) {
+            return str.split(' ').length
+        }
+    </script>
+</head>
+
+<body>
+    "{{ text }}" contains {{ wordCount(text) }} words
+</body>
+
+</html>
