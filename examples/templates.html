@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../../src/pow.js'
+
+        pow.apply(document.body, {
+            text: new Date(),
+            child: {
+                text: 'Hello, world!',
+                values: [1, 2, 3, 4, 5]
+            }
+        })
+    </script>
+</head>
+
+<body>
+    {{ text }}
+
+    <hr />
+
+    <div pow item="child">
+        {{ text }}:
+        <template pow array="values">
+            {{ *data }}<template pow ifnot="*last">, </template>
+        </template>
+    </div>
+</body>
+
+</html>
