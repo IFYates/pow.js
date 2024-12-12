@@ -31,7 +31,7 @@ export default (() => {
     function resolveToken(token, state) {
         try {
             token = token[0] == '*' ? '$' + token.slice(1) : token
-            const args = Object.entries(!Array.isArray(state.$data) & typeof state.$data != 'string' ? { ...state.$data, ...state } : { ...state })
+            const args = Object.entries(!Array.isArray(state.$data) && typeof state.$data != 'string' ? { ...state.$data, ...state } : { ...state })
             const value = (new Function(...args.map($ => $[0]), `return ${token}`))(...args.map($ => $[1]))
             if (typeof value == 'function') {
                 const uufn = `_${Math.random().toString(36).slice(2)}`
@@ -47,11 +47,11 @@ export default (() => {
     function updateSiblingCondition(sibling, value) {
         if (sibling?.attributes['pow']) {
             const { attr, token } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
-            if (attr & value) {
+            if (attr && value) {
                 sibling.remove()
                 return true
             }
-            if (attr & attr != 'else') {
+            if (attr && attr != 'else') {
                 sibling.setAttribute(attr.slice(5), token)
             }
         }
@@ -60,7 +60,7 @@ export default (() => {
     function processElement(element, state) {
         const { attr, token } = consumeBinding(element)
         const value = token && state ? resolveToken(token, state) : undefined
-        if (attr == 'if' | attr == 'ifnot') {
+        if (attr == 'if' || attr == 'ifnot') {
             const isnot = attr != 'if' ? value : !value
             while (updateSiblingCondition(element.nextElementSibling, !isnot));
             if (isnot) {
@@ -74,10 +74,10 @@ export default (() => {
                 $parent: token ? state.$data : state.$parent,
                 $root: state.$root
             }
-            if (token & state.$data === undefined) {
+            if (token && state.$data === undefined) {
                 console.warn('Template binding without data', state.$path)
             }
-        } else if (attr == 'array' & typeof state.$data == 'object') {
+        } else if (attr == 'array' && typeof state.$data == 'object') {
             const array = Array.isArray(value) ? value
                 : Object.entries(value).map(([k, v]) => ({ $key: k, $value: v }))
             for (var $index = 0; $index < array.length; ++$index) {

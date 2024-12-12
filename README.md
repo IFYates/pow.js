@@ -25,7 +25,7 @@ Looking at NPM and CDN hosting soon.
 ```html
 // examples/quickstart.html
 <script type="module">
-    import pow from '../../src/pow.js'
+    import pow from '../src/pow.js'
 
     const data = {
         "url": "https://github.com/IFYates/pow.js",
@@ -236,7 +236,7 @@ Some reactivity can be achieved through re-applying or refreshing a binding:
 ```html
 <!-- examples/reactivity/index.html -->
 <script type="module">
-    import pow from '../../src/pow.js'
+    import pow from '../src/pow.js'
 
     const binding = pow.bind(document.body)
     const data = {
