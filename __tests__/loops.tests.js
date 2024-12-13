@@ -32,7 +32,7 @@ test('Can loop current context', () => {
 })
 
 test('Can access index in loop', () => {
-  document.body.innerHTML = '{{ *index }}<div pow array="child">{{ *index }}</div>'
+  document.body.innerHTML = '<div pow array="child">{{ *index }}</div>'
 
   pow.apply(document.body, {
     child: [
@@ -46,7 +46,7 @@ test('Can access index in loop', () => {
 })
 
 test('Can access "first" in loop', () => {
-  document.body.innerHTML = '{{ *first }}<div pow array="child">{{ *first ? "true" : "false" }}</div>'
+  document.body.innerHTML = '<div pow array="child">{{ *first ? "true" : "false" }}</div>'
 
   pow.apply(document.body, {
     child: [
@@ -60,7 +60,7 @@ test('Can access "first" in loop', () => {
 })
 
 test('Can access "last" in loop', () => {
-  document.body.innerHTML = '{{ *last }}<div pow array="child">{{ *last ? "true" : "false" }}</div>'
+  document.body.innerHTML = '<div pow array="child">{{ *last ? "true" : "false" }}</div>'
 
   pow.apply(document.body, {
     child: [
@@ -74,7 +74,7 @@ test('Can access "last" in loop', () => {
 })
 
 test('Can access index in loop child', () => {
-  document.body.innerHTML = '{{ *index }}<div pow array="child"><template pow item="text">{{ *index }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ *index }}</template></div>'
 
   pow.apply(document.body, {
     child: [
@@ -88,7 +88,7 @@ test('Can access index in loop child', () => {
 })
 
 test('Can access "first" in loop child', () => {
-  document.body.innerHTML = '{{ *first }}<div pow array="child"><template pow item="text">{{ *first ? "true" : "false" }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ *first ? "true" : "false" }}</template></div>'
 
   pow.apply(document.body, {
     child: [
@@ -102,7 +102,7 @@ test('Can access "first" in loop child', () => {
 })
 
 test('Can access "last" in loop child', () => {
-  document.body.innerHTML = '{{ *last }}<div pow array="child"><template pow item="text">{{ *last ? "true" : "false" }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ *last ? "true" : "false" }}</template></div>'
 
   pow.apply(document.body, {
     child: [

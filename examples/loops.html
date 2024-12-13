@@ -6,47 +6,54 @@
         import pow from '../src/pow.js'
 
         const data = {
-            "data": [
-                {
-                    "request": {
-                        "traceIdentifier": '1',
-                        "method": 'GET',
-                        "url": 'https://github.com/IFYates/pow.js',
-                        "headers": {
-                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                            "Accept-Language": "en-US,en;q=0.9",
-                            "Accept-Encoding": "gzip, deflate, br",
-                        }
-                    }
-                }
+            "list": [
+                { "item": { "text": "Apples" } },
+                { "item": { "text": "Oranges" } },
+                { "item": { "text": "Pears" } },
+                { "item": { "text": "Bananas" } }
             ]
         }
-        pow.apply(document.getElementById('main'), data)
+        pow.apply(document.body, data)
     </script>
 </head>
 
 <body>
-    <div id="main">
-        <div>Items: {{ data.length }}</div>
-        <ol pow array="data">
-            <li pow item="request">
-                Item {{ *index }}:
-                <div>Request id: {{ *parent.traceIdentifier }}</div>
-                B{{ *path }}
-                <div>{{ method }} {{ url }}</div>
-                C{{ *path }}{{ Object.keys(headers).length }}
-                <lix pow if="Object.keys(headers).length">
-                    D{{ *path }}
-                    Headers ({{ headers.length }}):
-                    <ul pow array="headers">
-                        <li>{{ key }}: {{ value }}</li>
-                    </ul>
-                </lix>
-                E{{ *path }}
-                [<div>No headers (F{{ *path }} | {{ *data.request.headers.length }})</div>]
+    <h3>Using 'array="list"'</h3>
+    <div>
+        <div>There are {{ list.length }} item(s)</div>
+        <ol>
+            <li pow array="list">
+                <template pow item="item">
+                    <template pow if="*first">The first item</template>
+                    <template pow else-if="*last">The last item</template>
+                    <template pow else>Item {{ *index + 1 }}</template>
+                    is {{ text }}
+                </template>
             </li>
         </ol>
     </div>
+
+    <hr />
+
+    <h3>Using 'array' on context</h3>
+    <div pow item="list">
+        <div>There are {{ *data.length }} item(s)</div>
+        <ol>
+            <li pow array>
+                <template pow item="item">
+                    <template pow if="*first">The first item</template>
+                    <template pow else-if="*last">The last item</template>
+                    <template pow else>Item {{ *index + 1 }}</template>
+                    is {{ text }}
+                </template>
+            </li>
+        </ol>
+    </div>
+
+    <hr />
+
+    <h3>Direct array</h3>
+    <div pow array="[1,2,3]">{{ *data }}</div>
 </body>
 
 </html>
