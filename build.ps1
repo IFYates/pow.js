@@ -3,7 +3,7 @@ cloc src/pow.js
 
 ## Build
 yarn terser src/pow.js -c -m -o dist/pow.min.js --source-map
-Set-Content ./dist/pow.min.js -Value ((Get-Content ./dist/pow.min.js -Raw) -replace '\bconst\b', 'let')
+Set-Content ./dist/pow.min.js -Value ((Get-Content ./dist/pow.min.js -Raw) -replace '\bconst\b', 'let') -NoNewline
 
 # Minified size
 $len = ((Get-Content ./dist/pow.min.js -Raw) -replace '(?s)/\*.*\*/', '').Trim().Length
