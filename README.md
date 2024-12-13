@@ -16,7 +16,7 @@ An extremely small and lightweight templating framework.
 # Installation
 Get [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
 ```js
-import pow from 'https://ifyates.github.io/pow.js/dist/pow.min.js'
+import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
 ```
 
 Looking at CDN hosting soon.
