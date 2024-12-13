@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.js'
+
+        const data = {
+            "data": [
+                {
+                    "request": {
+                        "traceIdentifier": '1',
+                        "method": 'GET',
+                        "url": 'https://github.com/IFYates/pow.js',
+                        "headers": {
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                            "Accept-Language": "en-US,en;q=0.9",
+                            "Accept-Encoding": "gzip, deflate, br",
+                        }
+                    }
+                }
+            ]
+        }
+        pow.apply(document.getElementById('main'), data)
+    </script>
+</head>
+
+<body>
+    <div id="main">
+        <div>Items: {{ data.length }}</div>
+        <ol pow array="data">
+            <li pow item="request">
+                Item {{ *index }}:
+                <div>Request id: {{ *parent.traceIdentifier }}</div>
+                B{{ *path }}
+                <div>{{ method }} {{ url }}</div>
+                C{{ *path }}{{ Object.keys(headers).length }}
+                <lix pow if="Object.keys(headers).length">
+                    D{{ *path }}
+                    Headers ({{ headers.length }}):
+                    <ul pow array="headers">
+                        <li>{{ key }}: {{ value }}</li>
+                    </ul>
+                </lix>
+                E{{ *path }}
+                [<div>No headers (F{{ *path }} | {{ *data.request.headers.length }})</div>]
+            </li>
+        </ol>
+    </div>
+</body>
+
+</html>

@@ -49,7 +49,7 @@ Looking at CDN hosting soon.
     </p>
     <p>
         Tags:
-        <template pow item="tags" array>
+        <template pow array="tags">
             [<span>{{ *data }}</span>]<span ifnot="*last">, </span>
         </template>
     </p>
@@ -254,6 +254,26 @@ Some reactivity can be achieved through re-applying or refreshing a binding:
 </body>
 ```
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/reactivity.html)
+
+# Troubleshooting
+
+## Malformed HTML
+Since the templating is applied to the DOM structure, malformed HTML may cause what appears to be unexpected behaviour.  
+The `*path` interpolation is intended to help in these situations.
+
+**Example:**
+```html
+{{* path }}<!-- '*root' -->
+<ul pow item="array">
+    {{* path }}<!-- '*root.array' -->
+    <li pow array>
+        {{* path }}<!-- '*root.array[x]' -->
+        <li><!-- li element cannot be inside an li and will be shifted outside -->
+            {{* path }}<!-- '*root.array'! -->
+        </li>
+    </li>
+</ul>
+```
 
 # Possible future features
 * Attributes

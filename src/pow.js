@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.0.1
+ * @version 1.1.0
  */
 export default (() => {
     function findChildTemplates(element) {
@@ -72,10 +72,10 @@ export default (() => {
             }
         } else if (attr == 'item' && token) {
             state = {
+                ...state,
                 path: `${state.path}.${token}`,
                 data: value,
-                parent: state.data,
-                root: state.root
+                parent: state.data
             }
         } else if (attr == 'array' && typeof value == 'object') {
             const array = Array.isArray(value) ? value
@@ -84,11 +84,11 @@ export default (() => {
                 const child = element.cloneNode(1)
                 element.parentNode.insertBefore(child, element)
                 processElement(child, {
+                    ...state,
                     path: `${state.path}${token ? `.${token}` : ''}[${index}]`,
                     index, first: !index, last: index > array.length - 2,
                     data: array[index],
-                    parent: state,
-                    root: state.root
+                    parent: state
                 })
             }
             return element.remove()
@@ -114,7 +114,7 @@ export default (() => {
         }
     }
 
-    
+
     function bind(element) {
         const originalHTML = element.innerHTML
         const attributes = [...element.attributes]
