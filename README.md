@@ -6,7 +6,7 @@ An extremely small and lightweight templating framework.
 > 😲 Under 130 LOCs  
 > 🤏 ~2.2 KiB minified script (+ header)  
 > 🧩 No other dependencies  
-> ✅ [100% test coverage](coverage/lcov-report)
+> ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
 # Goals
 * A very small library that can be included without additional dependencies
@@ -50,8 +50,7 @@ Looking at CDN hosting soon.
     <p>
         Tags:
         <template pow item="tags" array>
-            [<span>{{ $data }}</span>]
-            <span ifnot="*last">, </span>
+            [<span>{{ *data }}</span>]<span ifnot="*last">, </span>
         </template>
     </p>
 </body>
@@ -214,13 +213,13 @@ If you are already in the array context, omit the binding value to achieve the s
         <li pow array>{{ *data }}</li>
 ```
 
-If an object is looped, the keys and values are iterated as `$key` and `$value`.
+If an object is looped, the keys and values are iterated as `key` and `value`.
 
 **Example:**
 ```html
 <!-- pow.apply(document.body, { steps: { first: 1, second: 2, third: 3 } }) -->
 <body>
-    <div pow array="steps">{{ $key }}: {{ $value }}</div>
+    <div pow array="steps">{{ key }}: {{ value }}</div>
 ```
 ```html
 <!-- Output -->

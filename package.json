@@ -29,7 +29,8 @@
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --detectOpenHandles",
-    "build": "pwsh build.ps1"
+    "build": "pwsh build.ps1",
+    "pub": "pwsh publish.ps1"
   },
   "jest": {
     "transform": {},
