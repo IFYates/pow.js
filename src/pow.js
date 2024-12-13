@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.0.0
+ * @version 1.0.1
  */
 export default (() => {
     function findChildTemplates(element) {
@@ -66,8 +66,8 @@ export default (() => {
         const { attr, token } = consumeBinding(element)
         const value = token && state ? resolveToken(token, state) : state.data
         if (attr == 'if' || attr == 'ifnot') {
-            while (updateSiblingCondition(element.nextElementSibling, (attr == 'if') == value));
-            if ((attr == 'if') != value) {
+            while (updateSiblingCondition(element.nextElementSibling, (attr == 'if') != !value));
+            if ((attr == 'if') == !value) {
                 return element.remove()
             }
         } else if (attr == 'item' && token) {
