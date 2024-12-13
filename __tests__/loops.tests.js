@@ -73,6 +73,48 @@ test('Can access "last" in loop', () => {
   expect(document.body.innerHTML).toBe('<div>false</div><div>false</div><div>true</div>')
 })
 
+test('Can access index in loop child', () => {
+  document.body.innerHTML = '{{ *index }}<div pow array="child"><template pow item="text">{{ *index }}</template></div>'
+
+  pow.apply(document.body, {
+    child: [
+      { text: 'One' },
+      { text: 'Two' },
+      { text: 'Three' }
+    ]
+  })
+
+  expect(document.body.innerHTML).toBe('<div>0</div><div>1</div><div>2</div>')
+})
+
+test('Can access "first" in loop child', () => {
+  document.body.innerHTML = '{{ *first }}<div pow array="child"><template pow item="text">{{ *first ? "true" : "false" }}</template></div>'
+
+  pow.apply(document.body, {
+    child: [
+      { text: 'One' },
+      { text: 'Two' },
+      { text: 'Three' }
+    ]
+  })
+
+  expect(document.body.innerHTML).toBe('<div>true</div><div>false</div><div>false</div>')
+})
+
+test('Can access "last" in loop child', () => {
+  document.body.innerHTML = '{{ *last }}<div pow array="child"><template pow item="text">{{ *last ? "true" : "false" }}</template></div>'
+
+  pow.apply(document.body, {
+    child: [
+      { text: 'One' },
+      { text: 'Two' },
+      { text: 'Three' }
+    ]
+  })
+
+  expect(document.body.innerHTML).toBe('<div>false</div><div>false</div><div>true</div>')
+})
+
 test('Can loop an object', () => {
   document.body.innerHTML = '<div pow array>{{ key }}: {{ value }}</div>'
 
