@@ -1,6 +1,6 @@
 {
   "name": "pow-templating",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "An extremely small and lightweight templating framework",
   "main": "./dist/pow.min.js",
   "type": "module",
@@ -28,10 +28,11 @@
     "terser": "^5.37.0"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "build": "yarn terser src/pow.js -c -m -o dist/pow.min.js --source-map"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --detectOpenHandles",
+    "build": "pwsh build.ps1"
   },
   "jest": {
-    "transform": {}
+    "transform": {},
+    "clearMocks": true
   }
 }
