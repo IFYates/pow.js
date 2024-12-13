@@ -1,3 +1,7 @@
+# Update header
+$package = (ConvertFrom-Json (Get-Content ./package.json -Raw))
+Set-Content ./src/pow.js -Value ((Get-Content ./src/pow.js -Raw) -replace '@version\s+\d+\.\d+\.\d+', "@version $($package.version)") -NoNewline
+
 # Count LOCs (winget install AlDanial.Cloc)
 cloc src/pow.js
 
