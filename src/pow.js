@@ -119,7 +119,6 @@ export default (() => {
         }
     }
 
-
     function bind(element) {
         const originalHTML = element.innerHTML
         const attributes = [...element.attributes]
