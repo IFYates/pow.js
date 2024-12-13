@@ -3,10 +3,10 @@ An extremely small and lightweight templating framework.
 
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
 
-> 😲 Under 150 LOCs  
-> 🤏 <2.5 KiB minified script  
+> 😲 Under 130 LOCs  
+> 🤏 ~2.2 KiB minified script (+ header)  
 > 🧩 No other dependencies  
-> ✅ Fully tested
+> ✅ [100% test coverage](coverage/lcov-report)
 
 # Goals
 * A very small library that can be included without additional dependencies
@@ -263,3 +263,10 @@ Some reactivity can be achieved through re-applying or refreshing a binding:
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
 * Recursive parsing?
     * Example: `data: { text: '[{{ value }}]', value: 1 }`
+* Switch statement
+   ```html
+   <template pow switch="token">
+       <div case="{{ token }}">...</div>
+       <div case="literal">...</div>
+   </template>
+   ```
