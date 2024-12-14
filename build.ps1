@@ -6,7 +6,7 @@ Set-Content ./src/pow.js -Value ((Get-Content ./src/pow.js -Raw) -replace '@vers
 cloc src/pow.js
 
 ## Build
-yarn terser src/pow.js -c -m -o dist/pow.min.js --source-map
+yarn terser src/pow.js -c -m -o dist/pow.min.js --source-map --toplevel
 Set-Content ./dist/pow.min.js -Value ((Get-Content ./dist/pow.min.js -Raw) -replace '\bconst\b', 'let') -NoNewline
 
 # Minified size
