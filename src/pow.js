@@ -2,9 +2,40 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.0.2
+ * @version 1.1.0
  */
 export default (() => {
+    function bind(element) {
+        const originalHTML = element.innerHTML
+        const attributes = [...element.attributes]
+        const binding = {
+            apply: (data) => {
+                if (binding.$pow) {
+                    return console.warn('Binding already in progress')
+                }
+                binding.$pow = 1
+                window.$pow$ = {}
+                element.innerHTML = originalHTML
+                for (const { name, value } of attributes) {
+                    element.setAttribute(name, value)
+                }
+                processElement(element, { path: '*root', data, root: data })
+                delete binding.$pow
+                binding.refresh = () => binding.apply(data)
+                return binding
+            },
+            refresh: () => { }
+        }
+        return binding
+    }
+    const pow = {
+        apply(element, data) {
+            return bind(element).apply(data)
+        },
+        bind,
+        _eval: (js, args) => (new Function(...args.map($ => $[0]), `return ${js}`))(...args.map($ => $[1]))
+    }
+
     function nextChildTemplate(element) {
         element.removeAttribute('pow')
         const dom = element.content ?? element
@@ -35,11 +66,10 @@ export default (() => {
     function resolveToken(token, state, js = token) {
         try {
             // If the token starts with a star, it's accessing the state metadata
-            let args = (token[0] == '*' && (js = token.slice(1))) ? state : state?.data
+            const args = (token[0] == '*' && (js = token.slice(1))) ? state : state?.data
 
             // Execute the token as JS code, mapping to the state data
-            args = Object.entries(args || {}).filter($ => isNaN($[0]))
-            const value = (new Function(...args.map($ => $[0]), `return ${js}`))(...args.map($ => $[1]))
+            const value = pow._eval(js, Object.entries(args || {}).filter($ => isNaN($[0])))
 
             // If the result is a function, bind it for later
             if (typeof value == 'function') {
@@ -119,33 +149,5 @@ export default (() => {
         }
     }
 
-    function bind(element) {
-        const originalHTML = element.innerHTML
-        const attributes = [...element.attributes]
-        const binding = {
-            apply: (data) => {
-                if (binding.$pow) {
-                    return console.warn('Binding already in progress')
-                }
-                binding.$pow = 1
-                window.$pow$ = {}
-                element.innerHTML = originalHTML
-                for (const { name, value } of attributes) {
-                    element.setAttribute(name, value)
-                }
-                processElement(element, { path: '*root', data, root: data })
-                delete binding.$pow
-                binding.refresh = () => binding.apply(data)
-                return binding
-            },
-            refresh: () => { }
-        }
-        return binding
-    }
-    return {
-        apply(element, data) {
-            return bind(element).apply(data)
-        },
-        bind
-    }
+    return pow
 })()
