@@ -4,7 +4,7 @@ An extremely small and lightweight templating framework.
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
 
 > 😲 Under 130 LOCs  
-> 🤏 <2.2 KiB minified script (+ header)  
+> 🤏 ~2 KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
@@ -152,6 +152,32 @@ HTML events can be handled by binding the event attribute to a function in the d
 </body>
 ```
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.html)
+
+### Interpolation logic
+By default, **_pow💥_** provides full Javascript logic for interpolation using dynamic functions.  
+Some environment block dynamic code evaluation for user security.
+
+In these situations, the interpolation logic can be replaced to allow for a custom parser to be used that meets any security requirements of the environment.
+
+The logic is specified by providing a new `pow._eval` function, where it takes 2 arguments: the string to be parsed and the current context data.
+
+**Example:**
+```html
+<script type="module">
+pow._eval = (js, args) => {
+    // js: 'child.text'
+    // args: { child: { text: "my value" } }
+}
+pow.apply(document.body, {
+    child: { text: "my value" }
+})
+</script>
+<body>
+    {{ child.text }}
+</body>
+```
+
+The [`pow.safe.js`](src/pow.safe.js) file is provided with a suggested alternative parser with some basic capabilities.
 
 ## Binding
 Any element can be used to control a binding, as long as it has the `pow` attribute.

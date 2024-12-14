@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>80/80</span>
+                <span class='fraction'>81/81</span>
             </div>
         
             
@@ -212,16 +212,13 @@
 <a name='L147'></a><a href='#L147'>147</a>
 <a name='L148'></a><a href='#L148'>148</a>
 <a name='L149'></a><a href='#L149'>149</a>
-<a name='L150'></a><a href='#L150'>150</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">199x</span>
-<span class="cline-any cline-yes">199x</span>
-<span class="cline-any cline-yes">199x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -251,7 +248,7 @@
 <span class="cline-any cline-yes">117x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">261x</span>
+<span class="cline-any cline-yes">117x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">116x</span>
@@ -277,6 +274,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">199x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">154x</span>
@@ -309,6 +308,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">130x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,7 +360,10 @@
 <span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">252x</span>
+<span class="cline-any cline-yes">252x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @license MIT
@@ -367,11 +371,6 @@
  * @description A very small and lightweight templating framework.
  * @version 1.1.0
  */
-function nextChildTemplate(element) {
-    element.removeAttribute('pow')
-    const dom = element.content ?? element
-    return dom.querySelector('*[pow]:not([pow] [pow])')
-}
 &nbsp;
 function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     for (const attr of bindings) {
@@ -384,7 +383,7 @@ function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     return {}
 }
 &nbsp;
-const _regex = /\{\{\s*(.*?)\s*\}\}/gs
+const _regex = /\{\{\s*(.*?)\s*\}\}/s
 function parseText(text, state, match) {
     while (match = _regex.exec(text)) {
         const value = resolveToken(match[1], state) ?? ''
@@ -400,7 +399,7 @@ function resolveToken(token, state, js = token) {
         const args = (token[0] == '*' &amp;&amp; (js = token.slice(1))) ? state : state?.data
 &nbsp;
         // Execute the token as JS code, mapping to the state data
-        const value = pow._eval(js, Object.entries(args || {}).filter($ =&gt; isNaN($[0])))
+        const value = pow._eval(js, args)
 &nbsp;
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
@@ -426,6 +425,8 @@ function updateSiblingCondition(sibling, value) {
         }
     }
 }
+&nbsp;
+const nextChildTemplate = (element) =&gt; (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 &nbsp;
 function processElement(element, state) {
     const { attr, token } = consumeBinding(element)
@@ -458,6 +459,8 @@ function processElement(element, state) {
         }
         return element.remove()
     }
+&nbsp;
+    element.removeAttribute('pow')
 &nbsp;
     // Process every child 'pow' template
     var childTemplate
@@ -508,7 +511,10 @@ const pow = {
         return bind(element).apply(data)
     },
     bind,
-    _eval: (js, args) =&gt; (new Function(...args.map($ =&gt; $[0]), `return ${js}`))(...args.map($ =&gt; $[1]))
+    _eval: (js, data) =&gt; {
+        data = Object.entries(data || {}).filter($ =&gt; isNaN($[0]))
+        return (new Function(...data.map($ =&gt; $[0]), `return ${js}`))(...data.map($ =&gt; $[1]))
+    }
 }
 export default pow</pre></td></tr></table></pre>
 
@@ -517,7 +523,7 @@ export default pow</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-14T12:10:10.371Z
+                at 2024-12-14T20:26:01.187Z
             </div>
         <script src="prettify.js"></script>
         <script>

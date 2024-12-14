@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.safe.js'
+        
+        const data = {
+            "url": "https://github.com/IFYates/pow.js",
+            "title": "pow.js",
+            "description": "An extremely small and lightweight templating framework.",
+            "tags": ["javascript", "templating", "framework"],
+            "creation": {
+                "author": "IFYates",
+                "date": "2024-12-09"
+            }
+        }
+        pow.apply(document.body, data)
+    </script>
+</head>
+
+<body>
+    <h1>{{ title }}</h1>
+    <h2>{{ description }}</h1>
+        <p><a href="{{ url }}">See project page</a></p>
+        <p pow item="creation">
+            Created by <em>{{ author }}</em> on {{ date }}
+        </p>
+        <p>
+            Tags ({{ tags.length }}):
+            <template pow array="tags">
+                <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
+            </template>
+        </p>
+    </h2>
+</body>
+
+</html>
