@@ -276,11 +276,18 @@ The `*path` interpolation is intended to help in these situations.
 ```
 
 # Possible future features
+* Non-eval alternative ("paranoid")
+    * Will be very restrictive
+* Reusable templates
+   ```html
+   <template id="example">{{ text }}</template>
+   <source pow template="example" ... /><!-- Uses innerHTML of template, instead of what's there. Can have other bindings -->
+   ```
 * Attributes
     * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
     * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
-* Recursive parsing?
+* Prevent recursive parsing?
     * Example: `data: { text: '[{{ value }}]', value: 1 }`
 * Switch statement
    ```html

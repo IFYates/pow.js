@@ -59,3 +59,17 @@ test('Function interpolation', () => {
   const fn = Object.keys(window.$pow$)[0]
   expect(document.body.innerHTML).toBe(`<div>$pow$.${fn}(this)</div>`)
 })
+
+test('Custom eval interpolation', () => {
+  document.body.innerHTML = '[{{ text }}, {{ number }}, {{ fn }}]'
+
+  const originalEval = pow._eval
+  
+  pow._eval = () => 'eval'
+  pow.apply(document.body, { text: 'Hello, world!', number: 123, fn: () => {} })
+
+  pow._eval = originalEval
+
+  const fn = Object.keys(window.$pow$)[0]
+  expect(document.body.innerHTML).toBe(`[eval, eval, eval]`)
+})

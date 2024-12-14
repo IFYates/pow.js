@@ -10,7 +10,7 @@
                 { "item": { "text": "Apples" } },
                 { "item": { "text": "Oranges" } },
                 { "item": { "text": "Pears" } },
-                { "item": { "text": "Bananas" } }
+                { "item": { "text": JSON.stringify(Object.keys(pow)) } }
             ]
         }
         pow.apply(document.body, data)

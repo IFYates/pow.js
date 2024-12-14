@@ -1,6 +1,6 @@
 {
   "name": "pow-templating",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "An extremely small and lightweight templating framework",
   "main": "./dist/pow.min.js",
   "type": "module",
@@ -35,5 +35,8 @@
   "jest": {
     "transform": {},
     "clearMocks": true
+  },
+  "dependencies": {
+    "yarn": "^1.22.22"
   }
 }
