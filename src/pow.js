@@ -4,11 +4,6 @@
  * @description A very small and lightweight templating framework.
  * @version 1.1.0
  */
-function nextChildTemplate(element) {
-    element.removeAttribute('pow')
-    const dom = element.content ?? element
-    return dom.querySelector('*[pow]:not([pow] [pow])')
-}
 
 function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     for (const attr of bindings) {
@@ -21,7 +16,7 @@ function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     return {}
 }
 
-const _regex = /\{\{\s*(.*?)\s*\}\}/gs
+const _regex = /\{\{\s*(.*?)\s*\}\}/s
 function parseText(text, state, match) {
     while (match = _regex.exec(text)) {
         const value = resolveToken(match[1], state) ?? ''
@@ -37,7 +32,7 @@ function resolveToken(token, state, js = token) {
         const args = (token[0] == '*' && (js = token.slice(1))) ? state : state?.data
 
         // Execute the token as JS code, mapping to the state data
-        const value = pow._eval(js, Object.entries(args || {}).filter($ => isNaN($[0])))
+        const value = pow._eval(js, args)
 
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
@@ -63,6 +58,8 @@ function updateSiblingCondition(sibling, value) {
         }
     }
 }
+
+const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 
 function processElement(element, state) {
     const { attr, token } = consumeBinding(element)
@@ -95,6 +92,8 @@ function processElement(element, state) {
         }
         return element.remove()
     }
+
+    element.removeAttribute('pow')
 
     // Process every child 'pow' template
     var childTemplate
@@ -145,6 +144,9 @@ const pow = {
         return bind(element).apply(data)
     },
     bind,
-    _eval: (js, args) => (new Function(...args.map($ => $[0]), `return ${js}`))(...args.map($ => $[1]))
+    _eval: (js, data) => {
+        data = Object.entries(data || {}).filter($ => isNaN($[0]))
+        return (new Function(...data.map($ => $[0]), `return ${js}`))(...data.map($ => $[1]))
+    }
 }
 export default pow
