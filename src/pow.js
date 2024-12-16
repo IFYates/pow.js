@@ -5,6 +5,7 @@
  * @version 1.2.0
  */
 
+// Resolves next pow binding
 function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     for (const attr of bindings) {
         const token = element.getAttribute(attr)
@@ -16,6 +17,7 @@ function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
     return 0
 }
 
+// Interpolates text templates
 const _regex = /\{\{\s*(.*?)\s*\}\}/s
 function parseText(text, state, match) {
     while (match = _regex.exec(text)) {
@@ -26,6 +28,7 @@ function parseText(text, state, match) {
     return text
 }
 
+// Resolves a token to a value
 function resolveToken(token, state, js = token) {
     try {
         // If the token starts with a star, it's accessing the state metadata
@@ -46,6 +49,7 @@ function resolveToken(token, state, js = token) {
     }
 }
 
+// Updates the next sibling condition
 function updateSiblingCondition(sibling, value) {
     if (sibling?.attributes.pow) {
         const { attr, token } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
@@ -132,7 +136,9 @@ function bind(element) {
             for (const { name, value } of attributes) {
                 element.setAttribute(name, value)
             }
+            //element.style.contentVisibility = 'hidden'
             processElement(element, { path: '*root', data, root: data })
+            //element.style.contentVisibility = 'visible'
             delete binding.$pow
             binding.refresh = () => binding.apply(data)
             return binding
