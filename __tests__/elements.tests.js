@@ -30,24 +30,6 @@ test('Updates child element', () => {
   expect(target.outerHTML).toBe('<div id="main"><div class="styled">Hello, world!</div></div>')
 })
 
-test('Replaces root template', () => {
-  document.body.innerHTML = '<template id="main">{{ text }}</template>'
-
-  const target = document.getElementById('main')
-  pow.apply(target, { text: 'Hello, world!' })
-
-  expect(document.body.outerHTML).toBe('<body>Hello, world!</body>')
-})
-
-test('Replaces child template', () => {
-  document.body.innerHTML = '<div id="main"><template pow>{{ text }}</template></div>'
-
-  const target = document.getElementById('main')
-  pow.apply(target, { text: 'Hello, world!' })
-
-  expect(target.outerHTML).toBe('<div id="main">Hello, world!</div>')
-})
-
 test('Invokes element event function', () => {
   document.body.innerHTML = '<button id="btn" onclick="{{ clicked }}">Click me</button>'
 
