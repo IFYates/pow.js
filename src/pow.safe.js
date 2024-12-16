@@ -6,7 +6,7 @@ import pow from './pow.js'
 pow._eval = (template, data) => {
     const idx = template.indexOf('.')
     if (idx < 0) {
-        return data.hasOwnProperty(template) ? data[template] : undefined
+        return data?.hasOwnProperty(template) ? data[template] : undefined
     }
 
     const value = pow._eval(template.slice(0, idx), data)
