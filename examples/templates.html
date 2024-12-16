@@ -8,7 +8,7 @@
         pow.apply(document.body, {
             text: () => new Date(),
             child: {
-                text: 'Hello, world!',
+                text: 'Some numbers',
                 values: [1, 2, 3, 4, 5]
             }
         })
@@ -16,16 +16,24 @@
 </head>
 
 <body>
-    {{ text() }}
-
-    <hr />
-
+    <strong>Loop a template</strong>
     <div pow item="child">
         {{ text }}:
         <template pow array="values">
             {{ *data }}<template pow ifnot="*last">, </template>
         </template>
     </div>
+
+    <hr />
+
+    <strong>Reuse a template</strong>
+    <div pow item="child">
+        {{ text }}:
+        <source pow if="values" array="values" template="array-item" />
+    </div>
+    <template id="array-item">
+        {{ *data }}<template pow ifnot="*last">, </template>
+    </template>
 </body>
 
 </html>

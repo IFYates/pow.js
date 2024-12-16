@@ -3,8 +3,8 @@ An extremely small and lightweight templating framework.
 
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
 
-> 😲 Only 130 LOCs!  
-> 🤏 <2.5 KiB minified script (+ header)  
+> 😲 Only 132 LOCs!  
+> 🤏 <2.25 KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
@@ -19,7 +19,8 @@ An extremely small and lightweight templating framework.
   * [With function support](#functions)
   * [And events](#events)
 * [Conditional binding](#conditional)
-* [Binding loops](#loops)
+* [Repeated sections](#loops)
+* [Reusable templates](#reusable)
 * [Basic reactivity](#reactivity)
 
 # Installation
@@ -182,7 +183,7 @@ pow.apply(document.body, {
 
 The [`pow.safe.js`](src/pow.safe.js) file is provided with a suggested alternative parser with some basic capabilities.
 
-## Binding
+## Bindings
 Any element can be used to control a binding, as long as it has the `pow` attribute.
 
 If the binding element is a `template`, it will be replaced in its entirety. Other elements will only have their contents replaced.
@@ -271,10 +272,36 @@ The `else` logic can be applied to loops, used when the loop does not produce an
     <div pow else>This is nothing in your list</div>
 ```
 
+### Reusable templates
+`v1.2.0` If you have a particularly complex template, **_pow💥_** can insert a copy of it using the `template` binding, replacing the bound element.  
+Although this can be applied to any element, it is recommended to use `source` as this is a self-closing tag that cannot have any contents.
+
+The `item`/`array` bindings can be used to specify what data the template receives.
+
+Note: Reusable templates should always be stored outside of any bound elements, otherwise they will be modified like anything else.
+
+**Example:**
+```html
+<!-- pow.apply(document.body, { list: [ 1, 2, 3, 4, 5 ] }) -->
+<body>
+    <source pow array="list" template="example" />
+</body>
+<template id="example">{{ *data }}, </template>
+```
+```html
+<!-- Output -->
+<body>
+    1, 2, 3, 4, 5, 
+</body>
+<template id="example">{{ *data }}, </template>
+```
+
 # Reactivity
 **_pow💥_** does not provide true reactivity out-of-the-box, in the aim of keeping the library small.
 
-Some reactivity can be achieved through re-applying or refreshing a binding:
+Some reactivity can be achieved through re-applying or refreshing a binding. Note that this does destroy the elements, so any code referencing the output will need to be reapplied.
+
+**Example:**
 ```html
 <!-- examples/reactivity/index.html -->
 <script type="module">
@@ -303,7 +330,7 @@ Some reactivity can be achieved through re-applying or refreshing a binding:
 Since the templating is applied to the DOM structure, malformed HTML may cause what appears to be unexpected behaviour.  
 The `*path` interpolation is intended to help in these situations.
 
-This is a very common mistake with tags not being closed correctly, and `div` tags being inside `p` tags.
+A particularly common mistake is not closing tags correctly or incorrect nestings (e.g., `div` tags cannot be inside `p` tags).
 
 **Example:**
 ```html
@@ -317,11 +344,6 @@ This is a very common mistake with tags not being closed correctly, and `div` ta
 ```
 
 # Possible future features
-* Reusable templates
-   ```html
-   <template id="example">{{ text }}</template>
-   <source pow template="example" ... /><!-- Uses innerHTML of template, instead of what's there. Can have other bindings -->
-   ```
 * Attributes
     * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
     * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)

@@ -142,3 +142,11 @@ test('Post-loop conditions are used if no loop', () => {
 
   expect(document.body.innerHTML).toBe('<div>None</div>')
 })
+
+test.each([ [true, '1, 2, 3, '], [false, ''] ])('Loop binding processed after conditional', (condition, expected) => {
+  document.body.innerHTML = '<template pow if="check" array="list">{{ *data }}, </template>'
+
+  pow.apply(document.body, { check: condition, list: [ 1, 2, 3 ] })
+
+  expect(document.body.innerHTML).toBe(expected)
+})

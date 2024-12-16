@@ -6,7 +6,7 @@
  */
 
 // Resolves next pow binding
-function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
+function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) {
     for (const attr of bindings) {
         const token = element.getAttribute(attr)
         if (token != null) {
@@ -69,10 +69,17 @@ const processCondition = (element, active, always) => {
     return (always || !active) && element.remove()
 }
 
-function processElement(element, state) {
+function processElement(element, state, value) {
     // TODO: (v2.0.0?) Proper event binding. @click="function" -> element.addEventHandler
     const { attr, token } = consumeBinding(element)
-    const value = token ? resolveToken(token, state) : state.data
+
+    if (attr == 'template' && (value = document.getElementById(token))) {
+        const clone = value.cloneNode(1)
+        element.parentNode.replaceChild(clone, element)
+        return processElement(clone, state)
+    }
+
+    value = token ? resolveToken(token, state) : state.data
     if (attr == 'if' || attr == 'ifnot') {
         return processCondition(element, (attr == 'if') != !value)
     } else if (attr == 'item' && token) {
@@ -83,28 +90,27 @@ function processElement(element, state) {
             parent: state.data
         }
     } else if (attr == 'array' && typeof value == 'object') { // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
-        const array = Array.isArray(value) ? value
+        value = Array.isArray(value) ? value
             : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
-        for (let index = 0; index < array.length; ++index) {
+        for (let index = 0; index < value.length; ++index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
             processElement(child, {
                 ...state,
                 path: `${state.path}${token ? `.${token}` : ''}[${index}]`,
-                index, first: !index, last: index > array.length - 2,
-                data: array[index],
+                index, first: !index, last: index > value.length - 2,
+                data: value[index],
                 parent: state
             })
         }
-        return processCondition(element, array.length, 1)
+        return processCondition(element, value.length, 1)
     }
 
     element.removeAttribute('pow')
 
     // Process every child 'pow' template
-    var childTemplate
-    while (childTemplate = nextChildTemplate(element)) {
-        processElement(childTemplate, state)
+    while (value = nextChildTemplate(element)) {
+        processElement(value, state)
     }
 
     // Interpolate attributes
@@ -113,12 +119,12 @@ function processElement(element, state) {
     }
 
     // Parse inner HTML
-    const html = parseText(element.innerHTML, state)
+    value = parseText(element.innerHTML, state)
     if (element instanceof HTMLTemplateElement) {
-        element.insertAdjacentHTML('afterend', html)
+        element.insertAdjacentHTML('afterend', value)
         element.remove()
     } else {
-        element.innerHTML = html
+        element.innerHTML = value
     }
 }
 
