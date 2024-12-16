@@ -54,6 +54,14 @@
 
     <h3>Direct array</h3>
     <div pow array="[1,2,3]">{{ *data }}</div>
+
+    <hr />
+
+    <h3>Conditional array</h3>
+    <div pow array="['Array 1 not empty']">{{ *data }}</div>
+    <div pow else>Empty array 1</div>
+    <div pow array="[]">{{ *data }}</div>
+    <div pow else>Empty array 2</div>
 </body>
 
 </html>

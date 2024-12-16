@@ -13,6 +13,15 @@ An extremely small and lightweight templating framework.
 * Provides clear templating and interpolation
 * Extensible functionality
 
+# Functionality
+**_pow💥_** has the following functionality:
+* [Interpolation](#interpolations)
+  * [With function support](#functions)
+  * [And events](#events)
+* [Conditional binding](#conditional)
+* [Binding loops](#loops)
+* [Basic reactivity](#reactivity)
+
 # Installation
 Get [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
 ```js
@@ -56,14 +65,7 @@ Looking at CDN hosting soon.
 </body>
 ```
 
-# Functionality
-**_pow💥_** has the following functionality:
-* [Interpolation](#interpolations)
-  * [With function support](#functions)
-  * [And events](#events)
-* [Conditional binding](#conditional)
-* [Binding loops](#loops)
-* [Basic reactivity](#reactivity)
+# Guide
 
 ## Interpolations
 **_pow💥_** uses mustache-syntax interpolations (`{{ key }}`) and supports deep attributes (`{{ child.key }}`).
@@ -154,6 +156,7 @@ HTML events can be handled by binding the event attribute to a function in the d
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.html)
 
 ### Interpolation logic
+`v1.1.0`
 By default, **_pow💥_** provides full Javascript logic for interpolation using dynamic functions.  
 Some environment block dynamic code evaluation for user security.
 
@@ -239,6 +242,7 @@ If you are already in the array context, omit the binding value to achieve the s
         <li pow array>{{ *data }}</li>
 ```
 
+#### Objects
 If an object is looped, the keys and values are iterated as `key` and `value`.
 
 **Example:**
@@ -253,6 +257,18 @@ If an object is looped, the keys and values are iterated as `key` and `value`.
     <div>first: 1</div>
     <div>second: 2</div>
     <div>third: 3</div>
+```
+
+#### Post-loop conditions
+`v1.2.0`
+The `else` logic can be applied to loops, used when the loop does not produce an output.
+
+**Example:**
+```html
+<!-- pow.apply(document.body, { list: [] }) -->
+<body>
+    <div pow array="list">{{ *data }}</div>
+    <div pow else>This is nothing in your list</div>
 ```
 
 # Reactivity
@@ -287,23 +303,20 @@ Some reactivity can be achieved through re-applying or refreshing a binding:
 Since the templating is applied to the DOM structure, malformed HTML may cause what appears to be unexpected behaviour.  
 The `*path` interpolation is intended to help in these situations.
 
+This is a very common mistake with tags not being closed correctly, and `div` tags being inside `p` tags.
+
 **Example:**
 ```html
 {{* path }}<!-- '*root' -->
-<ul pow item="array">
-    {{* path }}<!-- '*root.array' -->
-    <li pow array>
-        {{* path }}<!-- '*root.array[x]' -->
-        <li><!-- li element cannot be inside an li and will be shifted outside -->
-            {{* path }}<!-- '*root.array'! -->
-        </li>
-    </li>
-</ul>
+<p pow item="list">
+    {{* path }}<!-- '*root.list' -->
+    <div pow array><!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
+        {{* path }}<!-- '*root' -->
+    </div>
+</p>
 ```
 
 # Possible future features
-* Non-eval alternative ("paranoid")
-    * Will be very restrictive
 * Reusable templates
    ```html
    <template id="example">{{ text }}</template>

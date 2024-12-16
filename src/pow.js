@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
@@ -13,7 +13,7 @@ function consumeBinding(element, bindings = ['item', 'array', 'if', 'ifnot']) {
             return { attr, token }
         }
     }
-    return {}
+    return 0
 }
 
 const _regex = /\{\{\s*(.*?)\s*\}\}/s
@@ -51,7 +51,7 @@ function updateSiblingCondition(sibling, value) {
         const { attr, token } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
         if (attr && value) {
             sibling.remove()
-            return true
+            return 1
         }
         if (attr && attr != 'else') {
             sibling.setAttribute(attr.slice(5), token)
@@ -60,15 +60,17 @@ function updateSiblingCondition(sibling, value) {
 }
 
 const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
+const processCondition = (element, active, always) => {
+    while (updateSiblingCondition(element.nextElementSibling, active));
+    return (always || !active) && element.remove()
+}
 
 function processElement(element, state) {
+    // TODO: (v2.0.0?) Proper event binding. @click="function" -> element.addEventHandler
     const { attr, token } = consumeBinding(element)
     const value = token ? resolveToken(token, state) : state.data
     if (attr == 'if' || attr == 'ifnot') {
-        while (updateSiblingCondition(element.nextElementSibling, (attr == 'if') != !value));
-        if ((attr == 'if') == !value) {
-            return element.remove()
-        }
+        return processCondition(element, (attr == 'if') != !value)
     } else if (attr == 'item' && token) {
         state = {
             ...state,
@@ -76,7 +78,7 @@ function processElement(element, state) {
             data: value,
             parent: state.data
         }
-    } else if (attr == 'array' && typeof value == 'object') {
+    } else if (attr == 'array' && typeof value == 'object') { // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
         const array = Array.isArray(value) ? value
             : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
         for (let index = 0; index < array.length; ++index) {
@@ -90,7 +92,7 @@ function processElement(element, state) {
                 parent: state
             })
         }
-        return element.remove()
+        return processCondition(element, array.length, 1)
     }
 
     element.removeAttribute('pow')

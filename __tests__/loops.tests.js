@@ -126,3 +126,19 @@ test('Can loop an object', () => {
 
   expect(document.body.innerHTML).toBe('<div>One: 1</div><div>Two: 2</div><div>Three: 3</div>')
 })
+
+test('Post-loop conditions are ignored on loop', () => {
+  document.body.innerHTML = '<div pow array>{{ *data }}</div><div pow else>None</div>'
+
+  pow.apply(document.body, [1])
+
+  expect(document.body.innerHTML).toBe('<div>1</div>')
+})
+
+test('Post-loop conditions are used if no loop', () => {
+  document.body.innerHTML = '<div pow array>{{ *data }}</div><div pow else>None</div>'
+
+  pow.apply(document.body, [])
+
+  expect(document.body.innerHTML).toBe('<div>None</div>')
+})
