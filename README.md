@@ -67,7 +67,7 @@ Looking at CDN hosting soon.
 ```
 
 > [Fiddle with it ✏️](https://jsfiddle.net/IFYates/s13m7ptf/1/)
-<script async src="//jsfiddle.net/IFYates/s13m7ptf/1/embed/js,html,result/dark/"></script>
+<iframe width="100%" height="300" src="//jsfiddle.net/IFYates/s13m7ptf/1/embedded/js,html,result/dark/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 
 # Guide
 
