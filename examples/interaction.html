@@ -6,15 +6,18 @@
         import pow from '../src/pow.js'
 
         const data = {
+            count: 0,
             handler: function (arg, root) {
                 console.log('Clicked!',
                     this, // The HTML element that raised the event
                     arg, // The current binding context
                     root // The data used in `apply`
                 )
+                this.innerText = 'You clicked me ' + (++arg.count) + ' time'
+                    + (root.count > 1 ? 's' : '')
             }
         }
-        pow.apply(document.body, arg)
+        pow.apply(document.body, data)
     </script>
 </head>
 

@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 // Resolves next pow binding
@@ -70,7 +70,6 @@ const processCondition = (element, active, always) => {
 }
 
 function processElement(element, state, value) {
-    // TODO: (v2.0.0?) Proper event binding. @click="function" -> element.addEventHandler
     const { attr, token } = consumeBinding(element)
 
     if (attr == 'template' && (value = document.getElementById(token))) {
@@ -137,14 +136,16 @@ function bind(element) {
                 return console.warn('Binding already in progress')
             }
             binding.$pow = 1
+
+            // Reset global state
             window.$pow$ = {}
-            element.innerHTML = originalHTML
-            for (const { name, value } of attributes) {
-                element.setAttribute(name, value)
-            }
+            element.innerHTML = originalHTML;
+            [...attributes].forEach($ => element.setAttribute($.name, $.value))
+
             //element.style.contentVisibility = 'hidden'
             processElement(element, { path: '*root', data, root: data })
             //element.style.contentVisibility = 'visible'
+
             delete binding.$pow
             binding.refresh = () => binding.apply(data)
             return binding
