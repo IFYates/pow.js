@@ -25,7 +25,8 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "terser": "^5.37.0"
+    "terser": "^5.37.0",
+    "yarn": "^1.22.22"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --detectOpenHandles",
@@ -35,8 +36,5 @@
   "jest": {
     "transform": {},
     "clearMocks": true
-  },
-  "dependencies": {
-    "yarn": "^1.22.22"
   }
 }
