@@ -66,6 +66,9 @@ Looking at CDN hosting soon.
 </body>
 ```
 
+> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/s13m7ptf/1/)
+<script async src="//jsfiddle.net/IFYates/s13m7ptf/1/embed/js,html,result/dark/"></script>
+
 # Guide
 
 ## Interpolations
