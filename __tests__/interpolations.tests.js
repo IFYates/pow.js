@@ -44,11 +44,11 @@ test.each([ true, false ])('Boolean interpolation', (bool) => {
 })
 
 test('Function result interpolation', () => {
-  document.body.innerHTML = '<div>{{ fn() }}</div>'
+  document.body.innerHTML = '<div>{{ func(name) }}</div>'
 
-  pow.apply(document.body, { fn: () => 'ok' })
+  pow.apply(document.body, { name: 'world', func: (name) => 'Hello, ' + name + '!' })
 
-  expect(document.body.innerHTML).toBe('<div>ok</div>')
+  expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
 
 test('Function interpolation', () => {
