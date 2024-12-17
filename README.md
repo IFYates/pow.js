@@ -32,8 +32,8 @@ import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
 Looking at CDN hosting soon.
 
 # Example
-> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart.html)
-> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/s13m7ptf/1/)
+> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart.html)  
+> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/qtngjxbu/)
 ```html
 // examples/quickstart.html
 <script type="module">
