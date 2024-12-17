@@ -33,6 +33,7 @@ Looking at CDN hosting soon.
 
 # Example
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart.html)
+> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/s13m7ptf/1/)
 ```html
 // examples/quickstart.html
 <script type="module">
@@ -65,9 +66,6 @@ Looking at CDN hosting soon.
     </p>
 </body>
 ```
-
-> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/s13m7ptf/1/)
-<iframe width="100%" height="300" src="//jsfiddle.net/IFYates/s13m7ptf/1/embedded/js,html,result/dark/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 
 # Guide
 
