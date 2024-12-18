@@ -12,11 +12,11 @@ import pow from "./pow.js"
  * 
  * Supports property walking and 0-argument functions
  */
-pow._eval = (template, data, deep) => {
+function _eval(template, data, deep) {
     const period = template.indexOf('.')
     if (period < 0) {
         if (template.endsWith('()')) {
-            const fn = pow._eval(template.slice(0, -2), data, 1)
+            const fn = _eval(template.slice(0, -2), data, 1)
             return typeof fn == 'function' ? fn(data) : undefined
         }
         return data?.hasOwnProperty(template) ? data[template]
@@ -24,9 +24,10 @@ pow._eval = (template, data, deep) => {
                 : !deep ? window[template] : undefined
     }
 
-    const value = pow._eval(template.slice(0, period), data, 1)
-    return pow._eval(template.slice(period + 1), value, 1)
+    const value = _eval(template.slice(0, period), data, 1)
+    return _eval(template.slice(period + 1), value, 1)
 }
+pow._eval = _eval
 
 /**
  * Rebinds event listeners on bound range after each apply
@@ -55,7 +56,7 @@ function bind(element) {
 
 // pow.safe
 export default {
-    ...pow,
     apply: (element, data) => bind(element).apply(data),
-    bind
+    bind,
+    _eval
 }
