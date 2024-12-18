@@ -54,8 +54,7 @@ function updateSiblingCondition(sibling, value) {
     if (sibling?.attributes.pow) {
         const { attr, token } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
         if (attr && value) {
-            sibling.remove()
-            return 1
+            return !sibling.remove()
         }
         if (attr && attr != 'else') {
             sibling.setAttribute(attr.slice(5), token)
@@ -82,16 +81,19 @@ function processElement(element, state, value) {
     if (attr == 'if' || attr == 'ifnot') {
         return processCondition(element, (attr == 'if') != !value)
     } else if (attr == 'item' && token) {
+        if (value == null) {
+            return element.remove()
+        }
         state = {
             ...state,
             path: `${state.path}.${token}`,
             data: value,
             parent: state.data
         }
-    } else if (attr == 'array' && typeof value == 'object') { // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
-        value = Array.isArray(value) ? value
-            : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
-        for (let index = 0; index < value.length; ++index) {
+    } else if (attr == 'array') {
+        // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
+        value = !value || Array.isArray(value) ? value : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
+        for (let index = 0; index < value?.length; ++index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
             processElement(child, {
@@ -102,7 +104,7 @@ function processElement(element, state, value) {
                 parent: state
             })
         }
-        return processCondition(element, value.length, 1)
+        return processCondition(element, value?.length, 1)
     }
 
     element.removeAttribute('pow')

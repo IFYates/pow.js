@@ -31,6 +31,9 @@
             <template pow array="tags">
                 <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
             </template>
+            <span pow else>
+              No tags!
+            </span>
         </p>
     </h2>
 </body>

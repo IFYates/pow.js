@@ -31,6 +31,16 @@ test('Can loop current context', () => {
   expect(document.body.innerHTML).toBe('<div>One</div><div>Two</div><div>Three</div>')
 })
 
+test.each([[null], [[]]])('Loop if nothing does not output', (arr) => {
+  document.body.innerHTML = '<template pow item="child"><div pow array>DO NOT SHOW</div></template>'
+
+  pow.apply(document.body, {
+    child: arr
+  })
+
+  expect(document.body.innerHTML).toBe('')
+})
+
 test('Can access index in loop', () => {
   document.body.innerHTML = '<div pow array="child">{{ *index }}</div>'
 
@@ -135,10 +145,10 @@ test('Post-loop conditions are ignored on loop', () => {
   expect(document.body.innerHTML).toBe('<div>1</div>')
 })
 
-test('Post-loop conditions are used if no loop', () => {
-  document.body.innerHTML = '<div pow array>{{ *data }}</div><div pow else>None</div>'
+test.each([[null], [[]]])('Post-loop conditions are used if no loop', (arr) => {
+  document.body.innerHTML = '<div pow array>[{{ *data }}]</div><div pow else>None</div>'
 
-  pow.apply(document.body, [])
+  pow.apply(document.body, arr)
 
   expect(document.body.innerHTML).toBe('<div>None</div>')
 })
