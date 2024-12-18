@@ -74,6 +74,19 @@ test('Binding to unknown key removes element with warning', () => {
   expect(document.body.innerHTML).toBe('')
 })
 
+test('Binding to unknown this key removes element without warning', () => {
+  document.body.innerHTML = '<div pow item="this.child">DO NOT SHOW</div>'
+
+  const consoleWarnMock = jest.spyOn(console, 'warn')
+    .mockImplementation(() => { })
+
+  const binding = pow.bind(document.body)
+  binding.apply({ })
+
+  expect(consoleWarnMock.mock.calls).toHaveLength(0)
+  expect(document.body.innerHTML).toBe('')
+})
+
 test.each([ null, undefined ])('Binding to null data removes element without warning', (value) => {
   document.body.innerHTML = '<div pow item="child">DO NOT SHOW</div>'
 

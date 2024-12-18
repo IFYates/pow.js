@@ -2,16 +2,16 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.3.0
+ * @version 1.4.0
  */
 
 // Resolves next pow binding
 function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) {
     for (const attr of bindings) {
-        const token = element.getAttribute(attr)
-        if (token != null) {
+        const expr = element.getAttribute(attr)
+        if (expr != null) {
             element.removeAttribute(attr)
-            return { attr, token }
+            return { attr, expr }
         }
     }
     return 0
@@ -21,20 +21,20 @@ function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'te
 const _regex = /\{\{\s*(.*?)\s*\}\}/s
 function parseText(text, state, match) {
     while (match = _regex.exec(text)) {
-        const value = resolveToken(match[1], state) ?? ''
+        const value = resolveExpr(match[1], state) ?? ''
         _regex.lastIndex = match.index + `${value}`.length
         text = text.slice(0, match.index) + value + text.slice(match.index + match[0].length)
     }
     return text
 }
 
-// Resolves a token to a value
-function resolveToken(token, state, js = token) {
+// Resolves an expression to a value
+function resolveExpr(expr, state, js = expr) {
     try {
-        // If the token starts with a star, it's accessing the state metadata
-        const args = (token[0] == '*' && (js = token.slice(1))) ? state : state?.data
+        // If the expression starts with a star, it's accessing the state metadata
+        const args = (expr[0] == '*' && (js = expr.slice(1))) ? state : state?.data
 
-        // Execute the token as JS code, mapping to the state data
+        // Execute the expression as JS code, mapping to the state data
         const value = pow._eval(js, args)
 
         // If the result is a function, bind it for later
@@ -45,19 +45,18 @@ function resolveToken(token, state, js = token) {
         }
         return value
     } catch (e) {
-        console.warn('Interpolation failed', { '*path': state.path, token }, e)
+        console.warn('Interpolation failed', { '*path': state.path, expr }, e)
     }
 }
 
 // Updates the next sibling condition
 function updateSiblingCondition(sibling, value) {
     if (sibling?.attributes.pow) {
-        const { attr, token } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
+        const { attr, expr } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
         if (attr && value) {
             return !sibling.remove()
-        }
-        if (attr && attr != 'else') {
-            sibling.setAttribute(attr.slice(5), token)
+        } else if (attr && attr != 'else') {
+            sibling.setAttribute(attr.slice(5), expr)
         }
     }
 }
@@ -69,24 +68,24 @@ const processCondition = (element, active, always) => {
 }
 
 function processElement(element, state, value) {
-    const { attr, token } = consumeBinding(element)
+    const { attr, expr } = consumeBinding(element)
 
-    if (attr == 'template' && (value = document.getElementById(token))) {
+    if (attr == 'template' && (value = document.getElementById(expr))) {
         const clone = value.cloneNode(1)
         element.parentNode.replaceChild(clone, element)
         return processElement(clone, state)
     }
 
-    value = token ? resolveToken(token, state) : state.data
+    value = expr ? resolveExpr(expr, state) : state.data
     if (attr == 'if' || attr == 'ifnot') {
         return processCondition(element, (attr == 'if') != !value)
-    } else if (attr == 'item' && token) {
+    } else if (attr == 'item' && expr) {
         if (value == null) {
             return element.remove()
         }
         state = {
             ...state,
-            path: `${state.path}.${token}`,
+            path: `${state.path}.${expr}`,
             data: value,
             parent: state.data
         }
@@ -98,7 +97,7 @@ function processElement(element, state, value) {
             element.parentNode.insertBefore(child, element)
             processElement(child, {
                 ...state,
-                path: `${state.path}${token ? `.${token}` : ''}[${index}]`,
+                path: `${state.path}${expr ? `.${expr}` : ''}[${index}]`,
                 index, first: !index, last: index > value.length - 2,
                 data: value[index],
                 parent: state
@@ -141,8 +140,8 @@ function bind(element) {
 
             // Reset global state
             window.$pow$ = {}
-            element.innerHTML = originalHTML;
-            [...attributes].forEach($ => element.setAttribute($.name, $.value))
+            element.innerHTML = originalHTML
+            attributes.forEach($ => element.setAttribute($.name, $.value))
 
             //element.style.contentVisibility = 'hidden'
             processElement(element, { path: '*root', data, root: data })
@@ -161,9 +160,9 @@ const pow = {
         return bind(element).apply(data)
     },
     bind,
-    _eval: (js, data) => {
-        data = Object.entries(data || {}).filter($ => isNaN($[0]))
-        return (new Function(...data.map($ => $[0]), `return ${js}`))(...data.map($ => $[1]))
+    _eval: (js, data, args) => {
+        args = Object.entries(data || {}).filter($ => isNaN($[0]))
+        return (new Function(...args.map($ => $[0]), `return ${js}`)).call(data, ...args.map($ => $[1]))
     }
 }
 export default pow
