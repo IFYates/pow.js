@@ -2,6 +2,8 @@
 An extremely small and lightweight templating framework.
 
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
+![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
+
 
 > 😲 Only 130 LOCs!  
 > 🤏 <2.3 KiB minified script (+ header)  
@@ -208,53 +210,46 @@ The default context will be the `data` provided to the `apply()` function, but t
 In general, all placeholders in bound HTML are interpolated, so there is nothing special needed for setting attribute values.
 
 However, attributes on bound elements (with the `pow` attribute) have more logic applied to them:
-* $attributes (names beginning `$`) will have the character removed and be fully interpolated, only setting/overwriting the attribute if it is non-falsy, and
-* If an attribute template resolves to a falsy value (`false`, `0`, `''`, `null`, `undefined`), it will be removed.
+* &dollar;attributes (names beginning `$`) will have the `$` removed and be fully interpolated, only setting/overwriting the attribute if it is truthy, and
+* If an attribute template resolves to a null value (`''`, `null`, `undefined`), it will be removed. Note that `false` and `0` will be displayed verbatim.
 
 **Examples:**
-* Bound element with an attribute that evaluates to `true`:
+* Bound element with a truthy attribute value:
     ```html
+    <!-- data: { isChecked: 'truthy' } -->
     <input pow type="checkbox" checked="{{ isChecked }}" />
-    <!-- Result --><input type="checkbox" checked="true" />
+    <!-- Result --><input type="checkbox" checked="truthy" />
     ```
-* Bound element with an attribute that evaluates to any falsy:
+* Bound element with a null/missing attribute:
     ```html
+    <!-- data: { } -->
     <input pow type="checkbox" checked="{{ isChecked }}" />
     <!-- Result --><input type="checkbox" />
     ```
+* Unbound element with a null/missing attribute:
+    ```html
+    <!-- data: { } -->
+    <input type="checkbox" checked="{{ isChecked }}" />
+    <!-- Result --><input type="checkbox" checked="" />
+    ```
 * Unbound element with an attribute that evaluates to `false`:
     ```html
+    <!-- data: { isChecked: false } -->
     <input type="checkbox" checked="{{ isChecked }}" />
     <!-- Result --><input type="checkbox" checked="false" />
     ```
-* Bound element with a $attribute that overwrites an existing attribute:
+* Bound element with a truthy $attribute value, which overwrites an existing attribute:
     ```html
+    <!-- data: { value: 'replaced' } -->
     <div pow class="existing" $class="value">
     <!-- Result --><div class="replaced">
     ```
-* Bound element with a $attribute that evaluates to any falsy:
+* Bound element with a $attribute that evaluates to a null value, leaving the existing attribute:
     ```html
+    <!-- data: { } -->
     <div pow class="existing" $class="value">
     <!-- Result --><div class="existing">
     ```
-
-<!-- pow.apply(document.body, { optionA: false, optionB: true, optionC: false, optionDValue: 'valueD' }) -->
-<body>
-    <input pow type="checkbox" value="optionB" $checked="optionB" />
-    <input type="checkbox" value="optionC" checked="{{ optionC }}" $other="optionA" /><!-- Not bound -->
-    <input pow type="checkbox" value="optionD" $value="optionDValue" />
-    <input pow type="checkbox" value="optionE" $value="optionEValue" />
-```
-
-```html
-<!-- Output -->
-<body>
-    <input type="checkbox" value="optionA" />
-    <input type="checkbox" value="optionB" checked="true" />
-    <input type="checkbox" value="optionC" checked="false" $other="optionA" />
-    <input type="checkbox" value="valueD" />
-    <input type="checkbox" value="optionE" />
-```
 
 ### Conditional
 **_pow💥_** bindings support a basic set of conditions:
@@ -264,11 +259,11 @@ However, attributes on bound elements (with the `pow` attribute) have more logic
 
 The `else*` conditions are only evaluated if placed as siblings to a lead `if` template.
 ```html
-<div pow if="cond">Always shown</div> <!-- Not part of following set -->
-<div pow if="cond">Always shown; new condition set</div>
-<div pow else-if="cond">Only show if prior sibling "if" was false</div>
-<div pow else-if="cond">Only show if all prior sibling "if" and "else-if"s were false</div>
-<div pow else>Only shown if all prior sibling "if" and "else-if"s were false</div>
+<div pow if="cond">Always checked</div> <!-- Not part of following set -->
+<div pow if="cond">Always checked; new condition set</div>
+<div pow else-if="cond">Only checked if prior sibling "if" was false</div>
+<div pow else-if="cond">Only checked if all prior sibling "if" and "else-if"s were false</div>
+<div pow else>Only checked if all prior sibling "if" and "else-if"s were false</div>
 ```
 
 ### Loops

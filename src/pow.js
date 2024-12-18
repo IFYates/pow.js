@@ -111,7 +111,7 @@ function processElement(element, state, value) {
             if (value = resolveExpr(value, state)) {
                 element.setAttribute(name.slice(1), value)
             }
-        } else if (!['', 'false', '0'].includes(value = parseText(value, state))) {
+        } else if (value = (parseText(value, state) || '')) {
             element.setAttribute(name, value)
         } else {
             element.removeAttribute(name)
