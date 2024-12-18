@@ -24,7 +24,7 @@ An extremely small and lightweight templating framework.
 * [Basic reactivity](#reactivity)
 
 # Installation
-Get [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
+Get the [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
 ```js
 import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
 ```
@@ -32,8 +32,7 @@ import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
 Looking at CDN hosting soon.
 
 # Example
-> [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/quickstart.html)  
-> [Fiddle with it ✏️](https://jsfiddle.net/IFYates/qtngjxbu/)
+> [See it in action 🏃‍➡️](https://jsfiddle.net/IFYates/qtngjxbu/)
 ```html
 // examples/quickstart.html
 <script type="module">
@@ -157,14 +156,13 @@ HTML events can be handled by binding the event attribute to a function in the d
 ```
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.html)
 
-### Interpolation logic
-`v1.1.0`
+### Interpolation logic and pow.safe <small><sup>`v1.1.0`</sup></small>
 By default, **_pow💥_** provides full Javascript logic for interpolation using dynamic functions.  
-Some environment block dynamic code evaluation for user security.
+Some environments block dynamic code evaluation for user security.
 
 In these situations, the interpolation logic can be replaced to allow for a custom parser to be used that meets any security requirements of the environment.
 
-The logic is specified by providing a new `pow._eval` function, where it takes 2 arguments: the string to be parsed and the current context data.
+The logic is specified by providing a new `pow._eval` function, which takes 2 arguments: the string to be parsed and the current context data.
 
 **Example:**
 ```html
@@ -183,6 +181,10 @@ pow.apply(document.body, {
 ```
 
 The [`pow.safe.js`](src/pow.safe.js) file is provided with a suggested alternative parser with some basic capabilities.
+> [See the quickstart example using pow.safe in action 🏃‍➡️](https://jsfiddle.net/IFYates/jwaqme8o/)
+
+As of `v1.3.0`, pow.safe also rebinds [element events](#events) after every `apply` to remove dynamic code.
+> [See the interaction example using pow.safe in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.safe.html)
 
 ## Bindings
 Any element can be used to control a binding, as long as it has the `pow` attribute.
@@ -261,8 +263,7 @@ If an object is looped, the keys and values are iterated as `key` and `value`.
     <div>third: 3</div>
 ```
 
-#### Post-loop conditions
-`v1.2.0`
+#### Post-loop conditions <sup>`v1.2.0`</sup>
 The `else` logic can be applied to loops, used when the loop does not produce an output.
 
 **Example:**
@@ -273,8 +274,8 @@ The `else` logic can be applied to loops, used when the loop does not produce an
     <div pow else>This is nothing in your list</div>
 ```
 
-### Reusable templates
-`v1.2.0` If you have a particularly complex template, **_pow💥_** can insert a copy of it using the `template` binding, replacing the bound element.  
+### Reusable templates <small><sup>`v1.2.0`</sup></small>
+If you have a particularly complex template, **_pow💥_** can insert a copy of it using the `template` binding, replacing the bound element.  
 Although this can be applied to any element, it is recommended to use `source` as this is a self-closing tag that cannot have any contents.
 
 The `item`/`array` bindings can be used to specify what data the template receives.
