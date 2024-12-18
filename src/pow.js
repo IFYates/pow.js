@@ -6,7 +6,7 @@
  */
 
 // Resolves next pow binding
-function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) {
+const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) => {
     for (const attr of bindings.filter($ => element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         element.removeAttribute(attr)
@@ -14,12 +14,13 @@ function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'te
     }
     return 0
 }
+const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 
 // Interpolates text templates
 const parseText = (text, state) => text.replace(/\{\{\s*(.*?)\s*\}\}/gs, (_, expr) => resolveExpr(expr, state) ?? '')
 
 // Resolves an expression to a value
-function resolveExpr(expr, state, js = expr) {
+const resolveExpr = (expr, state, js = expr) => {
     try {
         // If the expression starts with a star, it's accessing the state metadata
         const args = (expr[0] == '*' && (js = expr.slice(1))) ? state : state.data
@@ -40,7 +41,7 @@ function resolveExpr(expr, state, js = expr) {
 }
 
 // Updates the next sibling condition
-function updateSiblingCondition(sibling, value) {
+const updateSiblingCondition = (sibling, value) => {
     if (sibling?.attributes.pow) {
         const { attr, expr } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
         if (attr && value) {
@@ -50,14 +51,12 @@ function updateSiblingCondition(sibling, value) {
         }
     }
 }
-
-const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 const processCondition = (element, active, always) => {
     while (updateSiblingCondition(element.nextElementSibling, active));
     return (always || !active) && element.remove()
 }
 
-function processElement(element, state, value) {
+const processElement = (element, state, value) => {
     const { attr, expr } = consumeBinding(element)
 
     if (attr == 'template' && (value = document.getElementById(expr))) {
@@ -128,7 +127,7 @@ function processElement(element, state, value) {
     }
 }
 
-function bind(element) {
+const bind = (element) => {
     const originalHTML = element.innerHTML
     const attributes = [...element.attributes]
     const binding = {
@@ -143,9 +142,7 @@ function bind(element) {
             element.innerHTML = originalHTML
             attributes.forEach($ => element.setAttribute($.name, $.value))
 
-            //element.style.contentVisibility = 'hidden'
             processElement(element, { path: '*root', data, root: data })
-            //element.style.contentVisibility = 'visible'
 
             delete binding.$pow
             binding.refresh = () => binding.apply(data)
