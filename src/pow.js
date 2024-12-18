@@ -22,7 +22,7 @@ const parseText = (text, state) => text.replace(/\{\{\s*(.*?)\s*\}\}/gs, (_, exp
 function resolveExpr(expr, state, js = expr) {
     try {
         // If the expression starts with a star, it's accessing the state metadata
-        const args = (expr[0] == '*' && (js = expr.slice(1))) ? state : state?.data
+        const args = (expr[0] == '*' && (js = expr.slice(1))) ? state : state.data
 
         // Execute the expression as JS code, mapping to the state data
         const value = pow._eval(js, args)
@@ -160,9 +160,9 @@ const pow = {
         return bind(element).apply(data)
     },
     bind,
-    _eval: (js, data, args) => {
-        args = Object.entries(data || {}).filter($ => isNaN($[0]))
-        return (new Function(...args.map($ => $[0]), `return ${js}`)).call(data, ...args.map($ => $[1]))
+    _eval: (expr, ctxt) => {
+        const args = Object.entries(ctxt || {}).filter($ => isNaN($[0]))
+        return (new Function(...args.map($ => $[0]), `return ${expr}`)).call(ctxt, ...args.map($ => $[1]))
     }
 }
 export default pow
