@@ -4,7 +4,7 @@
 <head>
     <script type="module">
         import pow from '../src/pow.js'
-        
+
         const data = {
             "url": "https://github.com/IFYates/pow.js",
             "title": "pow.js",
@@ -21,21 +21,20 @@
 
 <body>
     <h1>{{ title }}</h1>
-    <h2>{{ description }}</h1>
-        <p><a href="{{ url }}">See project page</a></p>
-        <p pow item="creation">
-            Created by <em>{{ author }}</em> on {{ date }}
-        </p>
-        <p>
-            Tags ({{ tags.length }}):
-            <template pow array="tags">
-                <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
-            </template>
-            <span pow else>
-              No tags!
-            </span>
-        </p>
-    </h2>
+    <h2>{{ description }}</h2>
+    <p><a href="{{ url }}">See project page</a></p>
+    <p pow item="creation">
+        Created by <em>{{ author }}</em> on {{ date }}
+    </p>
+    <p>
+        Tags ({{ tags.length }}):
+        <template pow array="tags">
+            <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
+        </template>
+        <span pow else>
+            No tags!
+        </span>
+    </p>
 </body>
 
 </html>
