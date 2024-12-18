@@ -55,7 +55,7 @@ Looking at CDN hosting soon.
 </script>
 <body>
     <h1>{{ title }}</h1>
-    <h2>{{ description }}</h1>
+    <h2>{{ description }}</h2>
     <p><a href="{{ url }}">See project page</a></p>
     <p pow item="creation">
         Created by <em>{{ author }}</em> on {{ date }}
