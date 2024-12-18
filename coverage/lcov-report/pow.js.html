@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>90/90</span>
+                <span class='fraction'>95/95</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>79/79</span>
+                <span class='fraction'>84/84</span>
             </div>
         
             
@@ -227,10 +227,7 @@
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L165'></a><a href='#L165'>165</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -238,7 +235,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1456x</span>
 <span class="cline-any cline-yes">107x</span>
 <span class="cline-any cline-yes">107x</span>
@@ -246,12 +243,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">197x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">331x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">243x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">172x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">172x</span>
@@ -272,7 +270,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">63x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
@@ -282,14 +280,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">331x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">272x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">272x</span>
@@ -360,7 +356,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">106x</span>
 <span class="cline-any cline-yes">106x</span>
 <span class="cline-any cline-yes">106x</span>
@@ -375,9 +371,7 @@
 <span class="cline-any cline-yes">106x</span>
 <span class="cline-any cline-yes">106x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">106x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">106x</span>
 <span class="cline-any cline-yes">106x</span>
@@ -405,7 +399,7 @@
  */
 &nbsp;
 // Resolves next pow binding
-function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) {
+const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) =&gt; {
     for (const attr of bindings.filter($ =&gt; element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         element.removeAttribute(attr)
@@ -413,12 +407,13 @@ function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'te
     }
     return 0
 }
+const nextChildTemplate = (element) =&gt; (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 &nbsp;
 // Interpolates text templates
 const parseText = (text, state) =&gt; text.replace(/\{\{\s*(.*?)\s*\}\}/gs, (_, expr) =&gt; resolveExpr(expr, state) ?? '')
 &nbsp;
 // Resolves an expression to a value
-function resolveExpr(expr, state, js = expr) {
+const resolveExpr = (expr, state, js = expr) =&gt; {
     try {
         // If the expression starts with a star, it's accessing the state metadata
         const args = (expr[0] == '*' &amp;&amp; (js = expr.slice(1))) ? state : state.data
@@ -439,7 +434,7 @@ function resolveExpr(expr, state, js = expr) {
 }
 &nbsp;
 // Updates the next sibling condition
-function updateSiblingCondition(sibling, value) {
+const updateSiblingCondition = (sibling, value) =&gt; {
     if (sibling?.attributes.pow) {
         const { attr, expr } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
         if (attr &amp;&amp; value) {
@@ -449,14 +444,12 @@ function updateSiblingCondition(sibling, value) {
         }
     }
 }
-&nbsp;
-const nextChildTemplate = (element) =&gt; (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 const processCondition = (element, active, always) =&gt; {
     while (updateSiblingCondition(element.nextElementSibling, active));
     return (always || !active) &amp;&amp; element.remove()
 }
 &nbsp;
-function processElement(element, state, value) {
+const processElement = (element, state, value) =&gt; {
     const { attr, expr } = consumeBinding(element)
 &nbsp;
     if (attr == 'template' &amp;&amp; (value = document.getElementById(expr))) {
@@ -527,7 +520,7 @@ function processElement(element, state, value) {
     }
 }
 &nbsp;
-function bind(element) {
+const bind = (element) =&gt; {
     const originalHTML = element.innerHTML
     const attributes = [...element.attributes]
     const binding = {
@@ -542,9 +535,7 @@ function bind(element) {
             element.innerHTML = originalHTML
             attributes.forEach($ =&gt; element.setAttribute($.name, $.value))
 &nbsp;
-            //element.style.contentVisibility = 'hidden'
             processElement(element, { path: '*root', data, root: data })
-            //element.style.contentVisibility = 'visible'
 &nbsp;
             delete binding.$pow
             binding.refresh = () =&gt; binding.apply(data)
@@ -571,7 +562,7 @@ export default pow</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-18T15:19:19.541Z
+                at 2024-12-18T18:18:06.337Z
             </div>
         <script src="prettify.js"></script>
         <script>

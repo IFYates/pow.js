@@ -6,7 +6,7 @@ An extremely small and lightweight templating framework.
 
 
 > 😲 Only 130 LOCs!  
-> 🤏 <2.3 KiB minified script (+ header)  
+> 🤏 <2&frac14; KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
