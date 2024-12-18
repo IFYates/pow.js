@@ -80,7 +80,7 @@ In addition to any attribute of the current object, there are some in-built valu
 * `*data`: The entire current object
 * `*parent`: The parent object
 * `*path`: The current binding path, for debug help
-* `*root`: The data passed to the `apply` call
+* `*root`: The data passed to the `apply()` call
 * If we are [looping](#loops) through data:
   * `*first`: `true` when this is the first item
   * `*index`: The 0-based index of the current item
@@ -146,7 +146,7 @@ HTML events can be handled by binding the event attribute to a function in the d
             console.log('Clicked!',
                 this, // The HTML element that raised the event
                 arg, // The current binding context
-                root // The data used in `apply`
+                root // The data used in `apply()`
             )
         }
     }
@@ -163,14 +163,14 @@ Some environments block dynamic code evaluation for user security.
 
 In these situations, the interpolation logic can be replaced to allow for a custom parser to be used that meets any security requirements of the environment.
 
-The logic is specified by providing a new `pow._eval` function, which takes 2 arguments: the string to be parsed and the current context data.
+The logic is specified by providing a new `pow._eval()` function, which takes 2 arguments: the string to be parsed and the current context data.
 
 **Example:**
 ```html
 <script type="module">
-pow._eval = (js, args) => {
-    // js: 'child.text'
-    // args: { child: { text: "my value" } }
+pow._eval = (expr, ctxt) => {
+    // expr: 'child.text'
+    // ctxt: { child: { text: "my value" } }
 }
 pow.apply(document.body, {
     child: { text: "my value" }
@@ -184,13 +184,14 @@ pow.apply(document.body, {
 The [`pow.safe.js`](src/pow.safe.js) file is provided with a suggested alternative parser with some basic capabilities.
 > [See the quickstart example using pow.safe in action 🏃‍➡️](https://jsfiddle.net/IFYates/jwaqme8o/)
 
-As of `v1.3.0`, pow.safe also rebinds [element events](#events) after every `apply` to remove dynamic code.
+As of `v1.3.0`, pow.safe also rebinds [element events](#events) after every `apply()` to remove dynamic code.
 > [See the interaction example using pow.safe in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/interaction.safe.html)
 
 ## Bindings
 Any element can be used to control a binding, as long as it has the `pow` attribute.
 
-If the binding element is a `template`, it will be replaced in its entirety. Other elements will only have their contents replaced.
+If the binding element is a `template`, it will be replaced in its entirety. Other elements will only have their contents replaced.  
+The other advantage of using `template` is that it will not render anything until `apply()` has completed.
 
 The default context will be the `data` provided to the `apply()` function, but the context can be changed by binding to a child element.
 
@@ -204,7 +205,7 @@ The default context will be the `data` provided to the `apply()` function, but t
 ```
 
 ### Attributes <small><sup>`v1.4.0`</sup></small>
-In general, all templates in bound HTML are interpolated, so there is nothing special needed for setting attribute values.
+In general, all placeholders in bound HTML are interpolated, so there is nothing special needed for setting attribute values.
 
 However, attributes on bound elements (with the `pow` attribute) have more logic applied to them:
 * $attributes (names beginning `$`) will have the character removed and be fully interpolated, only setting/overwriting the attribute if it is non-falsy, and
