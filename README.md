@@ -4,23 +4,24 @@ An extremely small and lightweight templating framework.
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
 
 > 😲 Only 130 LOCs!  
-> 🤏 <2.25 KiB minified script (+ header)  
+> 🤏 <2.3 KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
 # Goals
 * A very small library that can be included without additional dependencies
 * Provides clear templating and interpolation
-* Extensible functionality
+* Extensible functionality through function calling and templates
 
 # Functionality
 **_pow💥_** has the following functionality:
 * [Interpolation](#interpolations)
   * [With function support](#functions)
   * [And events](#events)
+* [Dynamic attributes](#attributes-v140)
 * [Conditional binding](#conditional)
 * [Repeated sections](#loops)
-* [Reusable templates](#reusable)
+* [Reusable templates](#reusable-templates-v120)
 * [Basic reactivity](#reactivity)
 
 # Installation
@@ -202,6 +203,58 @@ The default context will be the `data` provided to the `apply()` function, but t
             <p><!-- *data = data.child -->
 ```
 
+### Attributes <small><sup>`v1.4.0`</sup></small>
+In general, all templates in bound HTML are interpolated, so there is nothing special needed for setting attribute values.
+
+However, attributes on bound elements (with the `pow` attribute) have more logic applied to them:
+* $attributes (names beginning `$`) will have the character removed and be fully interpolated, only setting/overwriting the attribute if it is non-falsy, and
+* If an attribute template resolves to a falsy value (`false`, `0`, `''`, `null`, `undefined`), it will be removed.
+
+**Examples:**
+* Bound element with an attribute that evaluates to `true`:
+    ```html
+    <input pow type="checkbox" checked="{{ isChecked }}" />
+    <!-- Result --><input type="checkbox" checked="true" />
+    ```
+* Bound element with an attribute that evaluates to any falsy:
+    ```html
+    <input pow type="checkbox" checked="{{ isChecked }}" />
+    <!-- Result --><input type="checkbox" />
+    ```
+* Unbound element with an attribute that evaluates to `false`:
+    ```html
+    <input type="checkbox" checked="{{ isChecked }}" />
+    <!-- Result --><input type="checkbox" checked="false" />
+    ```
+* Bound element with a $attribute that overwrites an existing attribute:
+    ```html
+    <div pow class="existing" $class="value">
+    <!-- Result --><div class="replaced">
+    ```
+* Bound element with a $attribute that evaluates to any falsy:
+    ```html
+    <div pow class="existing" $class="value">
+    <!-- Result --><div class="existing">
+    ```
+
+<!-- pow.apply(document.body, { optionA: false, optionB: true, optionC: false, optionDValue: 'valueD' }) -->
+<body>
+    <input pow type="checkbox" value="optionB" $checked="optionB" />
+    <input type="checkbox" value="optionC" checked="{{ optionC }}" $other="optionA" /><!-- Not bound -->
+    <input pow type="checkbox" value="optionD" $value="optionDValue" />
+    <input pow type="checkbox" value="optionE" $value="optionEValue" />
+```
+
+```html
+<!-- Output -->
+<body>
+    <input type="checkbox" value="optionA" />
+    <input type="checkbox" value="optionB" checked="true" />
+    <input type="checkbox" value="optionC" checked="false" $other="optionA" />
+    <input type="checkbox" value="valueD" />
+    <input type="checkbox" value="optionE" />
+```
+
 ### Conditional
 **_pow💥_** bindings support a basic set of conditions:
 * `if="cond"`, `ifnot="cond"`
@@ -350,7 +403,8 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
     * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
     * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
-* Prevent recursive parsing?
+* async support on function resolution
+* Prevent recursive parsing by escaping '{{' to HTML entities
     * Example: `data: { text: '[{{ value }}]', value: 1 }`
 * Switch statement
    ```html
@@ -359,3 +413,5 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
        <div case="literal">...</div>
    </template>
    ```
+* Review the `*` syntax for accessing meta-context - makes certain expressions impossible (`*data == *root.value`)  
+   Likely just always expose `$data`, `$root`, `$path`, `$index`, etc.
