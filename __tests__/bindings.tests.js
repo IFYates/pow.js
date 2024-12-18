@@ -60,8 +60,8 @@ test('Applying bindings while being applied raises warning', () => {
   expect(document.body.innerHTML).toBe('')
 })
 
-test('Warned when applying binding for unknown key', () => {
-  document.body.innerHTML = '<div pow item="child">{{ *path }} = [{{ *data }}]</div>'
+test('Binding to unknown key removes element with warning', () => {
+  document.body.innerHTML = '<div pow item="child">DO NOT SHOW</div>'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -71,11 +71,11 @@ test('Warned when applying binding for unknown key', () => {
 
   expect(consoleWarnMock.mock.calls).toHaveLength(1)
   expect(consoleWarnMock.mock.calls[0][0]).toBe('Interpolation failed')
-  expect(document.body.innerHTML).toBe('<div>*root.child = []</div>')
+  expect(document.body.innerHTML).toBe('')
 })
 
-test.each([ null, undefined ])('Not warned when applying binding for missing data', (value) => {
-  document.body.innerHTML = '<div pow item="child">{{ *path }} = [{{ *data }}]</div>'
+test.each([ null, undefined ])('Binding to null data removes element without warning', (value) => {
+  document.body.innerHTML = '<div pow item="child">DO NOT SHOW</div>'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -84,5 +84,5 @@ test.each([ null, undefined ])('Not warned when applying binding for missing dat
   binding.apply({ child: value })
 
   expect(consoleWarnMock.mock.calls).toHaveLength(0)
-  expect(document.body.innerHTML).toBe('<div>*root.child = []</div>')
+  expect(document.body.innerHTML).toBe('')
 })
