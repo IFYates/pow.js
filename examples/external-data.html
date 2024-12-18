@@ -1,0 +1,92 @@
+<!--
+Adapted from Vue.js example
+https://vuejs.org/examples/#fetching-data
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>pow.js :: External data example</title>
+
+    <script>
+        function truncate(v) {
+            const newline = v.indexOf('\n')
+            return newline > 0 ? v.slice(0, newline) : v
+        }
+
+        function formatDate(v) {
+            return v.replace(/T|Z/g, ' ')
+        }
+    </script>
+    <script setup type="module">
+        import pow from '../src/pow.js'
+
+        const repo = 'IFYates/pow.js'
+        const API_URL = `https://api.github.com/repos/${repo}/commits?per_page=3&sha=`
+        const branches = ['main', 'other']
+
+        const data = {
+            repo,
+            branches,
+            currentBranch: branches[0],
+            commits: []
+        }
+        const binding = pow.apply(document.body, data)
+
+        data.reload = async (branch) => {
+            data.currentBranch = branch
+            const url = `${API_URL}${data.currentBranch}`
+            data.commits = await (await fetch(url)).json()
+            binding.refresh()
+        }
+        data.reload(branches[0])
+    </script>
+
+</head>
+
+<body>
+
+    <template pow>
+        <h1>Latest pow.js Commits</h1>
+        <template pow array="branches">
+            <input pow type="radio" $id="*data" $checked="*data == root.currentBranch" name="branch"
+                $onchange="*root.reload">
+            <label for="{{ *data }}">{{ *data }}</label>
+        </template>
+        <p>{{ repo }}@{{ currentBranch }}</p>
+        <ul pow if="Array.isArray(commits)">
+            <li pow array="commits" $key="sha">
+                <a href="{{ html_url }}" target="_blank" class="commit">{{ sha.slice(0, 7) }}</a>
+                - <span class="message">{{ truncate(commit.message) }}</span><br>
+                by <span class="author">
+                    <a href="{{ author.html_url }}" target="_blank">{{ commit.author.name }}</a>
+                </span>
+                at <span class="date">{{ formatDate(commit.author.date) }}</span>
+            </li>
+        </ul>
+        <ul pow else>
+            <li>No commits found</li>
+        </ul>
+    </template>
+
+    <style>
+        a {
+            text-decoration: none;
+            color: #42b883;
+        }
+
+        li {
+            line-height: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .author,
+        .date {
+            font-weight: bold;
+        }
+    </style>
+
+</body>
+
+</html>

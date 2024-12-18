@@ -7,26 +7,16 @@
 
 // Resolves next pow binding
 function consumeBinding(element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) {
-    for (const attr of bindings) {
+    for (const attr of bindings.filter($ => element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
-        if (expr != null) {
-            element.removeAttribute(attr)
-            return { attr, expr }
-        }
+        element.removeAttribute(attr)
+        return { attr, expr }
     }
     return 0
 }
 
 // Interpolates text templates
-const _regex = /\{\{\s*(.*?)\s*\}\}/s
-function parseText(text, state, match) {
-    while (match = _regex.exec(text)) {
-        const value = resolveExpr(match[1], state) ?? ''
-        _regex.lastIndex = match.index + `${value}`.length
-        text = text.slice(0, match.index) + value + text.slice(match.index + match[0].length)
-    }
-    return text
-}
+const parseText = (text, state) => text.replace(/\{\{\s*(.*?)\s*\}\}/gs, (_, expr) => resolveExpr(expr, state) ?? '')
 
 // Resolves an expression to a value
 function resolveExpr(expr, state, js = expr) {
@@ -91,7 +81,8 @@ function processElement(element, state, value) {
         }
     } else if (attr == 'array') {
         // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
-        value = !value || Array.isArray(value) ? value : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
+        value = !value || Array.isArray(value) ? value
+            : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
         for (let index = 0; index < value?.length; ++index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
@@ -114,8 +105,17 @@ function processElement(element, state, value) {
     }
 
     // Interpolate attributes
-    for (const { name, value } of element.attributes) {
-        element.setAttribute(name, parseText(value, state))
+    for (let { name, value } of [...element.attributes]) {
+        if (name[0] == '$') {
+            element.removeAttribute(name)
+            if (value = resolveExpr(value, state)) {
+                element.setAttribute(name.slice(1), value)
+            }
+        } else if (!['', 'false', '0'].includes(value = parseText(value, state))) {
+            element.setAttribute(name, value)
+        } else {
+            element.removeAttribute(name)
+        }
     }
 
     // Parse inner HTML
