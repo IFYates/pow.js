@@ -210,7 +210,7 @@ The default context will be the `data` provided to the `apply()` function, but t
 In general, all placeholders in bound HTML are interpolated, so there is nothing special needed for setting attribute values.
 
 However, attributes on bound elements (with the `pow` attribute) have more logic applied to them:
-* &dollar;attributes (names beginning `$`) will have the `$` removed and be fully interpolated, only setting/overwriting the attribute if it is truthy, and
+* :attributes (names beginning `:`) will have the `:` removed and be fully interpolated, only setting/overwriting the attribute if it is truthy, and
 * If an attribute template resolves to a null value (`''`, `null`, `undefined`), it will be removed. Note that `false` and `0` will be displayed verbatim.
 
 **Examples:**
@@ -238,16 +238,16 @@ However, attributes on bound elements (with the `pow` attribute) have more logic
     <input type="checkbox" checked="{{ isChecked }}" />
     <!-- Result --><input type="checkbox" checked="false" />
     ```
-* Bound element with a truthy $attribute value, which overwrites an existing attribute:
+* Bound element with a truthy :attribute value, which overwrites an existing attribute:
     ```html
     <!-- data: { value: 'replaced' } -->
-    <div pow class="existing" $class="value">
+    <div pow class="existing" :class="value">
     <!-- Result --><div class="replaced">
     ```
-* Bound element with a $attribute that evaluates to a null value, leaving the existing attribute:
+* Bound element with a :attribute that evaluates to a null value, leaving the existing attribute:
     ```html
     <!-- data: { } -->
-    <div pow class="existing" $class="value">
+    <div pow class="existing" :class="value">
     <!-- Result --><div class="existing">
     ```
 
@@ -399,9 +399,8 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
     * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
     * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
+    * Already have create (`attr="{{ value }}"`) and replace (`:attr="{{ value }}"`). Append could be `:add:attr="{{ value }}"`? Dynamic `::interpolate::="{{ value }}"`?
 * async support on function resolution
-* Prevent recursive parsing by escaping '{{' to HTML entities
-    * Example: `data: { text: '[{{ value }}]', value: 1 }`
 * Switch statement
    ```html
    <template pow switch="token">

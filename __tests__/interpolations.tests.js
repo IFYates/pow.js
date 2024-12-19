@@ -27,6 +27,14 @@ test('Deep interpolation', () => {
   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
 
+test('Interpolated values are not double-interpolated', () => {
+  document.body.innerHTML = '<div pow array="list">{{ *data }}</div>'
+
+  pow.apply(document.body, { list: ['{{ text }}'] })
+
+  expect(document.body.innerHTML).toBe('<div>{{ text }}</div>')
+})
+
 test('Array length interpolation', () => {
   document.body.innerHTML = '<div>{{ data.length }}</div>'
 
