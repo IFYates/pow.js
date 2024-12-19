@@ -13,15 +13,15 @@ test('Can bind to child context', () => {
 })
 
 test('Can access context path', () => {
-  document.body.innerHTML = '<div pow item="child">{{ *path }}</div>'
+  document.body.innerHTML = '<div pow item="child">{{ $path }}</div>'
 
   pow.apply(document.body, { child: {} })
 
-  expect(document.body.innerHTML).toBe('<div>*root.child</div>')
+  expect(document.body.innerHTML).toBe('<div>$root.child</div>')
 })
 
 test('Can access parent from child context', () => {
-  document.body.innerHTML = '<div pow item="child">{{ *parent.text }}</div>'
+  document.body.innerHTML = '<div pow item="child">{{ $parent.text }}</div>'
 
   pow.apply(document.body, { text: 'Hello, parent!', child: { text: 'Hello, child!' } })
 
@@ -98,7 +98,7 @@ test.each([null, undefined])('Binding to null data removes element without warni
 })
 
 test('Can stop parsing of elements', () => {
-  document.body.innerHTML = '{{ *path }}<div pow stop attr="{{ *path }}">{{ *path }} <div pow item="child">{{ *path }}</div></div>{{ *path }}'
+  document.body.innerHTML = '{{ $path }}<div pow stop attr="{{ $path }}">{{ $path }} <div pow item="child">{{ $path }}</div></div>{{ $path }}'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -106,7 +106,7 @@ test('Can stop parsing of elements', () => {
   pow.apply(document.body, { child: {} })
 
   expect(consoleWarnMock.mock.calls).toHaveLength(0)
-  expect(document.body.innerHTML).toBe('*root<div pow="" stop="" attr="{{ *path }}">{{ *path }} <div pow="" item="child">{{ *path }}</div></div>*root')
+  expect(document.body.innerHTML).toBe('$root<div pow="" stop="" attr="{{ $path }}">{{ $path }} <div pow="" item="child">{{ $path }}</div></div>$root')
 })
 
 test('Can have subsequent bindings of stopped child', () => {
