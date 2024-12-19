@@ -64,8 +64,35 @@ test('Function interpolation', () => {
 
   pow.apply(document.body, { fn: () => {} })
 
-  const fn = Object.keys(window.$pow$)[0]
-  expect(document.body.innerHTML).toBe(`<div>$pow$.${fn}(this)</div>`)
+  const bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
+  expect(bindingKeys.length).toBe(1)
+  const fn = Object.keys(window[bindingKeys[0]])[0]
+  expect(typeof window[bindingKeys[0]][fn]).toBe('function')
+  expect(document.body.innerHTML).toBe(`<div>${bindingKeys[0]}[${fn}](this)</div>`)
+})
+
+test('Functions are not removed from unrelated binding', () => {
+  document.body.innerHTML = '<div id="bind1">{{ fn }}</div><div id="bind2">{{ fn }}</div>'
+
+  const bind1 = document.getElementById('bind1')
+  pow.apply(bind1, { fn: () => {} })
+  
+  let bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
+  expect(bindingKeys.length).toBe(1)
+  expect(Object.keys(window[bindingKeys[0]]).length).toBe(1)
+  const fn1 = Object.keys(window[bindingKeys[0]])[0]
+
+  const bind2 = document.getElementById('bind2')
+  pow.apply(bind2, { fn: () => {} })
+  
+  bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
+  expect(bindingKeys.length).toBe(2)
+  expect(Object.keys(window[bindingKeys[1]]).length).toBe(1)
+  const fn2 = Object.keys(window[bindingKeys[1]])[0]
+
+  expect(`${bindingKeys[0]}[${fn1}]`).not.toBe(`${bindingKeys[1]}[${fn2}]`)
+  expect(typeof window[bindingKeys[0]][fn1]).toBe('function')
+  expect(typeof window[bindingKeys[1]][fn2]).toBe('function')
 })
 
 test('Custom eval interpolation', () => {
@@ -78,6 +105,5 @@ test('Custom eval interpolation', () => {
 
   pow._eval = originalEval
 
-  const fn = Object.keys(window.$pow$)[0]
   expect(document.body.innerHTML).toBe(`[eval, eval, eval]`)
 })
