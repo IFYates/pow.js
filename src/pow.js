@@ -17,7 +17,7 @@ const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'te
 const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
 
 // Interpolates text templates
-const parseText = (text, state) => text.replace(/\{\{\s*(.*?)\s*\}\}/gs, (_, expr) => resolveExpr(expr, state) ?? '')
+const parseText = (text, state) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), state.root == state.data)
 
 // Resolves an expression to a value
 const resolveExpr = (expr, state, js = expr) => {
@@ -55,6 +55,8 @@ const processCondition = (element, active, always) => {
     while (updateSiblingCondition(element.nextElementSibling, active));
     return (always || !active) && element.remove()
 }
+
+const escape = (text, skip) => skip ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 const processElement = (element, state, value) => {
     const { attr, expr } = consumeBinding(element)
@@ -105,12 +107,12 @@ const processElement = (element, state, value) => {
 
     // Interpolate attributes
     for (let { name, value } of [...element.attributes]) {
-        if (name[0] == '$') {
+        if (name[0] == ':') {
             element.removeAttribute(name)
             if (value = resolveExpr(value, state)) {
-                element.setAttribute(name.slice(1), value)
+                element.setAttribute(name.slice(1), escape(value, state.root == state.data))
             }
-        } else if (value = (parseText(value, state) || '')) {
+        } else if (value = parseText(value, state)) {
             element.setAttribute(name, value)
         } else {
             element.removeAttribute(name)
@@ -143,6 +145,7 @@ const bind = (element) => {
             attributes.forEach($ => element.setAttribute($.name, $.value))
 
             processElement(element, { path: '*root', data, root: data })
+            element.innerHTML = element.innerHTML.replace(/​/g, '')
 
             delete binding.$pow
             binding.refresh = () => binding.apply(data)
