@@ -5,8 +5,8 @@ An extremely small and lightweight templating framework.
 ![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
 
 
-> 😲 Only 130 LOCs!  
-> 🤏 <2&frac14; KiB minified script (+ header)  
+> 😲 Only 135 LOCs!  
+> 🤏 <2&frac12; KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
@@ -345,6 +345,19 @@ Note: Reusable templates should always be stored outside of any bound elements, 
     1, 2, 3, 4, 5, 
 </body>
 <template id="example">{{ *data }}, </template>
+```
+
+### Stop <small><sup>`v1.4.0`</sup></small>
+The `stop` binding will prevent an element and it's children from being processed further by the current `apply()`.
+
+Note that the binding logic is destructive to elements, even with `stop`, so any element references taken before will be void.
+
+**Example:**
+```html
+<body>
+    {{ text1 }}
+    <div pow stop>{{ ignore }}</div>
+    {{ text2 }}
 ```
 
 # Reactivity

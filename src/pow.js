@@ -14,7 +14,7 @@ const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'te
     }
     return 0
 }
-const nextChildTemplate = (element) => (element.content ?? element).querySelector('*[pow]:not([pow] [pow])')
+const nextChildTemplate = (element, selector) => (element.content ?? element).querySelectorAll(selector)
 
 // Interpolates text templates
 const parseText = (text, state) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), state.root == state.data)
@@ -81,7 +81,7 @@ const processElement = (element, state, value) => {
             parent: state.data
         }
     } else if (attr == 'array') {
-        // TODO: (v2.0.0?) Should array be inside only? Makes <ul array=""><li> cleaner. <div item="" array> could be outer
+        // TODO: (v2.0.0?) Alternative binding for inside only? Makes <ul pow each=""><li> cleaner
         value = !value || Array.isArray(value) ? value
             : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
         for (let index = 0; index < value?.length; ++index) {
@@ -101,7 +101,7 @@ const processElement = (element, state, value) => {
     element.removeAttribute('pow')
 
     // Process every child 'pow' template
-    while (value = nextChildTemplate(element)) {
+    while (value = nextChildTemplate(element, '*[pow]:not([pow] [pow])')[0]) {
         processElement(value, state)
     }
 
@@ -143,6 +143,11 @@ const bind = (element) => {
             window.$pow$ = {}
             element.innerHTML = originalHTML
             attributes.forEach($ => element.setAttribute($.name, $.value))
+
+            // Disable child HTML for stopped bindings
+            for (const child of nextChildTemplate(element, '*[pow][stop]')) {
+                child.outerHTML = escape(child.outerHTML)
+            }
 
             processElement(element, { path: '*root', data, root: data })
             element.innerHTML = element.innerHTML.replace(/​/g, '')
