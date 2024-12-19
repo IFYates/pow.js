@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 // Resolves next pow binding
@@ -30,9 +30,9 @@ const resolveExpr = (expr, state, js = expr) => {
 
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
-            const uufn = `_${Math.random().toString(36).slice(2)}`
-            window.$pow$[uufn] = (el) => value.call(el, state.data, state.root)
-            return `$pow$.${uufn}(this)`
+            const id = Math.random()
+            window[state.id][id] = (el) => value.call(el, state.data, state.root)
+            return `${state.id}[${id}](this)`
         }
         return value
     } catch (e) {
@@ -132,6 +132,7 @@ const processElement = (element, state, value) => {
 const bind = (element) => {
     const originalHTML = element.innerHTML
     const attributes = [...element.attributes]
+    const id = `$pow_${Math.random().toString(36).slice(2)}`
     const binding = {
         apply: (data) => {
             if (binding.$pow) {
@@ -140,7 +141,6 @@ const bind = (element) => {
             binding.$pow = 1
 
             // Reset global state
-            window.$pow$ = {}
             element.innerHTML = originalHTML
             attributes.forEach($ => element.setAttribute($.name, $.value))
 
@@ -149,10 +149,14 @@ const bind = (element) => {
                 child.outerHTML = escape(child.outerHTML)
             }
 
-            processElement(element, { path: '*root', data, root: data })
+            window[id] = {}
+            try {
+                processElement(element, { id, path: '*root', data, root: data })
+            } finally {
+                delete binding.$pow
+            }
             element.innerHTML = element.innerHTML.replace(/​/g, '')
 
-            delete binding.$pow
             binding.refresh = () => binding.apply(data)
             return binding
         },

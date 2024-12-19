@@ -121,3 +121,19 @@ test('Can have subsequent bindings of stopped child', () => {
   expect(consoleWarnMock.mock.calls).toHaveLength(0)
   expect(document.body.innerHTML).toBe('root<div id="child">child</div>root')
 })
+
+test('Failure does not block next binding', () => {
+  document.body.innerHTML = '<div pow :$bad="fail">{{ text }}</div>'
+
+  let failed = false
+  const binding = pow.bind(document.body)
+  try {
+    binding.apply({ fail: true, text: 'Hello, world!' })
+  } catch {
+    failed = true
+  }
+  binding.apply({ text: 'Hello, world!' })
+
+  expect(failed).toBe(true)
+  expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
+})

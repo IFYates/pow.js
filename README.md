@@ -5,7 +5,7 @@ An extremely small and lightweight templating framework.
 ![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
 
 
-> 😲 Only 135 LOCs!  
+> 😲 Only 140 LOCs!  
 > 🤏 <2&frac12; KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
@@ -412,7 +412,7 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
     * Dynamic attributes: Adding an attribute based on interpolation (with conditions)
     * Aggregating attributes: Adding a dynamic value to a static attribute (e.g., `class`)
     * Possible syntax: `<param pow (if?) name="interpolated" mode="create|replace|append" value="interpolated" />`
-    * Already have create (`attr="{{ value }}"`) and replace (`:attr="{{ value }}"`). Append could be `:add:attr="{{ value }}"`? Dynamic `::interpolate::="{{ value }}"`?
+    * Already have create (`attr="{{ expr }}"`) and replace (`:attr="expr"`). Append could be `:add:attr="expr"`? Dynamic `::interpolate::="expr"`? or `:attr="'+' + expr"`?
 * async support on function resolution
 * Switch statement
    ```html

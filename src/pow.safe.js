@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 import pow from "./pow.js"
@@ -36,9 +36,9 @@ function rebindEvents(element) {
     const attrs = [...element.querySelectorAll('*')].map($ => [...$.attributes]).flat()
         .filter($ => $.name.startsWith('on'))
     for (const { ownerElement, name, value } of attrs) {
-        const match = /^\$pow\$\.(\w+)/.exec(value)
+        const match = /^(\$pow.+?)\[(.*?)\]\(/.exec(value)
         if (match) {
-            ownerElement.addEventListener(name.slice(2), () => window.$pow$[match[1]](ownerElement))
+            ownerElement.addEventListener(name.slice(2), () => window[match[1]][match[2]](ownerElement))
             ownerElement.removeAttribute(name)
         }
     }
