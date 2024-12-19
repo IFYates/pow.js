@@ -1,0 +1,134 @@
+<!-- Layout adapted from https://tailwindflex.com/@hielkio/tailwind-sidebar-layout-improved -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>pow.js :: Documentation</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="HTMLImportElement.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="nav.js"></script>
+</head>
+
+<body>
+    <template id="svg-home">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25">
+        </path>
+    </template>
+    <template id="svg-wrench">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.867 19.125h.008v.008h-.008v-.008Z" />
+    </template>
+    <template id="svg-angles">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l-7-7 7-7m5 14l7-7-7-7"></path>
+    </template>
+
+    <div class="flex h-screen bg-gray-100">
+
+        <!-- Mobile menu toggle button -->
+        <input type="checkbox" id="menu-toggle" class="hidden peer">
+
+        <!-- Sidebar -->
+        <div id="nav"
+            class="hidden peer-checked:flex md:flex flex-col w-64 bg-gray-800 transition-all duration-300 ease-in-out">
+            <div class="flex items-center justify-between h-16 bg-gray-900 px-4">
+                <label for="menu-toggle" class="text-white cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:hidden lg:hidden" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </label>
+            </div>
+            <div class="flex flex-col flex-1 overflow-y-auto">
+                <nav class="flex-1 px-2 py-4 bg-gray-800">
+
+                    <template pow array="items">
+                        <!-- Item without children -->
+                        <a pow ifnot="value.children" href="javascript:{{ *root.navigate }}" :href="value.url"
+                            class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700 group" :class="*root.current == data.key ? '+ bg-gray-600' : ''">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                {{ value.icon }}
+                            </svg>
+                            {{ value.name }}
+                        </a>
+
+                        <!-- Item with children -->
+                        <div pow else class="mb-2 relative group">
+                            <input type="checkbox" id="toggle-nav{{ *index }}" class="hidden peer">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor"
+                                class="absolute top-2 left-4 text-white h-6 w-6 mr-2 peer-checked:hidden">
+                                {{ value.icon }}
+                            </svg>
+
+                            <label for="toggle-nav{{ *index }}"
+                                class="flex items-center px-12 py-2 mt-2 text-gray-100 hover:bg-gray-700 cursor-pointer w-full">
+                                {{ value.name }}
+                            </label>
+
+                            <!-- Arrow Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 ml-auto transition-transform transform peer-checked:rotate-180 absolute right-4 top-3 transform #dis--translate-y-1/2 text-white"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+
+                            <!-- Submenu -->
+                            <div
+                                class="hidden peer-checked:flex flex-col bg-white text-gray-800 mt-1 transition-all duration-300">
+                                <template pow array="value.children">
+                                    <a pow href="javascript:{{ *root.navigate }}" :href="value.url"
+                                        class="block px-4 py-2 hover:bg-gray-200">
+                                        {{ value.name }}
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex flex-col flex-1 overflow-y-auto">
+            <div class="flex items-center justify-between h-16 bg-white border-b border-gray-200">
+                <div class="flex items-center px-4">
+                    <label for="menu-toggle"
+                        class="md:hidden mr-4 bg-gray-800 text-white p-2 rounded focus:outline-none cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none"
+                            viewBox="0 0 24 24" stroke="white">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </label>
+                    <span class="font-bold text-3xl">pow.js 💥</span>
+                    <!-- <input class="mx-4 w-full border rounded-md px-4 py-2" type="text" placeholder="Search"> -->
+                </div>
+            </div>
+            <div class="p-4" id="main">
+                <template pow :template="'page-' + current"></template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page preload -->
+    <div style="display:none" id="preloader">
+        <template pow array="items">
+            <template pow array="value.children">
+                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key.replace('-', '/', 1) }}.html" replace></html-import></div>
+            </template>
+            <template pow else>
+                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key }}.html" replace></html-import></div>
+            </template>
+        </template>
+    </div>
+</body>
+
+</html>
