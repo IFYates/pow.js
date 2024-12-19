@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.safe.js'
+
+        const binding = pow.bind(document.body)
+        const data = {
+            count: 0,
+            increment: () => {
+                data.count += 1
+                binding.refresh()
+            }
+        }
+        binding.apply(data)
+    </script>
+</head>
+
+<body>
+    Current value: {{ count }}
+    <button onclick="{{ increment }}">Add 1</button>
+</body>
+
+</html>

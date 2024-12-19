@@ -1,6 +1,6 @@
 {
   "name": "pow-templating",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "An extremely small and lightweight templating framework",
   "main": "./dist/pow.min.js",
   "type": "module",
@@ -33,6 +33,8 @@
     "pub": "pwsh publish.ps1"
   },
   "jest": {
+    "setupFilesAfterEnv": ["./__tests__/_setup.js"],
+    "testMatch": ["**/__tests__/*.tests.js"],
     "transform": {},
     "clearMocks": true
   }
