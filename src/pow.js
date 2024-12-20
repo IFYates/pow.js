@@ -12,7 +12,7 @@ const B_ARRAY = 'array', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_ITEM
 const ATTR_POW = 'pow'
 
 // Resolves next pow binding
-const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_ITEM, B_ARRAY, B_TEMPLATE], attr) => {
+const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_ITEM, B_ARRAY], attr) => {
     if (attr = bindings.find($ => element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         _attribute.remove(element, attr)
@@ -75,10 +75,11 @@ const processElement = (element, state, isRoot, value) => {
 
     const { attr, expr } = consumeBinding(element) || 0
 
-    if (attr == B_TEMPLATE && (value = document.getElementById(expr))) {
-        const clone = value.cloneNode(1)
-        element.parentNode.replaceChild(clone, element)
-        return processElement(clone, state)
+    if (attr == B_TEMPLATE) {
+        if (value = document.getElementById(expr)) {
+            element.innerHTML = value.cloneNode(1).innerHTML
+        }
+        return processElement(element, state)
     }
 
     value = expr ? resolveExpr(expr, state) : state.$data
@@ -128,12 +129,9 @@ const processElement = (element, state, isRoot, value) => {
     }
 
     // Parse inner HTML
-    value = parseText(element.innerHTML, state, isRoot)
-    if (element instanceof HTMLTemplateElement) {
-        element.insertAdjacentHTML('afterend', value)
-        element.remove()
-    } else {
-        element.innerHTML = value
+    element.innerHTML = parseText(element.innerHTML, state, isRoot)
+    if (element.tagName == 'TEMPLATE') {
+        element.replaceWith(...element.content.childNodes)
     }
 }
 
