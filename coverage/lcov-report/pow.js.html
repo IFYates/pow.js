@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>106/106</span>
+                <span class='fraction'>112/112</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>55/55</span>
+                <span class='fraction'>56/56</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>91/91</span>
+                <span class='fraction'>92/92</span>
             </div>
         
             
@@ -251,15 +251,16 @@
 <span class="cline-any cline-yes">351x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">461x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">1521x</span>
+<span class="cline-any cline-yes">1335x</span>
 <span class="cline-any cline-yes">108x</span>
 <span class="cline-any cline-yes">108x</span>
 <span class="cline-any cline-yes">108x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">209x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -332,7 +333,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">225x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">17x</span>
@@ -401,8 +401,8 @@
 <span class="cline-any cline-yes">116x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">116x</span>
+<span class="cline-any cline-yes">116x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">115x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">115x</span>
 <span class="cline-any cline-yes">115x</span>
@@ -423,21 +423,22 @@
  * @license MIT
  * @author IFYates &lt;https://github.com/ifyates/pow.js&gt;
  * @description A very small and lightweight templating framework.
- * @version 1.4.1
+ * @version 2.0.0
  */
 &nbsp;
 const _attribute = { set: (element, name, value) =&gt; element.setAttribute(name, value), remove: (element, name) =&gt; element.removeAttribute(name) }
 const _rand = Math.random
 const _selectChild = (element, selector) =&gt; (element.content ?? element).querySelectorAll(selector)
+const B_ARRAY = 'array', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_ITEM = 'item', B_TEMPLATE = 'template'
+const ATTR_POW = 'pow'
 &nbsp;
 // Resolves next pow binding
-const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) =&gt; {
-    for (const attr of bindings.filter($ =&gt; element.hasAttribute($))) {
+const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_ITEM, B_ARRAY, B_TEMPLATE], attr) =&gt; {
+    if (attr = bindings.find($ =&gt; element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         _attribute.remove(element, attr)
         return { attr, expr }
     }
-    return 0
 }
 &nbsp;
 // Interpolates text templates
@@ -453,7 +454,7 @@ const resolveExpr = (expr, state) =&gt; {
         if (typeof value == 'function') {
             const id = _rand()
             window[state.$id][id] = (el) =&gt; value.call(el, state.$data, state.$root)
-            return `${state.$id}[${id}](this)`
+            return state.$id + '[' + id + '](this)'
         }
         return value
     } catch (e) {
@@ -464,23 +465,23 @@ const resolveExpr = (expr, state) =&gt; {
 // Updates the next sibling condition
 const updateSiblingCondition = (sibling, value) =&gt; {
     if (sibling?.attributes.pow) {
-        const { attr, expr } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
+        const { attr, expr } = consumeBinding(sibling, [B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE]) || 0
         if (attr &amp;&amp; value) {
             return !sibling.remove()
-        } else if (attr &amp;&amp; attr != 'else') {
+        } else if (attr &amp;&amp; attr != B_ELSE) {
             _attribute.set(sibling, attr.slice(5), expr)
         }
     }
 }
 const processCondition = (element, active, always) =&gt; {
     while (updateSiblingCondition(element.nextElementSibling, active));
-    return (always || !active) &amp;&amp; element.remove()
+    return (always | !active) &amp;&amp; element.remove()
 }
 &nbsp;
 const escape = (text, isRoot) =&gt; isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 &nbsp;
 const processElement = (element, state, value, isRoot = state.$path.length &lt; 6) =&gt; {
-    // v2.0.0: attributes interpolated before context change
+    // Process interpolated attributes
     for (let { name, value } of [...element.attributes].filter($ =&gt; $.name[0] == ':')) {
         _attribute.remove(element, name)
         if (value = resolveExpr(value, state)) {
@@ -488,37 +489,36 @@ const processElement = (element, state, value, isRoot = state.$path.length &lt; 
         }
     }
 &nbsp;
-    const { attr, expr } = consumeBinding(element)
+    const { attr, expr } = consumeBinding(element) || 0
 &nbsp;
-    if (attr == 'template' &amp;&amp; (value = document.getElementById(expr))) {
+    if (attr == B_TEMPLATE &amp;&amp; (value = document.getElementById(expr))) {
         const clone = value.cloneNode(1)
         element.parentNode.replaceChild(clone, element)
         return processElement(clone, state)
     }
 &nbsp;
     value = expr ? resolveExpr(expr, state) : state.$data
-    if (attr == 'if' || attr == 'ifnot') {
-        return processCondition(element, (attr == 'if') != !value)
-    } else if (attr == 'item' &amp;&amp; expr) {
+    if (attr == B_IF | attr == B_IFNOT) {
+        return processCondition(element, (attr == B_IF) != !value)
+    } else if (attr == B_ITEM &amp;&amp; expr) {
         if (value == null) {
             return element.remove()
         }
         state = {
             ...state,
-            $path: `${state.$path}.${expr}`,
+            $path: state.$path + '.' + expr,
             $data: value,
             $parent: state.$data
         }
-    } else if (attr == 'array') {
-        // TODO: (v2.0.0?) Alternative binding for inside only? Makes &lt;ul pow each=""&gt;&lt;li&gt; cleaner
-        value = !value || Array.isArray(value) ? value
+    } else if (attr == B_ARRAY) {
+        value = !value | Array.isArray(value) ? value
             : Object.entries(value).map(([k, v]) =&gt; ({ key: k, value: v }))
         for (let $index = 0; $index &lt; value?.length; ++$index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
             processElement(child, {
                 ...state,
-                $path: `${state.$path}${expr ? `.${expr}` : ''}[${$index}]`,
+                $path: state.$path + (expr ? '.' + expr : '') + '[' + $index + ']',
                 $index, $first: !$index, $last: $index &gt; value.length - 2,
                 $data: value[$index],
                 $parent: state
@@ -527,14 +527,14 @@ const processElement = (element, state, value, isRoot = state.$path.length &lt; 
         return processCondition(element, value?.length, 1)
     }
 &nbsp;
-    _attribute.remove(element, 'pow')
+    _attribute.remove(element, ATTR_POW)
 &nbsp;
     // Process every child 'pow' template
     while (value = _selectChild(element, '*[pow]:not([pow] [pow])')[0]) {
         processElement(value, state)
     }
 &nbsp;
-    // Interpolate attributes
+    // Interpolate literal attributes
     for (let { name, value } of [...element.attributes]) {
         if (value = parseText(value, state, isRoot)) {
             _attribute.set(element, name, value)
@@ -557,7 +557,7 @@ const bind = (element) =&gt; {
     //element = element.at ? nextChildTemplate(document, element) : element
     const originalHTML = element.innerHTML
     const attributes = [...element.attributes]
-    const $id = `$pow_${_rand().toString(36).slice(2)}`
+    const $id = '$pow_' + _rand().toString(36).slice(2)
     const binding = {
         apply: (data) =&gt; {
             if (binding.$pow) {
@@ -578,9 +578,9 @@ const bind = (element) =&gt; {
             try {
                 processElement(element, { $id, $path: '$root', $data: data, $root: data })
             } finally {
+                element.innerHTML = element.innerHTML.replace(/​/g, '')
                 delete binding.$pow
             }
-            element.innerHTML = element.innerHTML.replace(/​/g, '')
 &nbsp;
             binding.refresh = () =&gt; binding.apply(data)
             return binding
@@ -594,7 +594,7 @@ const pow = {
     bind,
     _eval: (expr, ctxt) =&gt; {
         const args = Object.entries(ctxt).filter($ =&gt; isNaN($[0]))
-        return (new Function(...args.map($ =&gt; $[0]), `return ${expr}`)).call(ctxt.$data, ...args.map($ =&gt; $[1]))
+        return (new Function(...args.map($ =&gt; $[0]), 'return ' + expr)).call(ctxt.$data, ...args.map($ =&gt; $[1]))
     }
 }
 export default pow</pre></td></tr></table></pre>
@@ -604,7 +604,7 @@ export default pow</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-19T17:23:55.906Z
+                at 2024-12-20T08:55:07.935Z
             </div>
         <script src="prettify.js"></script>
         <script>

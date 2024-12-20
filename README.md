@@ -63,7 +63,7 @@ Looking at CDN hosting soon.
     <p>
         Tags:
         <template pow array="tags">
-            [<span>{{ *data }}</span>]<span ifnot="*last">, </span>
+            [<span>{{ $data }}</span>]<span ifnot="$last">, </span>
         </template>
     </p>
 </body>
@@ -79,14 +79,14 @@ Interpolations can make use of complex expressions, but must start with a variab
 It is important to be aware that values are not made HTML-safe, so any HTML tags will be inserted verbatim.
 
 In addition to any attribute of the current object, there are some in-built values:
-* `*data`: The entire current object
-* `*parent`: The parent object
-* `*path`: The current binding path, for debug help
-* `*root`: The data passed to the `apply()` call
+* `$data`/`this`: The current data context
+* `$parent`: The parent object
+* `$path`: The current binding path, for debug help
+* `$root`: The data passed to the `apply()` call
 * If we are [looping](#loops) through data:
-  * `*first`: `true` when this is the first item
-  * `*index`: The 0-based index of the current item
-  * `*last`: `true` when this is the last item
+  * `$first`: `true` when this is the first item
+  * `$index`: The 0-based index of the current item
+  * `$last`: `true` when this is the last item
 
 ### Functions
 Interpolations can make use of functions registered on the bound data hierarchy.
@@ -131,7 +131,7 @@ Functions can also be provided as part of the data hierarchy.
     pow.apply(document.body, data)
 </script>
 <body>
-    "{{ text }}" contains {{ *root.wordCount(text) }} words
+    "{{ text }}" contains {{ $root.wordCount(text) }} words
 </body>
 ```
 > [See it in action 🏃‍➡️](https://ifyates.github.io/pow.js/examples/functions-data.html)
@@ -200,10 +200,10 @@ The default context will be the `data` provided to the `apply()` function, but t
 **Example:**
 ```html
 <!-- pow.apply(document.body, data) -->
-<body><!-- *data = data -->
-    <p><!-- *data = data -->
-        <template pow item="child"><!-- *data = data.child -->
-            <p><!-- *data = data.child -->
+<body><!-- $data = data -->
+    <p><!-- $data = data -->
+        <template pow item="child"><!-- $data = data.child -->
+            <p><!-- $data = data.child -->
 ```
 
 ### Attributes <small><sup>`v1.4.0`</sup></small>
@@ -276,7 +276,7 @@ The bound element will be repeated per element.
 <!-- pow.apply(document.body, { list: [1, 2, 3] }) -->
 <body>
     <ul>
-        <li pow array="list">{{ *data }}</li>
+        <li pow array="list">{{ $data }}</li>
 ```
 ```html
 <!-- Output -->
@@ -292,7 +292,7 @@ If you are already in the array context, omit the binding value to achieve the s
 <!-- pow.apply(document.body, { list: [1, 2, 3] }) -->
 <body>
     <ul pow item="list">
-        <li pow array>{{ *data }}</li>
+        <li pow array>{{ $data }}</li>
 ```
 
 #### Objects
@@ -319,7 +319,7 @@ The `else` logic can be applied to loops, used when the loop does not produce an
 ```html
 <!-- pow.apply(document.body, { list: [] }) -->
 <body>
-    <div pow array="list">{{ *data }}</div>
+    <div pow array="list">{{ $data }}</div>
     <div pow else>This is nothing in your list</div>
 ```
 
@@ -337,14 +337,14 @@ Note: Reusable templates should always be stored outside of any bound elements, 
 <body>
     <source pow array="list" template="example" />
 </body>
-<template id="example">{{ *data }}, </template>
+<template id="example">{{ $data }}, </template>
 ```
 ```html
 <!-- Output -->
 <body>
     1, 2, 3, 4, 5, 
 </body>
-<template id="example">{{ *data }}, </template>
+<template id="example">{{ $data }}, </template>
 ```
 
 ### Stop <small><sup>`v1.4.0`</sup></small>
@@ -392,17 +392,17 @@ Some reactivity can be achieved through re-applying or refreshing a binding. Not
 
 ## Malformed HTML
 Since the templating is applied to the DOM structure, malformed HTML may cause what appears to be unexpected behaviour.  
-The `*path` interpolation is intended to help in these situations.
+The `$path` interpolation is intended to help in these situations.
 
 A particularly common mistake is not closing tags correctly or incorrect nestings (e.g., `div` tags cannot be inside `p` tags).
 
 **Example:**
 ```html
-{{* path }}<!-- '*root' -->
+{{ $path }}<!-- '$root' -->
 <p pow item="list">
-    {{* path }}<!-- '*root.list' -->
+    {{ $path }}<!-- '$root.list' -->
     <div pow array><!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
-        {{* path }}<!-- '*root' -->
+        {{ $path }}<!-- '$root' -->
     </div>
 </p>
 ```
@@ -421,7 +421,5 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
        <div case="literal">...</div>
    </template>
    ```
-* Review the `*` syntax for accessing meta-context - makes certain expressions impossible (`*data == *root.value`)  
-   Likely just always expose `$data`, `$root`, `$path`, `$index`, etc.
 * Issue: rebinding root template
 * What to do about unknown template?

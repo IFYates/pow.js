@@ -8,15 +8,16 @@
 const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
 const _rand = Math.random
 const _selectChild = (element, selector) => (element.content ?? element).querySelectorAll(selector)
+const B_ARRAY = 'array', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_ITEM = 'item', B_TEMPLATE = 'template'
+const ATTR_POW = 'pow'
 
 // Resolves next pow binding
-const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) => {
-    for (const attr of bindings.filter($ => element.hasAttribute($))) {
+const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_ITEM, B_ARRAY, B_TEMPLATE], attr) => {
+    if (attr = bindings.find($ => element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         _attribute.remove(element, attr)
         return { attr, expr }
     }
-    return 0
 }
 
 // Interpolates text templates
@@ -32,7 +33,7 @@ const resolveExpr = (expr, state) => {
         if (typeof value == 'function') {
             const id = _rand()
             window[state.$id][id] = (el) => value.call(el, state.$data, state.$root)
-            return `${state.$id}[${id}](this)`
+            return state.$id + '[' + id + '](this)'
         }
         return value
     } catch (e) {
@@ -43,23 +44,23 @@ const resolveExpr = (expr, state) => {
 // Updates the next sibling condition
 const updateSiblingCondition = (sibling, value) => {
     if (sibling?.attributes.pow) {
-        const { attr, expr } = consumeBinding(sibling, ['else-if', 'else-ifnot', 'else'])
+        const { attr, expr } = consumeBinding(sibling, [B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE]) || 0
         if (attr && value) {
             return !sibling.remove()
-        } else if (attr && attr != 'else') {
+        } else if (attr && attr != B_ELSE) {
             _attribute.set(sibling, attr.slice(5), expr)
         }
     }
 }
 const processCondition = (element, active, always) => {
     while (updateSiblingCondition(element.nextElementSibling, active));
-    return (always || !active) && element.remove()
+    return (always | !active) && element.remove()
 }
 
 const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 const processElement = (element, state, value, isRoot = state.$path.length < 6) => {
-    // v2.0.0: attributes interpolated before context change
+    // Process interpolated attributes
     for (let { name, value } of [...element.attributes].filter($ => $.name[0] == ':')) {
         _attribute.remove(element, name)
         if (value = resolveExpr(value, state)) {
@@ -67,37 +68,36 @@ const processElement = (element, state, value, isRoot = state.$path.length < 6) 
         }
     }
 
-    const { attr, expr } = consumeBinding(element)
+    const { attr, expr } = consumeBinding(element) || 0
 
-    if (attr == 'template' && (value = document.getElementById(expr))) {
+    if (attr == B_TEMPLATE && (value = document.getElementById(expr))) {
         const clone = value.cloneNode(1)
         element.parentNode.replaceChild(clone, element)
         return processElement(clone, state)
     }
 
     value = expr ? resolveExpr(expr, state) : state.$data
-    if (attr == 'if' || attr == 'ifnot') {
-        return processCondition(element, (attr == 'if') != !value)
-    } else if (attr == 'item' && expr) {
+    if (attr == B_IF | attr == B_IFNOT) {
+        return processCondition(element, (attr == B_IF) != !value)
+    } else if (attr == B_ITEM && expr) {
         if (value == null) {
             return element.remove()
         }
         state = {
             ...state,
-            $path: `${state.$path}.${expr}`,
+            $path: state.$path + '.' + expr,
             $data: value,
             $parent: state.$data
         }
-    } else if (attr == 'array') {
-        // TODO: (v2.0.0?) Alternative binding for inside only? Makes <ul pow each=""><li> cleaner
-        value = !value || Array.isArray(value) ? value
+    } else if (attr == B_ARRAY) {
+        value = !value | Array.isArray(value) ? value
             : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
         for (let $index = 0; $index < value?.length; ++$index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
             processElement(child, {
                 ...state,
-                $path: `${state.$path}${expr ? `.${expr}` : ''}[${$index}]`,
+                $path: state.$path + (expr ? '.' + expr : '') + '[' + $index + ']',
                 $index, $first: !$index, $last: $index > value.length - 2,
                 $data: value[$index],
                 $parent: state
@@ -106,14 +106,14 @@ const processElement = (element, state, value, isRoot = state.$path.length < 6) 
         return processCondition(element, value?.length, 1)
     }
 
-    _attribute.remove(element, 'pow')
+    _attribute.remove(element, ATTR_POW)
 
     // Process every child 'pow' template
     while (value = _selectChild(element, '*[pow]:not([pow] [pow])')[0]) {
         processElement(value, state)
     }
 
-    // Interpolate attributes
+    // Interpolate literal attributes
     for (let { name, value } of [...element.attributes]) {
         if (value = parseText(value, state, isRoot)) {
             _attribute.set(element, name, value)
@@ -136,7 +136,7 @@ const bind = (element) => {
     //element = element.at ? nextChildTemplate(document, element) : element
     const originalHTML = element.innerHTML
     const attributes = [...element.attributes]
-    const $id = `$pow_${_rand().toString(36).slice(2)}`
+    const $id = '$pow_' + _rand().toString(36).slice(2)
     const binding = {
         apply: (data) => {
             if (binding.$pow) {
@@ -157,9 +157,9 @@ const bind = (element) => {
             try {
                 processElement(element, { $id, $path: '$root', $data: data, $root: data })
             } finally {
+                element.innerHTML = element.innerHTML.replace(/​/g, '')
                 delete binding.$pow
             }
-            element.innerHTML = element.innerHTML.replace(/​/g, '')
 
             binding.refresh = () => binding.apply(data)
             return binding
@@ -173,7 +173,7 @@ const pow = {
     bind,
     _eval: (expr, ctxt) => {
         const args = Object.entries(ctxt).filter($ => isNaN($[0]))
-        return (new Function(...args.map($ => $[0]), `return ${expr}`)).call(ctxt.$data, ...args.map($ => $[1]))
+        return (new Function(...args.map($ => $[0]), 'return ' + expr)).call(ctxt.$data, ...args.map($ => $[1]))
     }
 }
 export default pow
