@@ -2,8 +2,10 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.4.1
+ * @version 1.4.2
  */
+
+const doc = document, win = window
 
 // Resolves next pow binding
 const consumeBinding = (element, bindings = ['if', 'ifnot', 'item', 'array', 'template']) => {
@@ -31,7 +33,7 @@ const resolveExpr = (expr, state, js = expr) => {
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
             const id = Math.random()
-            window[state.id][id] = (el) => value.call(el, state.data, state.root)
+            win[state.id][id] = (el) => value.call(el, state.data, state.root)
             return `${state.id}[${id}](this)`
         }
         return value
@@ -53,15 +55,20 @@ const updateSiblingCondition = (sibling, value) => {
 }
 const processCondition = (element, active, always) => {
     while (updateSiblingCondition(element.nextElementSibling, active));
-    return (always || !active) && element.remove()
+    return (always | !active) && element.remove()
 }
 
 const escape = (text, skip) => skip ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
-const processElement = (element, state, value) => {
+const processElement = (element, state, isRoot, value) => {
+    // Disable child HTML for stopped bindings
+    for (const child of nextChildTemplate(element, '*[pow][stop]')) {
+        child.replaceWith(doc.createRange().createContextualFragment(escape(child.outerHTML)))
+    }
+    
     const { attr, expr } = consumeBinding(element)
 
-    if (attr == 'template' && (value = document.getElementById(expr))) {
+    if (attr == 'template' && (value = doc.getElementById(expr))) {
         const clone = value.cloneNode(1)
         element.parentNode.replaceChild(clone, element)
         return processElement(clone, state)
@@ -110,7 +117,7 @@ const processElement = (element, state, value) => {
         if (name[0] == ':') {
             element.removeAttribute(name)
             if (value = resolveExpr(value, state)) {
-                element.setAttribute(name.slice(1), escape(value, state.root == state.data))
+                element.setAttribute(name.slice(1), escape(value, isRoot))
             }
         } else if (value = parseText(value, state)) {
             element.setAttribute(name, value)
@@ -121,7 +128,7 @@ const processElement = (element, state, value) => {
 
     // Parse inner HTML
     value = parseText(element.innerHTML, state)
-    if (element instanceof HTMLTemplateElement) {
+    if (element.tagName == 'TEMPLATE') {
         element.insertAdjacentHTML('afterend', value)
         element.remove()
     } else {
@@ -143,15 +150,10 @@ const bind = (element) => {
             // Reset global state
             element.innerHTML = originalHTML
             attributes.forEach($ => element.setAttribute($.name, $.value))
+            win[id] = {}
 
-            // Disable child HTML for stopped bindings
-            for (const child of nextChildTemplate(element, '*[pow][stop]')) {
-                child.outerHTML = escape(child.outerHTML)
-            }
-
-            window[id] = {}
             try {
-                processElement(element, { id, path: '*root', data, root: data })
+                processElement(element, { id, path: '*root', data, root: data }, 1)
             } finally {
                 delete binding.$pow
             }
