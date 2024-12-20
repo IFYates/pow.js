@@ -20,7 +20,7 @@
     <div pow item="child">
         {{ text }}:
         <template pow array="values">
-            {{ *data }}<template pow ifnot="*last">, </template>
+            {{ $data }}<template pow ifnot="$last">, </template>
         </template>
     </div>
 
@@ -29,10 +29,10 @@
     <strong>Reuse a template</strong>
     <div pow item="child">
         {{ text }}:
-        <source pow if="values" array="values" template="array-item" />
+        <template pow if="values" array="values" template="array-item"></template>
     </div>
     <template id="array-item">
-        {{ *data }}<template pow ifnot="*last">, </template>
+        {{ $data }}<template pow ifnot="$last">, </template>
     </template>
 </body>
 

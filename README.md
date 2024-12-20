@@ -324,8 +324,8 @@ The `else` logic can be applied to loops, used when the loop does not produce an
 ```
 
 ### Reusable templates <small><sup>`v1.2.0`</sup></small>
-If you have a particularly complex template, **_pow💥_** can insert a copy of it using the `template` binding, replacing the bound element.  
-Although this can be applied to any element, it is recommended to use `source` as this is a self-closing tag that cannot have any contents.
+If you have a particularly complex template, **_pow💥_** can insert a copy of it using the `template` binding, replacing the contents of the bound element.  
+If the matching template cannot be found, the element contents are processed as-is.
 
 The `item`/`array` bindings can be used to specify what data the template receives.
 
@@ -335,7 +335,7 @@ Note: Reusable templates should always be stored outside of any bound elements, 
 ```html
 <!-- pow.apply(document.body, { list: [ 1, 2, 3, 4, 5 ] }) -->
 <body>
-    <source pow array="list" template="example" />
+    <template pow array="list" template="example"></template>
 </body>
 <template id="example">{{ $data }}, </template>
 ```
@@ -423,3 +423,4 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
    ```
 * Issue: rebinding root template
 * What to do about unknown template?
+* Template wrapping - pass the content of the parent to the child (`$body`?)
