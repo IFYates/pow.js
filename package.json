@@ -34,6 +34,8 @@
   },
   "jest": {
     "setupFilesAfterEnv": ["./__tests__/_setup.js"],
+    "setupFiles": ["./src/pow.js"],
+    "testEnvironment": "jsdom",
     "testMatch": ["**/__tests__/*.tests.js"],
     "transform": {},
     "clearMocks": true

@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test('Replaces root template', () => {
   document.body.innerHTML = '<template id="main">{{ text }}</template>'
 

@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test.each([ ['$data'], ['this'] ])('Self interpolation', (expr) => {
   document.body.innerHTML = `<div>{{ ${expr} }}</div>`
 

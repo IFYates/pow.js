@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test('Can loop contents of a child', () => {
   document.body.innerHTML = '<div pow array="child">{{ text }}</div>'
 
