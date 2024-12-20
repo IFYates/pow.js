@@ -60,6 +60,11 @@ const processCondition = (element, active, always) => {
 const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 const processElement = (element, state, isRoot, value) => {
+    // Disable child HTML for stopped bindings
+    for (const child of _selectChild(element, '*[pow][stop]')) {
+        child.replaceWith(document.createRange().createContextualFragment(escape(child.outerHTML)))
+    }
+
     // Process interpolated attributes
     for (let { name, value } of [...element.attributes].filter($ => $.name[0] == ':')) {
         _attribute.remove(element, name)
@@ -148,11 +153,6 @@ const bind = (element) => {
             element.innerHTML = originalHTML
             attributes.forEach($ => _attribute.set(element, $.name, $.value))
             window[$id] = {}
-
-            // Disable child HTML for stopped bindings
-            for (const child of _selectChild(element, '*[pow][stop]')) {
-                child.outerHTML = escape(child.outerHTML)
-            }
 
             try {
                 processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)

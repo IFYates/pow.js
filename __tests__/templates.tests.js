@@ -26,7 +26,7 @@ test('Replaces template contents repeated for loop', () => {
 })
 
 test('Can reference existing template', () => {
-  document.body.innerHTML = '<div id="main"><source pow template="text-view"/></div><template id="text-view">{{ text }}</template>'
+  document.body.innerHTML = '<div id="main"><template pow template="text-view"></template></div><template id="text-view">{{ text }}</template>'
 
   const target = document.getElementById('main')
   pow.apply(target, { text: 'Hello, world!' })
@@ -35,10 +35,21 @@ test('Can reference existing template', () => {
 })
 
 test.each([ [true, '1, 2, 3, 4, 5, '], [false, ''] ])('Template processed after other bindings', (condition, expected) => {
-  document.body.innerHTML = '<template id="main"><source pow if="check" array="list" template="list-view"/></template><template id="list-view">{{ $data }}, </template>'
+  document.body.innerHTML = '<template id="main"><template pow if="check" array="list" template="list-view"></template></template><template id="list-view">{{ $data }}, </template>'
 
   const target = document.getElementById('main')
   pow.apply(target, { check: condition, list: [ 1, 2, 3, 4, 5 ] })
 
   expect(document.body.innerHTML).toBe(expected + '<template id="list-view">{{ $data }}, </template>')
 })
+
+test('Can process stop in existing template', () => {
+  document.body.innerHTML = '<div id="main"><template pow template="text-view"></template></div><template id="text-view"><div pow stop>{{ text }}</div></template>'
+
+  const target = document.getElementById('main')
+  pow.apply(target, { text: 'Hello, world!' })
+
+  expect(document.body.innerHTML).toBe('<div id="main"><div pow="" stop="">{{ text }}</div></div><template id="text-view"><div pow="" stop="">{{ text }}</div></template>')
+})
+
+// TODO: pow array template / pow item template
