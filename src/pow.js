@@ -42,10 +42,10 @@ const resolveExpr = (expr, state) => {
 }
 
 // Updates the next sibling condition
-const updateSiblingCondition = (sibling, value) => {
+const updateSiblingCondition = (sibling, active) => {
     if (sibling?.attributes.pow) {
         const { attr, expr } = consumeBinding(sibling, [B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE]) || 0
-        if (attr && value) {
+        if (attr && active) {
             return !sibling.remove()
         } else if (attr && attr != B_ELSE) {
             _attribute.set(sibling, attr.slice(5), expr)
@@ -59,7 +59,7 @@ const processCondition = (element, active, always) => {
 
 const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
-const processElement = (element, state, value, isRoot = state.$path.length < 6) => {
+const processElement = (element, state, isRoot, value) => {
     // Process interpolated attributes
     for (let { name, value } of [...element.attributes].filter($ => $.name[0] == ':')) {
         _attribute.remove(element, name)
@@ -91,7 +91,7 @@ const processElement = (element, state, value, isRoot = state.$path.length < 6) 
         }
     } else if (attr == B_ARRAY) {
         value = !value | Array.isArray(value) ? value
-            : Object.entries(value).map(([k, v]) => ({ key: k, value: v }))
+            : Object.entries(value).map(([key, value]) => ({ key, value }))
         for (let $index = 0; $index < value?.length; ++$index) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
@@ -155,7 +155,7 @@ const bind = (element) => {
             }
 
             try {
-                processElement(element, { $id, $path: '$root', $data: data, $root: data })
+                processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
             } finally {
                 element.innerHTML = element.innerHTML.replace(/​/g, '')
                 delete binding.$pow

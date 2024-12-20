@@ -1,9 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-import { jest } from '@jest/globals'
-
 test('Can bind to child context', () => {
   document.body.innerHTML = '<div pow item="child">{{ text }}</div>'
 

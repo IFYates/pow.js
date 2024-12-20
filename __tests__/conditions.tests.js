@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test('Each condition group is distinct', () => {
   document.body.innerHTML = '<div pow if="true">1</div><div pow if="true">2</div>'
 
