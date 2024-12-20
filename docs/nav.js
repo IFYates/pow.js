@@ -8,6 +8,7 @@ const nav = {
         nav.current = item.key
         history.pushState(null, null, `?/${item.key}/`)
         mainBinding.refresh()
+        requestAnimationFrame(() => hljs.highlightAll())
     },
     isCurrent: (a, b, c) => {
         console.log(this, a, b, c)
@@ -16,6 +17,16 @@ const nav = {
 
     items: {
         'home': { icon: document.getElementById('svg-home')?.innerHTML, name: 'Home' },
+        'syntax': {
+            icon: '',
+            name: 'Syntax',
+            children: {
+                'syntax-expressions': { name: 'Expressions' },
+                'syntax-attributes': { name: 'Attributes' },
+                'syntax-templates': { name: 'Templates' },
+                'syntax-reactivity': { name: 'Reactivity' },
+            }
+        },
         'features': {
             icon: '',
             name: 'Features',
@@ -39,4 +50,7 @@ console.log(nav.current)
 
 pow.apply(document.getElementById('preloader'), nav)
 pow.apply(document.getElementById('nav'), nav)
-HTMLImportElement.whenInitialised(() => mainBinding.apply(nav))
+HTMLImportElement.whenInitialised(() => {
+    mainBinding.apply(nav)
+    requestAnimationFrame(() => hljs.highlightAll())
+})

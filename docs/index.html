@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <title>pow.js :: Documentation</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="HTMLImportElement.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="nav.js"></script>
@@ -48,8 +51,9 @@
 
                     <template pow array="items">
                         <!-- Item without children -->
-                        <a pow ifnot="value.children" href="javascript:{{ *root.navigate }}" :href="value.url"
-                            class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700 group" :class="*root.current == data.key ? '+ bg-gray-600' : ''">
+                        <a pow ifnot="value.children" href="javascript:{{ $root.navigate }}" :href="value.url"
+                            class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700 group"
+                            :class="$root.current == $data.key ? '+ bg-gray-600' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor">
                                 {{ value.icon }}
@@ -59,7 +63,7 @@
 
                         <!-- Item with children -->
                         <div pow else class="mb-2 relative group">
-                            <input type="checkbox" id="toggle-nav{{ *index }}" class="hidden peer">
+                            <input type="checkbox" id="toggle-nav{{ $index }}" class="hidden peer">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor"
@@ -67,7 +71,7 @@
                                 {{ value.icon }}
                             </svg>
 
-                            <label for="toggle-nav{{ *index }}"
+                            <label for="toggle-nav{{ $index }}"
                                 class="flex items-center px-12 py-2 mt-2 text-gray-100 hover:bg-gray-700 cursor-pointer w-full">
                                 {{ value.name }}
                             </label>
@@ -84,7 +88,7 @@
                             <div
                                 class="hidden peer-checked:flex flex-col bg-white text-gray-800 mt-1 transition-all duration-300">
                                 <template pow array="value.children">
-                                    <a pow href="javascript:{{ *root.navigate }}" :href="value.url"
+                                    <a pow href="javascript:{{ $root.navigate }}" :href="value.url"
                                         class="block px-4 py-2 hover:bg-gray-200">
                                         {{ value.name }}
                                     </a>
@@ -122,13 +126,36 @@
     <div style="display:none" id="preloader">
         <template pow array="items">
             <template pow array="value.children">
-                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key.replace('-', '/', 1) }}.html" replace></html-import></div>
+                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key.replace('-', '/', 1) }}.html"
+                        replace></html-import></div>
             </template>
             <template pow else>
-                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key }}.html" replace></html-import></div>
+                <div pow ifnot="value.url" id="page-{{ key }}"><html-import src="{{ key }}.html" replace></html-import>
+                </div>
             </template>
         </template>
     </div>
+
+    <!-- Display templates -->
+    <template id="pow"><code class="font-bold">pow💥</code></template>
+    <template id="pow.safe"><code class="font-bold">pow💥</code><code>safe</code></template>
+    <template id="version-latest"><template pow template="version" item="'2.0.0'"></template></template>
+    <template id="version"><code pow stop><a href="https://github.com/IFYates/pow.js/releases/tag/v{{ $data }}">v{{ $data }}</a></code></template>
+    <template id="version-overview">
+        <!-- data: { introduced, appliesUpTo, retired? } -->
+        <p class="mt-2 text-gray-600 p-2 border-gray-300 bg-gray-50 grid grid-cols-[auto_1fr] gap-x-4">
+            <strong>Introduced:</strong>
+            <template pow template="version" item="introduced"></template>
+
+            <strong>Applies up to:</strong>
+            <template pow template="version" item="appliesUpTo"></template>
+
+            <template pow if="this.retired">
+                <strong>Retired:</strong>
+                <template pow template="version" item="retired"></template>
+            </template>
+        </p>
+    </template>
 </body>
 
 </html>

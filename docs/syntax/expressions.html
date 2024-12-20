@@ -1,0 +1,50 @@
+<h1 class="text-2xl font-bold text-gray-600">Syntax &gt; Expressions</h1>
+
+<h2 class="text-xl font-bold text-gray-600">Data context</h2>
+<template pow template="version-overview" item="{
+    introduced: '1.0.0',
+    appliesUpTo: '2.0.0'
+}"></template>
+
+<p class="mt-2 text-gray-600">
+    *root
+</p>
+
+<h3 class="text-xl font-bold text-gray-600">Internal values</h3>
+<h4 class="font-bold text-gray-600">v1.x</h4>
+<blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
+    The original design of <span pow template="pow"></span> only handled very basic expression parsing,
+    so using a non-standard character to differentiate internal values from normal data was useful.<br />
+    This does mean that some expressions are not possible, such as <code>*root.attr1 == *data.attr2</code>.
+</blockquote>
+
+<p class="mt-2 text-gray-600">
+    *root
+</p>
+
+<h4 class="font-bold text-gray-600">v2.x</h4>
+<blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
+    In order to make better use of the full expression support in <template pow template="version-1.0.0"></template>,
+    the design was revised to use only standard characters, and expose the internal values as normal properties.
+</blockquote>
+
+<p class="mt-2 text-gray-600" pow item="{ text: 'test' }">
+    $root
+</p>
+
+<h2 class="text-xl font-bold text-gray-600">pow.safe</h2>
+<template pow template="version-overview" item="{
+    introduced: '1.1.0',
+    appliesUpTo: '2.0.0'
+}"></template>
+<blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
+    Full expression support requires a fully trusted browser environment. In situations where this isn't
+    possible, <template pow template="pow.safe"></template> can be used to replace dynamic expression
+    parsing with some simpler logic.
+</blockquote>
+
+<p class="mt-2 text-gray-600">
+    <pre><code pow stop class="language-js">
+        {{ 123 }}
+    </code></pre>
+</p>
