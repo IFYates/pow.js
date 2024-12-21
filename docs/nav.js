@@ -1,14 +1,17 @@
 import pow from '../src/pow.js'
 
 const mainBinding = pow.bind(document.getElementById('main'))
+window.refreshMain = () => {
+    mainBinding.refresh()
+    requestAnimationFrame(() => hljs.highlightAll())
+}
 
 const nav = {
     current: location.search?.match(/^\?\/([^\/]+)\/?$/) ? RegExp.$1 : 'home',
     navigate: (item) => {
         nav.current = item.key
         history.pushState(null, null, `?/${item.key}/`)
-        mainBinding.refresh()
-        requestAnimationFrame(() => hljs.highlightAll())
+        refreshMain()
     },
     isCurrent: (a, b, c) => {
         console.log(this, a, b, c)
@@ -17,10 +20,12 @@ const nav = {
 
     items: {
         'home': { icon: document.getElementById('svg-home')?.innerHTML, name: 'Home' },
+        'get-started': { name: 'Getting started' },
         'syntax': {
             icon: '',
             name: 'Syntax',
             children: {
+                'syntax-binding': { name: 'Bindings' },
                 'syntax-expressions': { name: 'Expressions' },
                 'syntax-attributes': { name: 'Attributes' },
                 'syntax-templates': { name: 'Templates' },
@@ -31,8 +36,9 @@ const nav = {
             icon: '',
             name: 'Features',
             children: {
-                'features-attributes': { name: 'Attributes' },
+                'features-conditions': { name: 'Conditions' },
                 'features-reactivity': { name: 'Reactivity' },
+                'features-pow-safe': { name: 'pow.safe' },
             }
         },
         'examples': {

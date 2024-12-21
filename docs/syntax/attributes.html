@@ -1,4 +1,56 @@
-<h1 class="text-2xl font-bold">Attributes</h1>
-<p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
+<h1 class="text-2xl font-bold text-gray-600">Attributes</h1>
 
-{{ $path }}
+<template pow template="version-list" item="[ '1.0', 1.4, '2.0' ]"></template>
+
+<h2 class="mt-3 text-xl font-bold text-gray-600">Basic values</h2>
+<p class="mt-2 text-gray-600">
+    As with any part of the bound document, <a href="?/syntax-expressions/">expressions</a> will be interpolated and
+    can be used to set attribute values.
+</p>
+<pre><code pow stop class="language-html">
+    &lt;!-- For { style: 'my-class' } -->
+    &lt;div class="{{ style }}">
+
+    &lt;!-- Result -->
+    &lt;div class="my-class">
+</code></pre>
+
+<template pow if="version(1.4)">
+    <h2 class="mt-3 text-xl font-bold text-gray-600">Interpolated attributes</h2>
+    <p class="mt-2 text-gray-600">
+        On a <a href="?/syntax-binding/">bound element</a>, attributes with a name starting <code>:</code> will be <a href="?/syntax-expressions/">interpolated</a>.
+    </p>
+    <p class="mt-2 text-gray-600">
+        If the result is empty, the attribute will not be set; otherwise, the attribute will be set to the result, replacing
+        any existing value.
+    </p>
+    <pre><code pow stop class="language-html">
+        &lt;!-- For { style1: 'my-class', style2: null } -->
+        &lt;div pow :class="style1">
+        &lt;div pow :class="style2">
+        &lt;div pow class="default" :class="style1">
+        &lt;div pow class="default" :class="style2">
+
+        &lt;!-- Result -->
+        &lt;div class="my-class">
+        &lt;div>
+        &lt;div class="my-class">
+        &lt;div class="default">
+    </code></pre>
+
+    <p pow if="version(1.4, 2.0)" class="mt-2 text-gray-600">
+        Interpolated attributes are evaluated after bindings have been applied.
+    </p>
+
+    <p pow if="version(2.0)" class="mt-2 text-gray-600">
+        Interpolated attributes are evaluated before the binding is applied, so they can be used to dynamically
+        set binding values.
+    </p>
+    <pre pow if="version(2.0)"><code pow stop class="language-html">
+        &lt;!-- For { item: 'child1', child1: { text: 'Child 1' } } -->
+        &lt;div pow :data="{{ item }}">{{ text }}&lt;/div>
+
+        &lt;!-- Result -->
+        &lt;div>Child 1&lt;/div>
+    </code></pre>
+</template>

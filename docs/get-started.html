@@ -1,0 +1,23 @@
+<h1 class="text-2xl font-bold text-gray-600">Getting started</h1>
+
+<p class="mt-2 text-gray-600">
+    The quickest way to get started is to use the latest version of <template pow template="pow"></template> from the publish site.<br />
+    This can be imported directly to immediately build a functional page.
+</p>
+
+<p class="mt-2 text-gray-600">
+    The following can be saved to a local file and opened in your browser:
+</p>
+
+<pre><code pow stop class="language-js">
+    &lt;head>
+        &lt;script type="module">
+            import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
+            const data = { text: 'Hello, world!' }
+            pow.apply(document.body, data)
+        &lt;/script>
+    &lt;/head>
+    &lt;body>
+        &lt;div><a href="?/syntax-expressions/">{{ text }}</a>&lt;/div>
+    &lt;/body>
+</code></pre>
