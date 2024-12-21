@@ -4,7 +4,6 @@ An extremely small and lightweight templating framework.
 [![NPM Version](https://img.shields.io/npm/v/pow-templating)](https://www.npmjs.com/package/pow-templating)
 ![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
 
-
 > 😲 Only 140 LOCs!  
 > 🤏 <2&frac12; KiB minified script (+ header)  
 > 🧩 No other dependencies  

@@ -1,4 +1,51 @@
-<h1 class="text-2xl font-bold">Attributes</h1>
-<p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
+<h1 class="text-2xl font-bold">Features / Conditions</h1>
 
-{{ $path }}
+<template pow template="version-list" item="[ '1.0' ]"></template>
+
+<h2 class="mt-3 text-xl font-bold text-gray-600">
+    <code class="html"><code class="attr">if</code>="<code class="expr">condition</code>"</code>
+    / <code class="html"><code class="attr">ifnot</code>="<code class="expr">condition</code>"</code>
+</h2>
+<p class="mt-2 text-gray-600">
+    The <code class="attr">if</code> and <code class="attr">ifnot</code> attributes can be used to conditionally render
+    any bound element.
+</p>
+<p class="mt-2 text-gray-600">
+    If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
+</p>
+<pre class="html">
+    &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
+        First block
+    &lt;/div>
+    &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+        Second block
+    &lt;/div>
+
+    &lt;!-- Result -->
+    &lt;div>
+        First block
+    &lt;/div>
+</pre>
+
+<h2 class="mt-3 text-xl font-bold text-gray-600">
+    <code class="attr">else</code>
+    / <code class="html"><code class="attr">else-if</code>="<code class="expr">condition</code>"</code>
+    / <code class="html"><code class="attr">else-ifnot</code>="<code class="expr">condition</code>"</code>
+</h2>
+<p class="mt-2 text-gray-600">
+    If a conditional element has been processed, the following sibling elements can make use of the
+    <code class="attr">else*</code> attributes to further conditionally render an element.
+</p>
+<pre class="html">
+    &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+        First block
+    &lt;/div>
+    &lt;div <span class="pow">pow</span> <span class="attr">else</span>>
+        Second block
+    &lt;/div>
+
+    &lt;!-- Result -->
+    &lt;div>
+        Second block
+    &lt;/div>
+</pre>

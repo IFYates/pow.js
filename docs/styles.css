@@ -1,3 +1,37 @@
-h3 {
-    margin-top: 2em;
+pre.html, code.html {
+    border-radius: 5px;
+    background-color: #dedede;
+    color: darkslategray;
+}
+.js {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: hsl(272, 100%, 90%);
+    color: #8800ff;
+}
+.pow {
+    padding: 3px 5px;
+    border-radius: 7px;
+    background-color: pink;
+    color: darkred;
+}
+.attr {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: lightblue;
+    color: darkblue;
+}
+.value {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: lightgreen;
+    color: darkgreen;
+    font-style: italic;
+}
+.expr {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: #ffdb99;
+    color: #805300;
+    font-style: italic;
 }
