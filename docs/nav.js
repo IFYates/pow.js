@@ -28,8 +28,6 @@ const nav = {
                 'syntax-binding': { name: 'Bindings' },
                 'syntax-expressions': { name: 'Expressions' },
                 'syntax-attributes': { name: 'Attributes' },
-                'syntax-templates': { name: 'Templates' },
-                'syntax-reactivity': { name: 'Reactivity' },
             }
         },
         'features': {
@@ -37,6 +35,9 @@ const nav = {
             name: 'Features',
             children: {
                 'features-conditions': { name: 'Conditions' },
+                'features-loops': { name: 'Loops' },
+                'features-templates': { name: 'Templates' },
+                'features-interaction': { name: 'Interactivity' },
                 'features-reactivity': { name: 'Reactivity' },
                 'features-pow-safe': { name: 'pow.safe' },
             }
