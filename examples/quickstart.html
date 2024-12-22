@@ -23,13 +23,13 @@
     <h1>{{ title }}</h1>
     <h2>{{ description }}</h2>
     <p><a href="{{ url }}">See project page</a></p>
-    <p pow item="creation">
+    <p pow data="creation">
         Created by <em>{{ author }}</em> on {{ date }}
     </p>
     <p>
         Tags ({{ tags.length }}):
         <template pow array="tags">
-            <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
+            <span>[{{ $data }}]</span><span pow ifnot="$last">, </span>
         </template>
         <span pow else>
             No tags!

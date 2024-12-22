@@ -17,7 +17,7 @@
 
 <body>
     <strong>Loop a template</strong>
-    <div pow item="child">
+    <div pow data="child">
         {{ text }}:
         <template pow array="values">
             {{ $data }}<template pow ifnot="$last">, </template>
@@ -27,7 +27,7 @@
     <hr />
 
     <strong>Reuse a template</strong>
-    <div pow item="child">
+    <div pow data="child">
         {{ text }}:
         <template pow if="values" array="values" template="array-item"></template>
     </div>

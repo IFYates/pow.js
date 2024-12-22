@@ -8,11 +8,17 @@
 const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
 const _rand = Math.random
 const _selectChild = (element, selector) => (element.content ?? element).querySelectorAll(selector)
-const B_ARRAY = 'array', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_ITEM = 'item', B_TEMPLATE = 'template'
+const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
 const ATTR_POW = 'pow'
 
 // Resolves next pow binding
-const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_ITEM, B_ARRAY], attr) => {
+const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_DATA, B_ARRAY], attr) => {
+    // for (const { attr, expr } of [...element.attributes]) {
+    //     if (bindings.includes(attr)) {
+    //         _attribute.remove(element, attr)
+    //         return { attr, expr }
+    //     }
+    // }
     if (attr = bindings.find($ => element.hasAttribute($))) {
         const expr = element.getAttribute(attr)
         _attribute.remove(element, attr)
@@ -27,7 +33,9 @@ const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/
 const resolveExpr = (expr, state) => {
     try {
         // Execute the expression as JS code, mapping to the state data
-        const value = pow._eval(expr, { ...state, ...state.$data })
+        const fn = (state) => (state.$parent ? { ...state.$data,...state, $parent: fn(state.$parent) } :  { ...state.$data, ...state })
+        const value = pow._eval(expr, fn(state))
+        // TODO: recursive so $parent is $parent.$data, but $parent.$parent works, too
 
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
@@ -57,7 +65,7 @@ const processCondition = (element, active, always) => {
     return (always | !active) && element.remove()
 }
 
-const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
+const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow\s)/g, '$1​$2​')
 
 const processElement = (element, state, isRoot, value) => {
     // Disable child HTML for stopped bindings
@@ -85,7 +93,7 @@ const processElement = (element, state, isRoot, value) => {
     value = expr ? resolveExpr(expr, state) : state.$data
     if (attr == B_IF | attr == B_IFNOT) {
         return processCondition(element, (attr == B_IF) != !value)
-    } else if (attr == B_ITEM && expr) {
+    } else if (attr == B_DATA && expr) {
         if (value == null) {
             return element.remove()
         }
@@ -106,6 +114,7 @@ const processElement = (element, state, isRoot, value) => {
                 $path: state.$path + (expr ? '.' + expr : '') + '[' + $index + ']',
                 $index, $first: !$index, $last: $index > value.length - 2,
                 $data: value[$index],
+                $array: value,
                 $parent: state
             })
         }
