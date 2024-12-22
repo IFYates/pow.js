@@ -11,16 +11,20 @@
 
 <p class="mt-2 text-gray-600">
     <span pow template="pow"></span> uses "moustache" syntax to access data in the current context.
-    <pre><code pow stop class="language-js">
+<pre><code pow stop class="language-js">
         {{ property }}
         {{ child.property }}
     </code></pre>
-    Any valid javascript expression can be used.
-    <pre><code pow stop class="language-js">
+Any valid javascript expression can be used.
+<pre><code pow stop class="language-js">
         {{ text.toUpperCase() }}
     </code></pre>
-    If a property is not found, the result will be blank and a warning will be raised. To suppress the warning, access
-    optional properties from the <a href="#internal-values"><code>$data</code></a> object.
+If a property is not found, the result will be blank and a warning will be raised. To suppress the warning, access
+optional properties from the <a href="#internal-values"><code>$data</code></a> object.
+</p>
+
+<p class="mt-2 text-gray-600">
+    It is important to be aware that values are not made HTML-safe, so any HTML tags will be inserted verbatim.
 </p>
 
 <p class="mt-2 text-gray-600">
@@ -28,10 +32,10 @@
     <a href="?/syntax-data/"><code>data</code></a> binding.
 </p>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">Functions</h2>
+<h2 class="mt-3 text-xl font-bold text-gray-600" id="functions">Functions</h2>
 <p class="mt-2 text-gray-600">
     Functions can be invoked from context data properties or the global scope.
-    <pre><code pow stop class="language-js">
+<pre><code pow stop class="language-js">
         {{ func(property) }}
     </code></pre>
 </p>
@@ -39,11 +43,11 @@
 <p class="mt-2 text-gray-600">
     If a function is used without any arguments, the output will be a bound function reference, which can be
     used to <a href="?/syntax-events/">bind element events</a>.
-    <pre><code pow stop class="language-js">
+<pre><code pow stop class="language-js">
         {{ func }}
     </code></pre>
-    When invoked, the bound function will receive the current context data and the root data.
-    <pre><code pow stop class="language-js">
+When invoked, the bound function will receive the current context data and the root data.
+<pre><code pow stop class="language-js">
         function func(data, root) {
             return data.text
         }
@@ -86,13 +90,18 @@
             <code>*index</code>: The index of the current item in the array.
         </li>
         <li>
-            <code>*first</code>: `true` if this is the first item in the array.
+            <code>*first</code>: <code>true</code> if this is the first item in the array.
         </li>
         <li>
-            <code>*last</code>: `true` if this is the last item in the array.
+            <code>*last</code>: <code>true</code> if this is the last item in the array.
         </li>
     </ul>
     </p>
+
+    <blockquote class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
+        <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
+        the internal value will not be accessible.
+    </blockquote>
 </template>
 
 <template pow if="version(2.0)">
@@ -130,16 +139,16 @@
             <code>$index</code>: The index of the current item in the array.
         </li>
         <li>
-            <code>$first</code>: `true` if this is the first item in the array.
+            <code>$first</code>: <code>true</code> if this is the first item in the array.
         </li>
         <li>
-            <code>$last</code>: `true` if this is the last item in the array.
+            <code>$last</code>: <code>true</code> if this is the last item in the array.
         </li>
     </ul>
     </p>
-</template>
 
-<blockquote class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
-    <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
-    the internal value will not be accessible.
-</blockquote>
+    <blockquote class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
+        <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
+        the internal value will not to be accessed through <code>$data</code> or <code>this</code>.
+    </blockquote>
+</template>

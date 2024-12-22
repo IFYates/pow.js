@@ -40,10 +40,10 @@
         <pre><code pow stop class="language-js">
             {{ func() }}
         </code></pre>
-        The argument will receive a single argument of the current data context and should return the expression result:
+        The function will receive the current data context and the root data, and should return the expression result:
         <pre><code pow stop class="language-js">
-            function func(data) {
-                return data.text
+            function func($data, $root) {
+                return $data.text
             }
         </code></pre>
         Functions will be invoked from context properties or the global scope.

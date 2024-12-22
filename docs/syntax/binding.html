@@ -108,3 +108,21 @@
 <p class="mt-2 text-gray-600">
     This enables you to apply a different binding to part of an element hierarchy that has already been bound.
 </p>
+
+<h2 class="mt-3 text-xl font-bold text-gray-600" id="templates">Templates</h2>
+<p class="mt-2 text-gray-600">
+    If the bound element is a <code class="html">template</code>, the entire element is replaced.<br />
+    This is a good way to hide unprocessed elements until rendering is complete.
+</p>
+<pre class="html">
+    &lt;div>
+        &lt;template <span class="pow">pow</span>>
+            Hello, world!
+        &lt;/template>
+    &lt;/div>
+
+    &lt;!-- Result -->
+    &lt;div>
+        Hello, world!
+    &lt;/div>
+</pre>

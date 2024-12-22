@@ -1,4 +1,22 @@
-<h1 class="text-2xl font-bold">Interactivity</h1>
-<p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
+<h1 class="text-2xl font-bold">Features / Interactivity</h1>
 
-{{ $path }}
+<template pow template="version-list" item="[ '1.0' ]"></template>
+
+<p class="mt-2 text-gray-600">
+    By using a <a href="?/syntax-expressions/#functions">function expression</a>, any element event can be bound to with
+    a <code class="html"><code class="attr">on(event)</code>="<code pow stop class="value">{{ function }}</code>"</code>
+    attribute.
+</p>
+<pre class="html">
+    &lt;button <span class="pow">pow</span> <span class="attr">onclick</span>="<span class="value">clicked</span>">
+        Click me
+    &lt;/button>
+</pre>
+When invoked, the bound function will receive the current context data and the root data.
+<pre><code pow stop class="language-js">
+    function clicked(data, root) {
+        // this: The element that was clicked
+        // data: The context data
+        // root: The root data
+    }
+</code></pre>
