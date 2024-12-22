@@ -13,16 +13,11 @@ const ATTR_POW = 'pow'
 
 // Resolves next pow binding
 const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_DATA, B_ARRAY], attr) => {
-    // for (const { attr, expr } of [...element.attributes]) {
-    //     if (bindings.includes(attr)) {
-    //         _attribute.remove(element, attr)
-    //         return { attr, expr }
-    //     }
-    // }
-    if (attr = bindings.find($ => element.hasAttribute($))) {
-        const expr = element.getAttribute(attr)
-        _attribute.remove(element, attr)
-        return { attr, expr }
+    for (const { name, value } of [...element.attributes]) {
+        if (bindings.includes(name)) {
+            _attribute.remove(element, name)
+            return { attr: name, expr: value }
+        }
     }
 }
 
