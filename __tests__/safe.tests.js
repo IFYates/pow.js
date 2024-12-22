@@ -10,7 +10,7 @@ test('Safe interpolation supports properties', () => {
 })
 
 test('Safe interpolation supports deep properties', () => {
-  document.body.innerHTML = '<div pow item="child">{{ text }}</div>'
+  document.body.innerHTML = '<div pow data="child">{{ text }}</div>'
 
   pow.apply(document.body, { child: { text: 'Hello, child!' } })
 

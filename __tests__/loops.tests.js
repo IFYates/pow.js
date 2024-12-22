@@ -13,7 +13,7 @@ test('Can loop contents of a child', () => {
 })
 
 test('Can loop current context', () => {
-  document.body.innerHTML = '<template pow item="child"><div pow array>{{ text }}</div></template>'
+  document.body.innerHTML = '<template pow data="child"><div pow array>{{ text }}</div></template>'
 
   pow.apply(document.body, {
     child: [
@@ -27,7 +27,7 @@ test('Can loop current context', () => {
 })
 
 test.each([[null], [[]]])('Loop if nothing does not output', (arr) => {
-  document.body.innerHTML = '<template pow item="child"><div pow array>DO NOT SHOW</div></template>'
+  document.body.innerHTML = '<template pow data="child"><div pow array>DO NOT SHOW</div></template>'
 
   pow.apply(document.body, {
     child: arr
@@ -79,7 +79,7 @@ test('Can access "last" in loop', () => {
 })
 
 test('Can access index in loop child', () => {
-  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ $index }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow data="text">{{ $index }}</template></div>'
 
   pow.apply(document.body, {
     child: [
@@ -93,7 +93,7 @@ test('Can access index in loop child', () => {
 })
 
 test('Can access "first" in loop child', () => {
-  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ $first ? "true" : "false" }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow data="text">{{ $first ? "true" : "false" }}</template></div>'
 
   pow.apply(document.body, {
     child: [
@@ -107,7 +107,7 @@ test('Can access "first" in loop child', () => {
 })
 
 test('Can access "last" in loop child', () => {
-  document.body.innerHTML = '<div pow array="child"><template pow item="text">{{ $last ? "true" : "false" }}</template></div>'
+  document.body.innerHTML = '<div pow array="child"><template pow data="text">{{ $last ? "true" : "false" }}</template></div>'
 
   pow.apply(document.body, {
     child: [

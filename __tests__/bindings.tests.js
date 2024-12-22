@@ -1,5 +1,5 @@
 test('Can bind to child context', () => {
-  document.body.innerHTML = '<div pow item="child">{{ text }}</div>'
+  document.body.innerHTML = '<div pow data="child">{{ text }}</div>'
 
   pow.apply(document.body, { child: { text: 'Hello, child!' } })
 
@@ -7,7 +7,7 @@ test('Can bind to child context', () => {
 })
 
 test('Can access context path', () => {
-  document.body.innerHTML = '<div pow item="child">{{ $path }}</div>'
+  document.body.innerHTML = '<div pow data="child">{{ $path }}</div>'
 
   pow.apply(document.body, { child: {} })
 
@@ -15,7 +15,7 @@ test('Can access context path', () => {
 })
 
 test('Can access parent from child context', () => {
-  document.body.innerHTML = '<div pow item="child">{{ $parent.text }}</div>'
+  document.body.innerHTML = '<div pow data="child">{{ $parent.text }}</div>'
 
   pow.apply(document.body, { text: 'Hello, parent!', child: { text: 'Hello, child!' } })
 
@@ -23,7 +23,7 @@ test('Can access parent from child context', () => {
 })
 
 test('Binding context applies to children', () => {
-  document.body.innerHTML = '{{ context }} <div pow item="child" attr="{{ context }}">{{ context }}</div> {{ context }}'
+  document.body.innerHTML = '{{ context }} <div pow data="child" attr="{{ context }}">{{ context }}</div> {{ context }}'
 
   pow.apply(document.body, { context: 'parent', child: { context: 'child' } })
 
@@ -55,7 +55,7 @@ test('Applying bindings while being applied raises warning', () => {
 })
 
 test('Binding to unknown key removes element with warning', () => {
-  document.body.innerHTML = '<div pow item="child">DO NOT SHOW</div>'
+  document.body.innerHTML = '<div pow data="child">DO NOT SHOW</div>'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -68,7 +68,7 @@ test('Binding to unknown key removes element with warning', () => {
 })
 
 test('Binding to unknown this key removes element without warning', () => {
-  document.body.innerHTML = '<div pow item="this.child">DO NOT SHOW</div>'
+  document.body.innerHTML = '<div pow data="this.child">DO NOT SHOW</div>'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -80,7 +80,7 @@ test('Binding to unknown this key removes element without warning', () => {
 })
 
 test.each([null, undefined])('Binding to null data removes element without warning', (value) => {
-  document.body.innerHTML = '<div pow item="child">DO NOT SHOW</div>'
+  document.body.innerHTML = '<div pow data="child">DO NOT SHOW</div>'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -92,7 +92,7 @@ test.each([null, undefined])('Binding to null data removes element without warni
 })
 
 test('Can stop parsing of elements', () => {
-  document.body.innerHTML = '{{ $path }}<div pow stop attr="{{ $path }}">{{ $path }} <div pow item="child">{{ $path }}</div></div>{{ $path }}'
+  document.body.innerHTML = '{{ $path }}<div pow stop attr="{{ $path }}">{{ $path }} <div pow data="child">{{ $path }}</div></div>{{ $path }}'
 
   const consoleWarnMock = jest.spyOn(console, 'warn')
     .mockImplementation(() => { })
@@ -100,7 +100,7 @@ test('Can stop parsing of elements', () => {
   pow.apply(document.body, { child: {} })
 
   expect(consoleWarnMock.mock.calls).toHaveLength(0)
-  expect(document.body.innerHTML).toBe('$root<div pow="" stop="" attr="{{ $path }}">{{ $path }} <div pow="" item="child">{{ $path }}</div></div>$root')
+  expect(document.body.innerHTML).toBe('$root<div attr="{{ $path }}">{{ $path }} <div pow="" data="child">{{ $path }}</div></div>$root')
 })
 
 test('Can have subsequent bindings of stopped child', () => {

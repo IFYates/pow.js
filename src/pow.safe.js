@@ -17,7 +17,7 @@ function _eval(template, data, deep) {
     if (period < 0) {
         if (template.endsWith('()')) {
             const fn = _eval(template.slice(0, -2), data, 1)
-            return typeof fn == 'function' ? fn(data) : undefined
+            return typeof fn == 'function' ? fn(data.$data, data.$root) : undefined
         }
         return data?.hasOwnProperty(template) ? data[template]
             : template == 'length' && typeof data == 'object' ? Object.keys(data).length
