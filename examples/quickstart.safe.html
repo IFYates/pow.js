@@ -29,7 +29,7 @@
     <p>
         Tags ({{ tags.length }}):
         <template pow array="tags">
-            <span>[{{ *data }}]</span><span pow ifnot="*last">, </span>
+            <span>[{{ $data }}]</span><span pow ifnot="$last">, </span>
         </template>
         <span pow else>
             No tags!

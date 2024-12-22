@@ -33,7 +33,7 @@ const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/
 const resolveExpr = (expr, state) => {
     try {
         // Execute the expression as JS code, mapping to the state data
-        const fn = (state) => (state.$parent ? { ...state.$data,...state, $parent: fn(state.$parent) } :  { ...state.$data, ...state })
+        const fn = (state) => (state.$parent ? { ...state.$data, ...state, $parent: fn(state.$parent) } :  { ...state.$data, ...state })
         const value = pow._eval(expr, fn(state))
         // TODO: recursive so $parent is $parent.$data, but $parent.$parent works, too
 
@@ -65,7 +65,7 @@ const processCondition = (element, active, always) => {
     return (always | !active) && element.remove()
 }
 
-const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow\s)/g, '$1​$2​')
+const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 const processElement = (element, state, isRoot, value) => {
     // Disable child HTML for stopped bindings

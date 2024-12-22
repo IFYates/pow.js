@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1734894651525" clover="3.2.0">
-  <project timestamp="1734894651525" name="All files">
-    <metrics statements="2" coveredstatements="2" conditionals="72" coveredconditionals="68" methods="34" coveredmethods="34" elements="108" coveredelements="104" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
+<coverage generated="1734897995407" clover="3.2.0">
+  <project timestamp="1734897995407" name="All files">
+    <metrics statements="2" coveredstatements="2" conditionals="72" coveredconditionals="72" methods="34" coveredmethods="34" elements="108" coveredelements="108" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
     <file name="pow.min.js" path="F:\dev\pow.js\dist\pow.min.js">
-      <metrics statements="1" coveredstatements="1" conditionals="56" coveredconditionals="52" methods="26" coveredmethods="26"/>
-      <line num="7" count="1408" type="cond" truecount="52" falsecount="4"/>
+      <metrics statements="1" coveredstatements="1" conditionals="56" coveredconditionals="56" methods="26" coveredmethods="26"/>
+      <line num="7" count="1362" type="cond" truecount="56" falsecount="0"/>
     </file>
     <file name="pow.safe.min.js" path="F:\dev\pow.js\dist\pow.safe.min.js">
       <metrics statements="1" coveredstatements="1" conditionals="16" coveredconditionals="16" methods="8" coveredmethods="8"/>
-      <line num="7" count="20" type="cond" truecount="16" falsecount="0"/>
+      <line num="7" count="21" type="cond" truecount="16" falsecount="0"/>
     </file>
   </project>
 </coverage>

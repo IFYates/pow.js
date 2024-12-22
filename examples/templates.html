@@ -16,24 +16,7 @@
 </head>
 
 <body>
-    <strong>Loop a template</strong>
-    <div pow data="child">
-        {{ text }}:
-        <template pow array="values">
-            {{ $data }}<template pow ifnot="$last">, </template>
-        </template>
-    </div>
-
-    <hr />
-
-    <strong>Reuse a template</strong>
-    <div pow data="child">
-        {{ text }}:
-        <template pow if="values" array="values" template="array-item"></template>
-    </div>
-    <template id="array-item">
-        {{ $data }}<template pow ifnot="$last">, </template>
-    </template>
+    <div pow stop attr="{{ $path }}">{{ $path }} <div pow data="child">{{ $path }}</div></div>
 </body>
 
 </html>

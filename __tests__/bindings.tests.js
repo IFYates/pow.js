@@ -100,7 +100,7 @@ test('Can stop parsing of elements', () => {
   pow.apply(document.body, { child: {} })
 
   expect(consoleWarnMock.mock.calls).toHaveLength(0)
-  expect(document.body.innerHTML).toBe('$root<div attr="{{ $path }}">{{ $path }} <div pow="" data="child">{{ $path }}</div></div>$root')
+  expect(document.body.innerHTML).toBe('$root<div pow="" stop="" attr="{{ $path }}">{{ $path }} <div pow="" data="child">{{ $path }}</div></div>$root')
 })
 
 test('Can have subsequent bindings of stopped child', () => {
