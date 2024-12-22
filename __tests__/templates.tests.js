@@ -49,7 +49,7 @@ test('Can process stop in existing template', () => {
   const target = document.getElementById('main')
   pow.apply(target, { text: 'Hello, world!' })
 
-  expect(document.body.innerHTML).toBe('<div id="main"><div>{{ text }}</div></div><template id="text-view"><div pow="" stop="">{{ text }}</div></template>')
+  expect(document.body.innerHTML).toBe('<div id="main"><div pow="" stop="">{{ text }}</div></div><template id="text-view"><div pow="" stop="">{{ text }}</div></template>')
 })
 
 // TODO: pow array template / pow item template

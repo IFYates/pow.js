@@ -28,7 +28,7 @@ test('Safe interpolation can resolve functions', () => {
 test('Safe interpolation can resolve deep functions', () => {
   document.body.innerHTML = '<div>{{ child.func() }}</div>'
 
-  pow.apply(document.body, { child: { name: 'world', func: (me) => 'Hello, ' + me.name + '!' } })
+  pow.apply(document.body, { child: { name: 'world', func: (me) => 'Hello, ' + me.child.name + '!' } })
 
   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
