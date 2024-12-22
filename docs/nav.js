@@ -9,8 +9,8 @@ window.refreshMain = () => {
 const nav = {
     current: location.search?.match(/^\?\/([^\/]+)\/?$/) ? RegExp.$1 : 'home',
     navigate: (item) => {
-        nav.current = item.key
-        history.pushState(null, null, `?/${item.key}/`)
+        nav.current = item.id
+        history.pushState(null, null, `?/${item.id}/`)
         refreshMain()
     },
     isCurrent: (a, b, c) => {
@@ -18,40 +18,45 @@ const nav = {
         return false
     },
 
-    items: {
-        'home': { icon: document.getElementById('svg-home')?.innerHTML, name: 'Home' },
-        'get-started': { name: 'Getting started' },
-        'syntax': {
-            icon: '',
+    pages: [
+        { id: 'home', name: 'Home', icon: '<i class="bi-house-door"></i>' },
+        { id: 'get-started', name: 'Getting started' },
+        {
+            id: 'syntax',
             name: 'Syntax',
-            children: {
-                'syntax-binding': { name: 'Bindings' },
-                'syntax-expressions': { name: 'Expressions' },
-                'syntax-attributes': { name: 'Attributes' },
-            }
+            children: [
+                { id: 'syntax-binding', name: 'Bindings' },
+                { id: 'syntax-expressions', name: 'Expressions' },
+                { id: 'syntax-attributes', name: 'Attributes' },
+            ]
         },
-        'features': {
-            icon: '',
+        {
+            id: 'bindings',
+            name: 'Bindings',
+            children: [
+                { id: 'bindings-conditions', name: 'if / ifnot / else' },
+                { id: 'bindings-loops', name: 'array' },
+                { id: 'bindings-templates', name: 'template' },
+            ]
+        },
+        {
+            id: 'features',
             name: 'Features',
-            children: {
-                'features-conditions': { name: 'Conditions' },
-                'features-loops': { name: 'Loops' },
-                'features-templates': { name: 'Templates' },
-                'features-interaction': { name: 'Interactivity' },
-                'features-reactivity': { name: 'Reactivity' },
-                'features-pow-safe': { name: 'pow.safe' },
-            }
+            children: [
+                { id: 'features-interaction', name: 'Interactivity' },
+                { id: 'features-reactivity', name: 'Reactivity' },
+                { id: 'features-pow-safe', name: 'pow.safe' },
+            ]
         },
-        'examples': {
-            icon: document.getElementById('svg-wrench')?.innerHTML,
+        {
+            id: 'examples',
             name: 'Examples',
-            children: {
-                'examples-quickstart': { name: 'Quickstart' },
-                'examples-external-data': { name: 'External Data' }
-            }
+            children: [
+                { id: 'quickstart', name: 'Quickstart' },
+            ]
         },
-        'repo': { icon: document.getElementById('svg-angles')?.innerHTML, name: 'Repository', url: 'https://github.com/IFYates/pow.js' }
-    }
+        { id: 'repo', name: 'Repository', url: 'https://github.com/IFYates/pow.js' }
+    ]
 }
 console.log(nav.current)
 
