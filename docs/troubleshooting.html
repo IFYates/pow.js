@@ -1,0 +1,33 @@
+<h1 class="text-2xl font-bold">Troubleshooting</h1>
+
+<h2 class="mt-3 text-xl font-bold text-gray-600">Malformed HTML</h2>
+<p class="mt-2 text-gray-600">
+    Since the templating is applied to the DOM structure, malformed HTML may cause what appears to be unexpected
+    behaviour.<br />
+    The <code class="js">$path</code> interpolation is intended to help in these situations.
+</p>
+<p class="mt-2 text-gray-600">
+    A particularly common mistake is not closing tags correctly or incorrect nestings (e.g., <code
+        class="html">div</code> tags cannot be inside <code class="html">p</code> tags).
+</p>
+
+<div class="mt-2 grid grid-cols-2 gap-2">
+    <pre pow stop class="html">
+<span class="expr">{{ $path }}</span>
+&lt;p <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">list</span>">
+    <span class="expr">{{ $path }}</span>
+    &lt;!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
+    &lt;div <span class="pow">pow</span> <span class="attr">array</span>>
+        <span class="expr">{{ $path }}</span>
+    &lt;/div>
+&lt;/p>
+</pre>
+    <pre><code pow stop class="language-html">$root
+&lt;p>
+    $root.list
+&lt;/p>
+&lt;div>
+    $root
+&lt;/div>
+</code></pre>
+</div>

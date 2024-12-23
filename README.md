@@ -57,7 +57,7 @@ Looking at CDN hosting soon.
     <h1>{{ title }}</h1>
     <h2>{{ description }}</h2>
     <p><a href="{{ url }}">See project page</a></p>
-    <p pow item="creation">
+    <p pow data="creation">
         Created by <em>{{ author }}</em> on {{ date }}
     </p>
     <p>
@@ -202,7 +202,7 @@ The default context will be the `data` provided to the `apply()` function, but t
 <!-- pow.apply(document.body, data) -->
 <body><!-- $data = data -->
     <p><!-- $data = data -->
-        <template pow item="child"><!-- $data = data.child -->
+        <template pow data="child"><!-- $data = data.child -->
             <p><!-- $data = data.child -->
 ```
 
@@ -291,7 +291,7 @@ If you are already in the array context, omit the binding value to achieve the s
 ```html
 <!-- pow.apply(document.body, { list: [1, 2, 3] }) -->
 <body>
-    <ul pow item="list">
+    <ul pow data="list">
         <li pow array>{{ $data }}</li>
 ```
 
@@ -399,7 +399,7 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
 **Example:**
 ```html
 {{ $path }}<!-- '$root' -->
-<p pow item="list">
+<p pow data="list">
     {{ $path }}<!-- '$root.list' -->
     <div pow array><!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
         {{ $path }}<!-- '$root' -->
@@ -424,3 +424,5 @@ A particularly common mistake is not closing tags correctly or incorrect nesting
 * Issue: rebinding root template
 * What to do about unknown template?
 * Template wrapping - pass the content of the parent to the child (`$body`?)
+* Subtemplates - template bind content 
+* Binding to function that can modify element

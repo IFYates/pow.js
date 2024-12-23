@@ -131,3 +131,11 @@ test('Failure does not block next binding', () => {
   expect(failed).toBe(true)
   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
+
+test('Binding order is important', () => {
+  document.body.innerHTML = '<div pow if="text == \'Parent\'" data="child">{{ text }}</div><div pow data="child" if="text == \'Child\'">{{ text }}</div>'
+
+  pow.apply(document.body, { text: 'Parent', child: { text: 'Child' } })
+
+  expect(document.body.innerHTML).toBe('<div>Child</div><div>Child</div>')
+})

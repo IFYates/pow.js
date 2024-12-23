@@ -134,7 +134,7 @@
     <!-- Display templates -->
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
-    <template id="version-latest"><template pow template="version" item="'2.0.0'"></template></template>
+    <template id="version-latest"><template pow template="version" data="'2.0.0'"></template></template>
     <template
         id="version"><code><a href="https://github.com/IFYates/pow.js/releases/tag/v{{ $data.split('.').length == 2 ? $data + '.0' : $data }}">{{ $data }}</a></code></template>
 
@@ -151,7 +151,7 @@
         <p class="mt-2 text-gray-600 p-2 border-gray-300 bg-gray-50 grid grid-cols-10 gap-x-2">
             <strong style="text-align:end">Versions:</strong>
             <template pow
-                item="{ data: $data, active: $data.filter($ => $ &lt;= activeVersion).sort((a, b) => b - a)[0] }">
+                data="{ data: $data, active: $data.filter($ => $ &lt;= activeVersion).sort((a, b) => b - a)[0] }">
                 <template pow array="data">
                     <button pow if="$data == $parent.active" class="bg-blue-300"><code>{{ $data }}</code></button>
                     <button pow else class="bg-gray-300 hover:bg-blue-100"
