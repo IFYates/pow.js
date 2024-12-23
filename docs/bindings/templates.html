@@ -1,6 +1,6 @@
 <h1 class="text-2xl font-bold">Bindings / Template</h1>
 
-<template pow template="version-list" item="[ 1.2, 1.4, '2.0' ]"></template>
+<template pow template="version-list" data="[ 1.2, 1.4, '2.0' ]"></template>
 
 <h2 class="mt-3 text-xl font-bold text-gray-600"><code class="html"><code class="attr">template</code>="<code
         class="value">id</code>"</code></h2>
@@ -85,7 +85,7 @@
             class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code></h2>
 
     <p class="mt-2 text-gray-600">
-        Although <span pow template="version" item="1.4"></span> introduced <a
+        Although <span pow template="version" data="1.4"></span> introduced <a
             href="?/syntax-attributes/#interpolated">interpolated attributes</a>, they were evaluated after the
         template and so can not be used to modify bindings.
     </p>
@@ -110,10 +110,10 @@
             class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code></h2>
 
     <p class="mt-2 text-gray-600">
-        Although <span pow template="version" item="1.4"></span> introduced <a
+        Although <span pow template="version" data="1.4"></span> introduced <a
             href="?/syntax-attributes/#interpolated">interpolated attributes</a>, they were evaluated after the
         template
-        prior to <span pow template="version" item="'2.0'"></span> and so could not be used to modify
+        prior to <span pow template="version" data="'2.0'"></span> and so could not be used to modify
         bindings.<br />
         Now that the processing order has changed, an interpolated <code class="attr">:template</code> attribute can
         be used to dynamically select the target template, which gives a convenient structure for simulating a

@@ -10,7 +10,9 @@
             "title": "pow.js",
             "description": "An extremely small and lightweight templating framework.",
             "tags": ["javascript", "templating", "framework"],
+            text: 1,
             "creation": {
+                text: 2,
                 "author": "IFYates",
                 "date": "2024-12-09"
             }
@@ -27,6 +29,13 @@
         Created by <em>{{ author }}</em> on {{ date }}
     </p>
     <p>
+        <div
+        pow
+        data="creation"
+        if="text == 1"
+        >
+            {{ text }}
+        </div>
         Tags ({{ tags.length }}):
         <template pow array="tags">
             <span>[{{ $data }}]</span><span pow ifnot="$last">, </span>

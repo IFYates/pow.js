@@ -1,6 +1,6 @@
 <h1 class="text-2xl font-bold text-gray-600">Syntax / Expressions</h1>
 
-<template pow template="version-list" item="[ '1.0', 1.1, 1.4, '2.0' ]"></template>
+<template pow template="version-list" data="[ '1.0', 1.1, 1.4, '2.0' ]"></template>
 
 <h2 class="mt-3 text-xl font-bold text-gray-600">Overview</h2>
 <blockquote pow if="version(1.1)" class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
@@ -107,7 +107,7 @@ When invoked, the bound function will receive the current context data and the r
 <template pow if="version(2.0)">
     <blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
         In order to make better use of the full expression support in <template pow template="version"
-            item="'1.0'"></template>,
+            data="'1.0'"></template>,
         the design was revised to use only standard characters, and expose the internal values as normal properties.
     </blockquote>
 

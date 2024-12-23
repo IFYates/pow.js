@@ -4,6 +4,7 @@ const mainBinding = pow.bind(document.getElementById('main'))
 window.refreshMain = () => {
     mainBinding.refresh()
     requestAnimationFrame(() => hljs.highlightAll())
+    // TODO: scroll to top
 }
 
 const nav = {
@@ -34,8 +35,10 @@ const nav = {
             id: 'bindings',
             name: 'Bindings',
             children: [
-                { id: 'bindings-conditions', name: 'if / ifnot / else' },
                 { id: 'bindings-loops', name: 'array' },
+                { id: 'bindings-data', name: 'data', url: '?/syntax-binding/#data' },
+                { id: 'bindings-conditions', name: 'if / ifnot / else' },
+                { id: 'bindings-stop', name: 'stop', url: '?/syntax-binding/#stop' },
                 { id: 'bindings-templates', name: 'template' },
             ]
         },
@@ -55,6 +58,8 @@ const nav = {
                 { id: 'quickstart', name: 'Quickstart' },
             ]
         },
+        { id: 'breaking-changes', name: 'Breaking changes' },
+        { id: 'troubleshooting', name: 'Troubleshooting' },
         { id: 'repo', name: 'Repository', url: 'https://github.com/IFYates/pow.js' }
     ]
 }

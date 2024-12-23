@@ -87,17 +87,20 @@ const processElement = (element, state, isRoot, value) => {
 
     value = expr ? resolveExpr(expr, state) : state.$data
     if (attr == B_IF | attr == B_IFNOT) {
+        if (value) {
+            processElement(element, state, isRoot)
+        }
         return processCondition(element, (attr == B_IF) != !value)
     } else if (attr == B_DATA && expr) {
         if (value == null) {
             return element.remove()
         }
-        state = {
+        return processElement(element, {
             ...state,
             $path: state.$path + '.' + expr,
             $data: value,
             $parent: state.$data
-        }
+        }, isRoot)
     } else if (attr == B_ARRAY) {
         value = !value | Array.isArray(value) ? value
             : Object.entries(value).map(([key, value]) => ({ key, value }))
