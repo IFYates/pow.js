@@ -103,5 +103,6 @@ test('Safe binding will rebind event functions', () => {
   document.querySelector('button').click()
 
   expect(document.body.innerHTML).toBe('<button>Click</button>')
-  expect(clickArg).toBe(data)
+  expect(clickArg.$data).toBe(data)
+  expect(clickArg.func).toBe(data.func)
 })

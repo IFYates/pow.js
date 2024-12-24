@@ -22,6 +22,14 @@ test('Can access parent from child context', () => {
   expect(document.body.innerHTML).toBe('<div>Hello, parent!</div>')
 })
 
+test('Parent does not modify child context', () => {
+  document.body.innerHTML = '<div pow data="child">{{ $data.text }}</div>'
+
+  pow.apply(document.body, { text: 'Hello, parent!', child: { } })
+
+  expect(document.body.innerHTML).toBe('<div></div>')
+})
+
 test('Binding context applies to children', () => {
   document.body.innerHTML = '{{ context }} <div pow data="child" attr="{{ context }}">{{ context }}</div> {{ context }}'
 
