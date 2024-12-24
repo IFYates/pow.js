@@ -24,18 +24,19 @@ const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_DATA, 
 // Interpolates text templates
 const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
 
+const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } :  { ...state.$data, ...state })
+
 // Resolves an expression to a value
-const resolveExpr = (expr, state) => {
+const resolveExpr = (expr, state, context = getContext(state)) => {
     try {
         // Execute the expression as JS code, mapping to the state data
-        const fn = (state) => (state.$parent ? { ...state.$data, ...state, $parent: fn(state.$parent) } :  { ...state.$data, ...state })
-        const value = pow._eval(expr, fn(state))
+        const value = pow._eval(expr, context)
         // TODO: recursive so $parent is $parent.$data, but $parent.$parent works, too
 
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
             const id = _rand()
-            window[state.$id][id] = (el) => value.call(el, state.$data, state.$root)
+            window[state.$id][id] = (el) => value.call(el, context)
             return state.$id + '[' + id + '](this)'
         }
         return value
@@ -99,7 +100,7 @@ const processElement = (element, state, isRoot, value) => {
             ...state,
             $path: state.$path + '.' + expr,
             $data: value,
-            $parent: state.$data
+            $parent: state
         }, isRoot)
     } else if (attr == B_ARRAY) {
         value = !value | Array.isArray(value) ? value
@@ -160,7 +161,8 @@ const bind = (element) => {
             window[$id] = {}
 
             try {
-                processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
+                const root = { $id, $data: data, $path: '$root' }
+                processElement(element, { ...root, $root: root }, 1)
             } finally {
                 element.innerHTML = element.innerHTML.replace(/​/g, '')
                 delete binding.$pow
