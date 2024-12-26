@@ -1,3 +1,46 @@
+
+div.example {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+div.example.grid21 {
+    grid-template-columns: 2fr 1fr;
+}
+div.example pre {
+    border: 1px solid #aaaaaa;
+    background-color: #ededed;
+    padding: 10px;
+}
+div.example code {
+    margin-bottom: 0;
+    height: 100%;
+}
+div.example pre.js {
+    grid-column: span 2;
+}
+
+code {
+    color: inherit;
+}
+button.version {
+    background-color: #dedede;
+}
+button.version:hover {
+    background-color: #aaaaff;
+}
+button.version.active {
+    background-color: #6060ff;
+    color: white;
+    cursor: default;
+}
+
+blockquote {
+    border-left: 4px solid #aaaaff;
+    padding-left: 15px;
+    background-color: #e8e8e8;
+}
+
 .html {
     border-radius: 5px;
     background-color: #dedede;

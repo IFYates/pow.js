@@ -1,9 +1,9 @@
 import pow from '../src/pow.js'
 
-const mainBinding = pow.bind(document.getElementById('main'))
+const mainBinding = pow.bind(document.getElementsByTagName('main')[0])
 window.refreshMain = () => {
     mainBinding.refresh()
-    requestAnimationFrame(() => hljs.highlightAll())
+    //requestAnimationFrame(() => hljs.highlightAll())
     // TODO: scroll to top
 }
 
@@ -65,9 +65,9 @@ const nav = {
 }
 console.log(nav.current)
 
+pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)
-pow.apply(document.getElementById('nav'), nav)
 HTMLImportElement.whenInitialised(() => {
     mainBinding.apply(nav)
-    requestAnimationFrame(() => hljs.highlightAll())
+    // requestAnimationFrame(() => hljs.highlightAll())
 })

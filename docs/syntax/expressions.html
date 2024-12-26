@@ -1,15 +1,15 @@
-<h1 class="text-2xl font-bold text-gray-600">Syntax / Expressions</h1>
+<h1>Syntax / Expressions</h1>
 
 <template pow template="version-list" data="[ '1.0', 1.1, 1.4, '2.0' ]"></template>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">Overview</h2>
-<blockquote pow if="version(1.1)" class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
+<h2>Overview</h2>
+<blockquote pow if="version(1.1)">
     <strong>Note:</strong> This page only covers core <span pow template="pow"></span> functionality. If you are using
     <a href="?/features-pow-safe/"><span pow template="pow.safe"></span></a> refer to that page instead, as it has a
     different support for expressions.
 </blockquote>
 
-<p class="mt-2 text-gray-600">
+<p>
     <span pow template="pow"></span> uses "moustache" syntax to access data in the current context.
 <pre><code pow stop class="language-js">
         {{ property }}
@@ -20,27 +20,27 @@ Any valid javascript expression can be used.
         {{ text.toUpperCase() }}
     </code></pre>
 If a property is not found, the result will be blank and a warning will be raised. To suppress the warning, access
-optional properties from the <a href="#internal-values"><code>$data</code></a> object.
+optional properties from the <a href="#internal-values"><code class="expr">$data</code></a> object.
 </p>
 
-<p class="mt-2 text-gray-600">
+<p>
     It is important to be aware that values are not made HTML-safe, so any HTML tags will be inserted verbatim.
 </p>
 
-<p class="mt-2 text-gray-600">
-    The context data is initially the root data passed in to <code>apply()</code>, but it can be changed using the
-    <a href="?/syntax-data/"><code>data</code></a> binding.
+<p>
+    The context data is initially the root data passed in to <code class="js">apply()</code>, but it can be changed using the
+    <a href="?/syntax-data/"><code class="attr">data</code></a> binding.
 </p>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600" id="functions">Functions</h2>
-<p class="mt-2 text-gray-600">
+<h2 id="functions">Functions</h2>
+<p>
     Functions can be invoked from context data properties or the global scope.
 <pre><code pow stop class="language-js">
         {{ func(property) }}
     </code></pre>
 </p>
 
-<p class="mt-2 text-gray-600">
+<p>
     If a function is used without any arguments, the output will be a bound function reference, which can be
     used to <a href="?/syntax-events/">bind element events</a>.
 <pre><code pow stop class="language-js">
@@ -54,101 +54,147 @@ When invoked, the bound function will receive the current context data and the r
     </code></pre>
 </p>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600" id="internal-values">Internal values</h2>
+<h2 id="internal-values">Internal values</h2>
 <template pow if="version(1.0, 1.9)">
-    <blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
+    <blockquote>
         The original design of <span pow template="pow"></span> only handled very basic expression parsing,
         so using a non-standard character to differentiate internal values from normal data was useful.<br />
-        This does mean that some expressions are not possible, such as <code>*root.attr1 == *data.attr2</code>.
+        This does mean that some expressions are not possible, such as <code class="expr">*root.attr1 == *data.attr2</code>.
     </blockquote>
 
-    <p class="mt-2 text-gray-600">
+    <p>
         The accessible internal values are:
     <ul>
         <li>
-            <code>*root</code>: The data originally passed to <code>apply</code>.
+            <code class="expr">*root</code>: The data originally passed to <code class="js">apply()</code>.
         </li>
         <li pow if="version(1.0, 1.3)">
-            <code>*data</code>: The current data context.
+            <code class="expr">*data</code>: The current data context.
         </li>
         <li pow if="version(1.4)">
-            <code>*data</code> / <code>this</code>: The current data context.
+            <code class="expr">*data</code> / <code class="js">this</code>: The current data context.
         </li>
         <li>
-            <code>*parent</code>: The previous data context.
+            <code class="expr">*parent</code>: The previous data context.
         </li>
         <li>
-            <code>*path</code>: The binding path to the current data context.
+            <code class="expr">*path</code>: The binding path to the current data context.
         </li>
     </ul>
     </p>
 
-    <p class="mt-2 text-gray-600">
+    <p>
         When used in an <a href="?/syntax-arrays/">array context</a>, there are additional internal values:
     <ul>
         <li>
-            <code>*index</code>: The index of the current item in the array.
+            <code class="expr">*index</code>: The index of the current item in the array.
         </li>
         <li>
-            <code>*first</code>: <code>true</code> if this is the first item in the array.
+            <code class="expr">*first</code>: <code class="js">true</code> if this is the first item in the array.
         </li>
         <li>
-            <code>*last</code>: <code>true</code> if this is the last item in the array.
+            <code class="expr">*last</code>: <code class="js">true</code> if this is the last item in the array.
         </li>
     </ul>
     </p>
 
-    <blockquote class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
+    <blockquote>
         <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
-        the internal value will not be accessible.
+        the internal value <strong>will not be accessible</strong>.
     </blockquote>
 </template>
 
 <template pow if="version(2.0)">
-    <blockquote class="mt-2 text-gray-600 p-4 my-4 border-s-4 border-gray-300 bg-gray-50">
+    <blockquote>
         In order to make better use of the full expression support in <template pow template="version"
             data="'1.0'"></template>,
         the design was revised to use only standard characters, and expose the internal values as normal properties.
     </blockquote>
 
-    <p class="mt-2 text-gray-600">
+    <p>
         The accessible internal values are:
     <ul>
         <li>
-            <code>$root</code>: The data originally passed to <code>apply()</code>.
+            <code class="expr">$root</code>: The data originally passed to <code class="js">apply()</code>.
         </li>
         <li>
-            <code>$data</code> / <code>this</code>: The current data context.
+            <code class="expr">$data</code> / <code class="js">this</code>: The current data context.
         </li>
         <li>
-            <code>$parent</code>: The previous data context.
+            <code class="expr">$parent</code>: The previous <a href="#context">data context</a>.
         </li>
         <li>
-            <code>$path</code>: The binding path to the current data context.
+            <code class="expr">$path</code>: The binding path to the current data context.
         </li>
     </ul>
     </p>
 
-    <p class="mt-2 text-gray-600">
+    <p>
         When used in an <a href="?/syntax-arrays/">array context</a>, there are additional internal values:
     <ul>
         <li>
-            <code>$array</code>: The data context of the current array binding.
+            <code class="expr">$array</code>: The data context of the current array binding.
         </li>
         <li>
-            <code>$index</code>: The index of the current item in the array.
+            <code class="expr">$index</code>: The index of the current item in the array.
         </li>
         <li>
-            <code>$first</code>: <code>true</code> if this is the first item in the array.
+            <code class="expr">$first</code>: <code class="js">true</code> if this is the first item in the array.
         </li>
         <li>
-            <code>$last</code>: <code>true</code> if this is the last item in the array.
+            <code class="expr">$last</code>: <code class="js">true</code> if this is the last item in the array.
         </li>
     </ul>
     </p>
 
-    <blockquote class="mt-2 text-gray-600 p-2 my-4 border-s-4 border-orange-300 bg-gray-200">
+    <blockquote>
         <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
-        the internal value will not to be accessed through <code>$data</code> or <code>this</code>.
+        the internal value will need to be accessed through <code class="expr">$data</code> or <code class="js">this</code>.
     </blockquote>
 </template>
+
+<h2 id="context">Context</h2>
+<p>
+    The context object is built as each <code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>/<code
+        class="attr">array</code> binding is
+    processed.<br />
+    The <code class="js">$parent</code> property points to the previous binding context, <span pow if="version(2.0)">and
+        can be chained until the root is reached,</span> while the <code class="js">$path</code> property contains the
+    path to the current context.
+</p>
+<div pow if="version(1.0, 2.0)" class="example">
+    <pre class="html"><code pow stop class="language-html">&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
+    &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>">
+        <span class="expr">{{ $path }}</span>
+        <span class="expr">{{ $parent.$path }}</span>
+    &lt;/div>
+&lt;/div></code></pre>
+    <pre class="html"><code pow stop class="language-html">&lt;div>
+    &lt;div>
+        $root.child.value
+        $root.child
+    &lt;/div>
+&lt;/div></code></pre>
+</div>
+<div pow if="version(2.0)" class="example">
+    <pre class="html"><code pow stop class="language-html">&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
+    &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">grandchild</span>">
+        &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>">
+            <span class="expr">{{ $path }}</span>
+            <span class="expr">{{ $parent.$path }}</span>
+            <span class="expr">{{ $parent.$parent.$path }}</span>
+            <span class="expr">{{ $parent.$parent.$parent.$path }}</span>
+        &lt;/div>
+    &lt;/div>
+&lt;/div></code></pre>
+    <pre class="html"><code pow stop class="language-html">&lt;div>
+    &lt;div>
+        &lt;div>
+            $root.child.grandchild.value
+            $root.child.grandchild
+            $root.child
+            $root
+        &lt;/div>
+    &lt;/div>
+&lt;/div></code></pre>
+</div>

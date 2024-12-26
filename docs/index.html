@@ -1,4 +1,3 @@
-<!-- Layout adapted from https://tailwindflex.com/@hielkio/tailwind-sidebar-layout-improved -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,115 +6,68 @@
     <title>pow.js :: Documentation</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link rel="stylesheet" href="hljs-theme.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script> -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="HTMLImportElement.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="nav.js"></script>
 </head>
 
 <body>
-    <template id="svg-home">
-        <path stroke-linecap="round" stroke-linejoin="round"
-            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25">
-        </path>
-    </template>
-    <template id="svg-wrench">
-        <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z" />
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4.867 19.125h.008v.008h-.008v-.008Z" />
-    </template>
-    <template id="svg-angles">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l-7-7 7-7m5 14l7-7-7-7"></path>
-    </template>
+    <div class="d-flex">
+        <nav class="sidebar d-flex flex-column flex-shrink-0 position-fixed">
+            <!-- <button class="toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-chevron-left"></i>
+            </button> -->
 
-    <div class="flex h-screen bg-gray-100">
-
-        <!-- Mobile menu toggle button -->
-        <input type="checkbox" id="menu-toggle" class="hidden peer">
-
-        <!-- Sidebar -->
-        <div id="nav"
-            class="hidden peer-checked:flex md:flex flex-col w-64 bg-gray-800 transition-all duration-300 ease-in-out">
-            <div class="flex items-center justify-between h-16 bg-gray-900 px-4">
-                <label for="menu-toggle" class="text-white cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:hidden lg:hidden" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </label>
+            <div class="p-4">
+                <h4 class="logo-text fw-bold mb-0">pow.js💥</h4>
             </div>
-            <div class="flex flex-col flex-1 overflow-y-auto">
-                <nav class="flex-1 px-2 py-4 bg-gray-800">
 
-                    <template pow array="pages">
-                        <!-- Item without children -->
-                        <a pow ifnot="this.children" href="javascript:{{ $root.navigate }}" :href="this.url"
-                            class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700 group"
-                            :class="$root.current == id ? '+ bg-gray-600' : ''">
-                            {{ this.icon }}
-                            {{ name }}
+            <div class="nav flex-column">
+                <template pow array="pages">
+                    <!-- Item with children -->
+                    <template pow if="this.children">
+                        <a class="sidebar-link text-decoration-none p-2">
+                            <i class="fas fa-home me-3"></i>
+                            <span class="hide-on-collapse">{{ name }}</span>
                         </a>
 
-                        <!-- Item with children -->
-                        <div pow else class="mb-2 relative group">
-                            <input type="checkbox" id="toggle-nav{{ $index }}" class="hidden peer">
-
-                            {{ this.icon }}
-
-                            <label for="toggle-nav{{ $index }}"
-                                class="flex items-center px-12 py-2 mt-2 text-gray-100 hover:bg-gray-700 cursor-pointer w-full">
-                                {{ name }}
-                            </label>
-
-                            <!-- Arrow Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-4 w-4 ml-auto transition-transform transform peer-checked:rotate-180 absolute right-4 top-3 transform #dis--translate-y-1/2 text-white"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-
-                            <!-- Submenu -->
-                            <div
-                                class="hidden peer-checked:flex flex-col bg-white text-gray-800 mt-1 transition-all duration-300">
-                                <template pow array="children">
-                                    <a pow href="javascript:{{ $root.navigate }}" :href="this.url"
-                                        class="block px-4 py-2 hover:bg-gray-200">
-                                        {{ name }}
-                                    </a>
-                                </template>
-                            </div>
-                        </div>
+                        <template pow array="children">
+                            <a href="javascript:{{ $root.navigate }}" class="sidebar-link text-decoration-none p-1 ps-5">
+                                <span class="hide-on-collapse">{{ name }}</span>
+                            </a>
+                        </template>
                     </template>
-                </nav>
-            </div>
-        </div>
 
-        <!-- Main content -->
-        <div class="flex flex-col flex-1 overflow-y-auto">
-            <div class="flex items-center justify-between h-16 bg-white border-b border-gray-200">
-                <div class="flex items-center px-4">
-                    <label for="menu-toggle"
-                        class="md:hidden mr-4 bg-gray-800 text-white p-2 rounded focus:outline-none cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none"
-                            viewBox="0 0 24 24" stroke="white">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </label>
-                    <span class="font-bold text-3xl">pow.js 💥</span>
-                    <!-- <input class="mx-4 w-full border rounded-md px-4 py-2" type="text" placeholder="Search"> -->
-                </div>
+                    <!-- Item without children -->
+                    <a pow ifnot="this.children" href="javascript:{{ $root.navigate }}" :href="this.url" class="sidebar-link text-decoration-none p-2">
+                        <i class="fas fa-home me-3"></i>
+                        <span class="hide-on-collapse">{{ name }}</span>
+                    </a>
+                </template>
             </div>
-            <div class="p-4" id="main">
+        </nav>
+
+        <main class="main-content">
+            <div class="container-fluid">
                 <template pow :template="'page-' + current"></template>
             </div>
-        </div>
+        </main>
+
     </div>
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        window.toggleSidebar = () => sidebar.classList.toggle('collapsed')
+    </script>
 
     <!-- Page preload -->
     <div style="display:none" id="preloader">
@@ -131,6 +83,7 @@
         </template>
     </div>
 
+
     <!-- Display templates -->
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
@@ -140,8 +93,8 @@
 
     <script>
         window.activeVersion = 2.0
-        function setActiveVersion(version) {
-            window.activeVersion = version
+        function setActiveVersion(context) {
+            window.activeVersion = context.$data
             window.refreshMain()
         }
         window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
@@ -153,8 +106,8 @@
             <template pow
                 data="{ data: $data, active: $data.filter($ => $ &lt;= activeVersion).sort((a, b) => b - a)[0] }">
                 <template pow array="data">
-                    <button pow if="$data == $parent.active" class="bg-blue-300"><code>{{ $data }}</code></button>
-                    <button pow else class="bg-gray-300 hover:bg-blue-100"
+                    <button pow if="$data == $parent.active" class="version active"><code>{{ $data }}</code></button>
+                    <button pow else class="version"
                         onclick="{{ setActiveVersion }}"><code>{{ $data }}</code></button>
                 </template>
             </template>
