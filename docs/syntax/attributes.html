@@ -1,7 +1,5 @@
 <h1 class="text-2xl font-bold text-gray-600">Syntax / Attributes</h1>
 
-<template pow template="version-list" data="[ '1.0', 1.4, '2.0' ]"></template>
-
 <h2 class="mt-3 text-xl font-bold text-gray-600">Basic values</h2>
 <p class="mt-2 text-gray-600">
     As with any part of the bound document, <a href="?/syntax-expressions/">expressions</a> will be interpolated and
@@ -42,10 +40,10 @@
     </p>
     <div pow if="version(1.4, 2.0)" class="example">
         <pre style="grid-column: span 2"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">:data</span>="<span class="expr">item</span>"><span class="expr">{{ item }}</span>&lt;/div></code></pre>
+        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
         <br />
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child1</span>">Parent&lt;/div></code></pre>
-        <pre><code pow stop>&lt;div>Parent&lt;/div></code></pre>
+        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child1</span>">Parent&lt;/div></code></pre>
+        <pre><code>&lt;div>Parent&lt;/div></code></pre>
     </div>
 
     <p pow if="version(2.0)" class="mt-2 text-gray-600">
@@ -54,9 +52,9 @@
     </p>
     <div pow if="version(2.0)" class="example">
         <pre style="grid-column: span 2"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">:data</span>="<span class="expr">item</span>"><span class="expr">{{ item }}</span>&lt;/div></code></pre>
+        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
         <br />
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child1</span>"><span class="expr">{{ item }}</span>&lt;/div></code></pre>
-        <pre><code pow stop>&lt;div>Child 1&lt;/div></code></pre>
+        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child1</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
+        <pre><code>&lt;div>Child 1&lt;/div></code></pre>
     </div>
 </template>

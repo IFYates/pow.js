@@ -1,16 +1,14 @@
-<h1 class="text-2xl font-bold">Features / Reactivity</h1>
+<h1>Features / Reactivity</h1>
 
-<template pow template="version-list" data="[ '1.0' ]"></template>
-
-<p class="mt-2 text-gray-600">
+<p>
     <code pow template="pow"></code> does not provide true reactivity out-of-the-box, in the aim of keeping the library
     small.<br />
     Some reactivity can be achieved through re-applying or refreshing a binding. Note that this does destroy the
     elements, so any code referencing the output will need to be reapplied.
 </p>
 
-<div class="mt-2 grid grid-cols-2 gap-2">
-    <pre class="js">const binding = pow.bind(document.body)
+<div class="example nogrid">
+    <pre><code class="js">const binding = pow.bind(document.body)
 const data = {
     count: 0,
     increment: () => {
@@ -18,8 +16,7 @@ const data = {
         binding.refresh()
     }
 }
-binding.apply(data)</pre>
-    <pre pow stop class="html">Current value: {{ count }}
-&lt;button onclick="{{ increment }}">Add 1&lt;/button>
-</pre>
+binding.apply(data)</code></pre>
+    <pre><code pow stop>Current value: <span class="expr">{{ count }}</span>
+&lt;button onclick="<span class="expr">{{ increment }}</span>">Add 1&lt;/button></code></pre>
 </div>

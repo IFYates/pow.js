@@ -9,19 +9,19 @@
 <p>
     The following can be saved to a local file and opened in your browser:
 </p>
+<div class="example nogrid">
+    <pre><code>&lt;head>
+    &lt;script type="module">
+        <span class="js">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'</span>
+        <span class="js">const data = { text: 'Hello, world!' }</span>
+        <span class="js"><a href="?/syntax-binding/">pow.apply(document.body, data)</a></span>
+    &lt;/script>
+&lt;/head>
+&lt;body>
+    &lt;div><span pow stop class="expr"><a href="?/syntax-expressions/">{{ text }}</a></span>&lt;/div>
+&lt;/body></code></pre>
+</div>
 
-<pre><code pow stop class="language-html">
-    &lt;head>
-        &lt;script type="module">
-            import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
-            const data = { text: 'Hello, world!' }
-            pow.apply(document.body, data)
-        &lt;/script>
-    &lt;/head>
-    &lt;body>
-        &lt;div><a href="?/syntax-expressions/">{{ text }}</a>&lt;/div>
-    &lt;/body>
-</code></pre>
 
 <p>
     Check out a complete example here: <a
