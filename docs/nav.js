@@ -7,12 +7,21 @@ window.refreshMain = () => {
     // TODO: scroll to top
 }
 
+window.activeVersion = 2.0
+window.setActiveVersion = function(context) {
+    window.activeVersion = context.$data
+    window.refreshMain()
+}
+window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
+
 const nav = {
     current: location.search?.match(/^\?\/([^\/]+)\/?$/) ? RegExp.$1 : 'home',
-    navigate: (item) => {
+    navigate: function (item) {
+        this.href = 'javascript:void(0)'
         nav.current = item.id
         history.pushState(null, null, `?/${item.id}/`)
         refreshMain()
+        return false
     },
     isCurrent: (a, b, c) => {
         console.log(this, a, b, c)
@@ -36,7 +45,7 @@ const nav = {
             name: 'Bindings',
             children: [
                 { id: 'bindings-loops', name: 'array' },
-                { id: 'bindings-data', name: 'data', url: '?/syntax-binding/#data' },
+                { id: 'bindings-data', name: 'data / item', url: '?/syntax-binding/#data' },
                 { id: 'bindings-conditions', name: 'if / ifnot / else' },
                 { id: 'bindings-stop', name: 'stop', url: '?/syntax-binding/#stop' },
                 { id: 'bindings-templates', name: 'template' },
@@ -55,7 +64,7 @@ const nav = {
             id: 'examples',
             name: 'Examples',
             children: [
-                { id: 'quickstart', name: 'Quickstart' },
+                { id: 'examples-quickstart', name: 'Quickstart' },
             ]
         },
         { id: 'breaking-changes', name: 'Breaking changes' },

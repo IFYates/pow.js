@@ -11,23 +11,20 @@
         class="html">div</code> tags cannot be inside <code class="html">p</code> tags).
 </p>
 
-<div class="mt-2 grid grid-cols-2 gap-2">
-    <pre pow stop class="html">
-<span class="expr">{{ $path }}</span>
+<div class="example">
+    <pre><code><span class="expr">{{ $path }}</span>
 &lt;p <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">list</span>">
     <span class="expr">{{ $path }}</span>
     &lt;!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
     &lt;div <span class="pow">pow</span> <span class="attr">array</span>>
         <span class="expr">{{ $path }}</span>
     &lt;/div>
-&lt;/p>
-</pre>
-    <pre><code pow stop class="language-html">$root
+&lt;/p></code></pre>
+    <pre><code>$root
 &lt;p>
     $root.list
 &lt;/p>
 &lt;div>
     $root
-&lt;/div>
-</code></pre>
+&lt;/div></code></pre>
 </div>

@@ -1,22 +1,53 @@
-<h1 class="text-2xl font-bold">Features / Interactivity</h1>
+<h1>Features / Interactivity</h1>
 
-<template pow template="version-list" data="[ '1.0' ]"></template>
-
-<p class="mt-2 text-gray-600">
+<p>
     By using a <a href="?/syntax-expressions/#functions">function expression</a>, any element event can be bound to with
     a <code class="html"><code class="attr">on(event)</code>="<code pow stop class="value">{{ function }}</code>"</code>
     attribute.
 </p>
-<pre class="html">
-    &lt;button <span class="pow">pow</span> <span class="attr">onclick</span>="<span class="value">clicked</span>">
-        Click me
-    &lt;/button>
-</pre>
-When invoked, the bound function will receive the current context data and the root data.
-<pre><code pow stop class="language-js">
-    function clicked(data, root) {
-        // this: The element that was clicked
-        // data: The context data
-        // root: The root data
-    }
+<div class="example nogrid">
+    <pre><code>&lt;button <span class="pow">pow</span> <span class="attr">onclick</span>="<span pow stop class="expr">{{ clicked }}</span>">
+    Click me
+&lt;/button></code></pre>
+</div>
+
+<template pow if="version(1.0, 2.0)">
+    <p>
+        When invoked, the bound function will receive the current context data and the root data.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked(data, root) {
+    // this: The element that was clicked
+    // data: The context data
+    // root: The root data
+}
 </code></pre>
+    </div>
+</template>
+
+<template pow if="version(2.0)">
+    <p>
+        When invoked, the bound function will receive the current context object in full.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked(context) {
+    // this: The element that was clicked
+    // context.$path: The current binding path
+    // context.$data: The context data
+    // context.$root: The root data
+}
+</code></pre>
+    </div>
+    
+    <p>
+        It can be cleaner to map the argument to the properties needed, providing compatibility with older versions.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked({ $data, $root }) {
+    // this: The element that was clicked
+    // $data: The context data
+    // $root: The root data
+}
+</code></pre>
+    </div>
+</template>

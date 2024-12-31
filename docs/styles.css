@@ -1,11 +1,10 @@
-
 div.example {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
 }
-div.example.grid21 {
-    grid-template-columns: 2fr 1fr;
+div.example.nogrid {
+    grid-template-columns: auto;
 }
 div.example pre {
     border: 1px solid #aaaaaa;
@@ -20,6 +19,9 @@ div.example pre.js {
     grid-column: span 2;
 }
 
+pre.block {
+    margin-left: 4ex;
+}
 code {
     color: inherit;
 }
@@ -43,7 +45,7 @@ blockquote {
 
 .html {
     border-radius: 5px;
-    background-color: #dedede;
+    background-color: #bcbcbc;
     color: darkslategray;
 }
 .js {

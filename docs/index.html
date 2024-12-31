@@ -32,6 +32,18 @@
                 <h4 class="logo-text fw-bold mb-0">pow.js💥</h4>
             </div>
 
+            <div style="color:#a0a3bd; align-self:center">
+                Version:&nbsp;
+                <select onchange="{{ function() { setActiveVersion.call(this, { $data: this.value }) } }}">
+                    <option value="2.0">2.0 (current)</option>
+                    <option value="1.4">1.4</option>
+                    <option value="1.3">1.3</option>
+                    <option value="1.2">1.2</option>
+                    <option value="1.1">1.1</option>
+                    <option value="1.0">1.0</option>
+                </select>
+            </div>
+
             <div class="nav flex-column">
                 <template pow array="pages">
                     <!-- Item with children -->
@@ -42,14 +54,16 @@
                         </a>
 
                         <template pow array="children">
-                            <a href="javascript:{{ $root.navigate }}" class="sidebar-link text-decoration-none p-1 ps-5">
+                            <a pow href="?/{{ id }}/" :href="this.url" onclick="{{ this.url ? '' : $root.navigate }}"
+                                class="sidebar-link text-decoration-none p-1 ps-5">
                                 <span class="hide-on-collapse">{{ name }}</span>
                             </a>
                         </template>
                     </template>
 
                     <!-- Item without children -->
-                    <a pow ifnot="this.children" href="javascript:{{ $root.navigate }}" :href="this.url" class="sidebar-link text-decoration-none p-2">
+                    <a pow ifnot="this.children" href="?/{{ id }}/" :href="this.url"
+                        onclick="{{ this.url ? '' : $root.navigate }}" class="sidebar-link text-decoration-none p-2">
                         <i class="fas fa-home me-3"></i>
                         <span class="hide-on-collapse">{{ name }}</span>
                     </a>
@@ -83,36 +97,12 @@
         </template>
     </div>
 
-
     <!-- Display templates -->
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="version-latest"><template pow template="version" data="'2.0.0'"></template></template>
     <template
         id="version"><code><a href="https://github.com/IFYates/pow.js/releases/tag/v{{ $data.split('.').length == 2 ? $data + '.0' : $data }}">{{ $data }}</a></code></template>
-
-    <script>
-        window.activeVersion = 2.0
-        function setActiveVersion(context) {
-            window.activeVersion = context.$data
-            window.refreshMain()
-        }
-        window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
-    </script>
-    <template id="version-list">
-        <!-- data: [ string ] -->
-        <p class="mt-2 text-gray-600 p-2 border-gray-300 bg-gray-50 grid grid-cols-10 gap-x-2">
-            <strong style="text-align:end">Versions:</strong>
-            <template pow
-                data="{ data: $data, active: $data.filter($ => $ &lt;= activeVersion).sort((a, b) => b - a)[0] }">
-                <template pow array="data">
-                    <button pow if="$data == $parent.active" class="version active"><code>{{ $data }}</code></button>
-                    <button pow else class="version"
-                        onclick="{{ setActiveVersion }}"><code>{{ $data }}</code></button>
-                </template>
-            </template>
-        </p>
-    </template>
 </body>
 
 </html>
