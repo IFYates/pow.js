@@ -35,15 +35,13 @@
     </div>
 
     <p pow if="version(1.4, 2.0)" class="mt-2 text-gray-600">
-        Interpolated attributes are evaluated after bindings have been applied, with the context of any <code
+        Interpolated attributes are evaluated <em>after</em> bindings have been applied, with the context of any <code
             class="attr">item</code> or <code class="attr">array</code> binding.
     </p>
     <div pow if="version(1.4, 2.0)" class="example">
         <pre style="grid-column: span 2"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
         <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
-        <br />
-        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child1</span>">Parent&lt;/div></code></pre>
-        <pre><code>&lt;div>Parent&lt;/div></code></pre>
+        <pre><code>&lt;div item="child1">Parent&lt;/div></code></pre>
     </div>
 
     <p pow if="version(2.0)" class="mt-2 text-gray-600">

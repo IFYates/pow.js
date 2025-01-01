@@ -126,9 +126,8 @@
 
 <template pow if="version(2.0)">
     <blockquote>
-        In order to make better use of the full expression support in <template pow template="version"
-            data="'1.0'"></template>,
-        the design was revised to use only standard characters, and expose the internal values as normal properties.
+        In order to make better use of the full expression support, the original design has been revised to use only
+        standard characters and expose the internal values as normal properties.
     </blockquote>
 
     <p>
@@ -189,13 +188,13 @@
     <pre class="html"><code pow stop class="language-html">&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">value</span>">
         <span class="expr">{{ *path }}</span>
-        <span class="expr">{{ *parent.$path }}</span>
+        <span class="expr">{{ *parent }}</span>
     &lt;/div>
 &lt;/div></code></pre>
     <pre class="html"><code class="language-html">&lt;div>
     &lt;div>
         *root.child.value
-        *root.child
+        [object root.child]
     &lt;/div>
 &lt;/div></code></pre>
 </div>

@@ -27,7 +27,7 @@ body {
     overflow: hidden;
 }
 
-.sidebar-link:hover {
+.sidebar-link[href]:hover {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(5px);
