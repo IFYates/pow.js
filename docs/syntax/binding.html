@@ -27,7 +27,7 @@
 <ul>
     <li pow if="version(1.4)"><a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this element hierarchy.</li>
     <li>
-        <a href="?/features-conditions/">
+        <a pow href="?/bindings-conditions/" onclick="{{ () => $root.navigate('bindings-conditions') }}">
             <code class="attr">if</code>
             <code class="attr">ifnot</code>
             <code class="attr">else</code>
@@ -54,7 +54,7 @@
     <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">item</span>="<span class="expr">child</span>">
     <span pow stop class="expr">{{ text }}</span>
 &lt;/div><hr/>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
-<span pow stop class="expr">{{ text }}</span>
+    <span pow stop class="expr">{{ text }}</span>
 &lt;/div></code></pre>
     <pre><code>&lt;div>
     Hello, world!

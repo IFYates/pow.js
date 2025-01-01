@@ -1,8 +1,8 @@
-<h1 class="text-2xl font-bold">Breaking changes</h1>
+<h1>Breaking changes</h1>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">v2.0</h2>
-<p class="mt-2 text-gray-600">
-    data
-    priority
-    function binding arg
-</p>
+<h2>v2.0</h2>
+<ul>
+    <li><code class="attr">item</code> attribute has been renamed to <code class="attr">data</code>, to better match its behaviour</li>
+    <li>Binding attributes are now parsed in the order they appear in the HTML, instead of based on a fixed order</li>
+    <li>Bound functions now receive the entire context object as an argument, instead of the <code class="js">$data</code> and <code class="js">$root</code> items separately</li>
+</ul>
