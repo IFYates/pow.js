@@ -2,6 +2,7 @@
     color: #eff3f8;
     background-color: #30313b;
 }
+
 a {
     color: #a6bdd8;
 }
@@ -100,8 +101,26 @@ blockquote {
 
 pre.live-example {
     -webkit-user-modify: read-write;
+    position: relative;
 }
+
 pre.example-data {
     grid-column: span 2;
     -webkit-user-modify: read-write;
+}
+
+.element {
+    position: relative;
+}
+
+pre.live-example::before {
+    font-family: 'Font Awesome 6 Free';
+    content: '\f304';
+    font-weight: 900;
+    color: #ffffff30;
+    position: absolute;
+    z-index: 0;
+    right: 8px;
+    bottom: 5px;
+    font-size: 1.5rem;
 }
