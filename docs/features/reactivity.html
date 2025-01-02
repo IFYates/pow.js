@@ -7,8 +7,12 @@
     elements, so any code referencing the output will need to be reapplied.
 </p>
 
-<div class="example nogrid">
-    <pre><code class="js">const binding = pow.bind(document.body)
+<div class="example">
+    <pre class="live-example" style="grid-row: span 2"><code>&lt;head>
+    &lt;script type="module">
+<div class="js" style="margin-left: 2em">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
+
+const binding = pow.bind(document.body)
 const data = {
     count: 0,
     increment: () => {
@@ -16,7 +20,12 @@ const data = {
         binding.refresh()
     }
 }
-binding.apply(data)</code></pre>
-    <pre><code pow stop>Current value: <span class="expr">{{ count }}</span>
-&lt;button onclick="<span class="expr">{{ increment }}</span>">Add 1&lt;/button></code></pre>
+binding.apply(data)</div>   &lt;/script>
+&lt;/head>
+&lt;body>
+    &lt;div>Current value: <span pow stop class="expr">{{ count }}</span>&lt;/div>
+    &lt;button onclick="<span pow stop class="expr">{{ increment }}</span>">Add 1&lt;/button>
+&lt;/body></code></pre>
+    <pre></pre>
+    <pre class="example-live" style="background-color:white"></pre>
 </div>

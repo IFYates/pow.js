@@ -6,6 +6,10 @@ a {
     color: #a6bdd8;
 }
 
+.error {
+    color: #ff0037;
+}
+
 div.example {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -92,4 +96,12 @@ blockquote {
     background-color: #6279cb;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+pre.live-example {
+    -webkit-user-modify: read-write;
+}
+pre.example-data {
+    grid-column: span 2;
+    -webkit-user-modify: read-write;
 }

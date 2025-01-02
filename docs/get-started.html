@@ -9,17 +9,18 @@
 <p>
     The following can be saved to a local file and opened in your browser:
 </p>
-<div class="example nogrid">
-    <pre><code>&lt;head>
+<div class="example">
+    <pre class="live-example"><code>&lt;head>
     &lt;script type="module">
-        <span class="js">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'</span>
-        <span class="js">const data = { text: 'Hello, world!' }</span>
-        <span class="js"><span pow template="nav" data="{ id: 'syntax-binding', text: 'pow.apply(document.body, data)' }"></span></span>
+    <span class="js">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'</span>
+    <span class="js">const data = { text: 'Hello, world!' }</span>
+    <span class="js"><span pow template="nav" data="{ id: 'syntax-binding', text: 'pow.apply(document.body, data)' }"></span></span>
     &lt;/script>
 &lt;/head>
 &lt;body>
     &lt;div><span pow template="nav" data="{ id: 'syntax-expressions', text: '{{ text }}' }" class="expr"></span>&lt;/div>
 &lt;/body></code></pre>
+    <pre></pre>
 </div>
 
 <p>
