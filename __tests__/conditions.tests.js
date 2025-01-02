@@ -69,3 +69,11 @@ test('Falls through to "else" on all other failures (ifnot)', () => {
 
   expect(document.body.innerHTML).toBe('<div>3</div>')
 })
+
+test.each([ [1], [2], [3] ])('Conditions work fully with template elements', (value) => {
+  document.body.innerHTML = '<template pow if="$data === 1">1</template><template pow else-if="$data === 2">2</template><template pow else>3</template>'
+
+  pow.apply(document.body, value)
+
+  expect(document.body.innerHTML).toBe(`${value}`)
+})
