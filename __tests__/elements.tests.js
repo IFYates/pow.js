@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test('Support body as root', () => {
   document.body.innerHTML = '{{ text }}'
 

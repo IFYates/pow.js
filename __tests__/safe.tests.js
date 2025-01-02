@@ -1,7 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.safe.js'
+//import pow from '../src/pow.safe.js'
+import pow from '../dist/pow.safe.min.js'
 
 test('Safe interpolation supports properties', () => {
   document.body.innerHTML = '<div>{{ text }}</div>'
@@ -12,7 +10,7 @@ test('Safe interpolation supports properties', () => {
 })
 
 test('Safe interpolation supports deep properties', () => {
-  document.body.innerHTML = '<div pow item="child">{{ text }}</div>'
+  document.body.innerHTML = '<div pow data="child">{{ text }}</div>'
 
   pow.apply(document.body, { child: { text: 'Hello, child!' } })
 
@@ -30,7 +28,7 @@ test('Safe interpolation can resolve functions', () => {
 test('Safe interpolation can resolve deep functions', () => {
   document.body.innerHTML = '<div>{{ child.func() }}</div>'
 
-  pow.apply(document.body, { child: { name: 'world', func: (me) => 'Hello, ' + me.name + '!' } })
+  pow.apply(document.body, { child: { name: 'world', func: (me) => 'Hello, ' + me.child.name + '!' } })
 
   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
@@ -105,5 +103,6 @@ test('Safe binding will rebind event functions', () => {
   document.querySelector('button').click()
 
   expect(document.body.innerHTML).toBe('<button>Click</button>')
-  expect(clickArg).toBe(data)
+  expect(clickArg.$data).toBe(data)
+  expect(clickArg.func).toBe(data.func)
 })

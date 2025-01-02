@@ -1,0 +1,95 @@
+.main-content {
+    color: #eff3f8;
+    background-color: #30313b;
+}
+a {
+    color: #a6bdd8;
+}
+
+div.example {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+
+div.example.nogrid {
+    grid-template-columns: auto;
+}
+
+div.example pre {
+    border: 1px solid #aaaaaa;
+    background-color: #22232a;
+    padding: 10px;
+}
+
+div.example code {
+    margin-bottom: 0;
+    height: 100%;
+}
+
+div.example pre.js {
+    grid-column: span 2;
+}
+
+pre.block {
+    margin-left: 4ex;
+}
+
+code {
+    color: inherit;
+}
+
+blockquote {
+    border-left: 4px solid #aaaaff;
+    padding-left: 15px;
+    background-color: hsl(232, 11%, 15%);
+}
+
+.html {
+    border-radius: 5px;
+    background-color: #7a7a7a;
+    color: #262626;
+}
+
+.js {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: #592f7f;
+    color: #dbb3ff;
+}
+
+.pow {
+    padding: 3px 5px;
+    border-radius: 7px;
+    background-color: pink;
+    color: darkred;
+}
+
+.attr {
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: lightblue;
+    background-color: darkblue;
+}
+
+.value {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: lightgreen;
+    color: darkgreen;
+    font-style: italic;
+}
+
+.expr {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: #664200;
+    color: #ffdb99;
+    font-style: italic;
+}
+
+.solid {
+    background-color: #6279cb;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

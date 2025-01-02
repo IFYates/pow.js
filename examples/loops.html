@@ -23,10 +23,10 @@
         <div>There are {{ list.length }} item(s)</div>
         <ol>
             <li pow array="list">
-                <template pow item="item">
-                    <template pow if="*first">The first item</template>
-                    <template pow else-if="*last">The last item</template>
-                    <template pow else>Item {{ *index + 1 }}</template>
+                <template pow data="item">
+                    <template pow if="$first">The first item</template>
+                    <template pow else-if="$last">The last item</template>
+                    <template pow else>Item {{ $index + 1 }}</template>
                     is {{ text }}
                 </template>
             </li>
@@ -36,14 +36,14 @@
     <hr />
 
     <h3>Using 'array' on context</h3>
-    <div pow item="list">
-        <div>There are {{ *data.length }} item(s)</div>
+    <div pow data="list">
+        <div>There are {{ $data.length }} item(s)</div>
         <ol>
             <li pow array>
-                <template pow item="item">
-                    <template pow if="*first">The first item</template>
-                    <template pow else-if="*last">The last item</template>
-                    <template pow else>Item {{ *index + 1 }}</template>
+                <template pow data="item">
+                    <template pow if="$first">The first item</template>
+                    <template pow else-if="$last">The last item</template>
+                    <template pow else>Item {{ $index + 1 }}</template>
                     is {{ text }}
                 </template>
             </li>
@@ -53,14 +53,14 @@
     <hr />
 
     <h3>Direct array</h3>
-    <div pow array="[1,2,3]">{{ *data }}</div>
+    <div pow array="[1,2,3]">{{ $data }}</div>
 
     <hr />
 
     <h3>Conditional array</h3>
-    <div pow array="['Array 1 not empty']">{{ *data }}</div>
+    <div pow array="['Array 1 not empty']">{{ $data }}</div>
     <div pow else>Empty array 1</div>
-    <div pow array="[]">{{ *data }}</div>
+    <div pow array="[]">{{ $data }}</div>
     <div pow else>Empty array 2</div>
 </body>
 

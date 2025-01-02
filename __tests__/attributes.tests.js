@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
 test('Attribute templates on unbound elements are resolved', () => {
   document.body.innerHTML = '<div class="{{ value }}"></div>'
 

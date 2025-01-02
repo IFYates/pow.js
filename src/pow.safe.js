@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 1.4.2
+ * @version 2.0.0
  */
 
 import pow from "./pow.js"
@@ -12,20 +12,20 @@ import pow from "./pow.js"
  * 
  * Supports property walking and 0-argument functions
  */
-function _eval(template, data, deep) {
+function _eval(template, data, root) {
     const period = template.indexOf('.')
     if (period < 0) {
         if (template.endsWith('()')) {
-            const fn = _eval(template.slice(0, -2), data, 1)
-            return typeof fn == 'function' ? fn(data) : undefined
+            const fn = _eval(template.slice(0, -2), data, root ??= data)
+            return typeof fn == 'function' ? fn(root.$data, root) : undefined
         }
         return data?.hasOwnProperty(template) ? data[template]
             : template == 'length' && typeof data == 'object' ? Object.keys(data).length
-                : !deep ? window[template] : undefined
+                : !root ? window[template] : undefined
     }
 
-    const value = _eval(template.slice(0, period), data, 1)
-    return _eval(template.slice(period + 1), value, 1)
+    const value = _eval(template.slice(0, period), data, root ??= data)
+    return _eval(template.slice(period + 1), value, root)
 }
 pow._eval = _eval
 

@@ -1,0 +1,54 @@
+<h1>Features / Interactivity</h1>
+
+<p>
+    By using a <span pow template="nav"
+        data="{ id: 'syntax-expressions', hash: 'functions', text: 'function expression' }"></span>, any element event
+    can be bound to with a <code class="html"><span class="attr">on(event)</span>="<span pow stop
+        class="value">{{ function }}</span>"</code> attribute.
+</p>
+<div class="example nogrid">
+    <pre><code>&lt;button <span class="pow">pow</span> <span class="attr">onclick</span>="<span pow stop class="expr">{{ clicked }}</span>">
+    Click me
+&lt;/button></code></pre>
+</div>
+
+<template pow if="version(1.0, 2.0)">
+    <p>
+        When invoked, the bound function will receive the current context data and the root data.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked(data, root) {
+    // this: The element that was clicked
+    // data: The context data
+    // root: The root data
+}
+</code></pre>
+    </div>
+</template>
+
+<template pow if="version(2.0)">
+    <p>
+        When invoked, the bound function will receive the current context object in full.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked(context) {
+    // this: The element that was clicked
+    // context.$path: The current binding path
+    // context.$data: The context data
+    // context.$root: The root data
+}
+</code></pre>
+    </div>
+
+    <p>
+        It can be cleaner to map the argument to the properties needed, providing compatibility with older versions.
+    </p>
+    <div class="example nogrid">
+        <pre><code class="js">function clicked({ $data, $root }) {
+    // this: The element that was clicked
+    // $data: The context data
+    // $root: The root data
+}
+</code></pre>
+    </div>
+</template>
