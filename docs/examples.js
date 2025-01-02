@@ -48,8 +48,9 @@ window.renderExample = function (el, elData) {
 
         const body = iframe.contentDocument.documentElement.getElementsByTagName('body')[0]
         const html = el.innerText.includes('<body') ? body.outerHTML : body.innerHTML
-        elResult.innerHTML = html.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        elResult.innerHTML = html.trim().replace(/</g, '&lt;')
             .replace(/=""(?=[ >])/g, '')
+            .replace(/>/g, '&gt;')
 
         if (elResult.nextElementSibling?.classList.contains('example-live')) {
             while (elResult.nextElementSibling.firstChild) {

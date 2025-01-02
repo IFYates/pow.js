@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.0.0
+ * @version 2.0.1
  */
 
 const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
@@ -40,11 +40,9 @@ const updateSiblingCondition = (sibling, active) => {
         for (const { name, value } of sibling.attributes) {
             if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
                 _attribute.remove(sibling, name)
-                if (active) {
-                    return !sibling.remove()
-                } else if (name != B_ELSE) {
-                    _attribute.set(sibling, name.slice(5), value) // Convert to if/ifnot
-                }
+                return active
+                    ? !sibling.remove()
+                    : name != B_ELSE && _attribute.set(sibling, name.slice(5), value) // Convert to if/ifnot
             }
         }
     }
@@ -105,10 +103,8 @@ const processElement = (element, state, isRoot, val) => {
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
             val = (name == B_IF) != !val
-            if (val) {
-                processElement(element, state, isRoot)
-            }
-            return processCondition(element, val)
+            processCondition(element, val)
+            return val && processElement(element, state, isRoot)
         }
 
         // Element loop
