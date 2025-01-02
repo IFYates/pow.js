@@ -1,10 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-import pow from '../src/pow.js'
-
-test('Self interpolation', () => {
-  document.body.innerHTML = '<div>{{ *data }}</div>'
+test.each([ ['$data'], ['this'] ])('Self interpolation', (expr) => {
+  document.body.innerHTML = `<div>{{ ${expr} }}</div>`
 
   pow.apply(document.body, 'Hello, world!')
 
@@ -28,7 +23,7 @@ test('Deep interpolation', () => {
 })
 
 test('Interpolated values are not double-interpolated', () => {
-  document.body.innerHTML = '<div pow array="list">{{ *data }}</div>'
+  document.body.innerHTML = '<div pow array="list">{{ $data }}</div>'
 
   pow.apply(document.body, { list: ['{{ text }}'] })
 

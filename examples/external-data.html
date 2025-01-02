@@ -50,9 +50,9 @@ https://vuejs.org/examples/#fetching-data
     <template pow>
         <h1>Latest pow.js Commits</h1>
         <template pow array="branches">
-            <input pow type="radio" $id="*data" $checked="*data == root.currentBranch" name="branch"
-                $onchange="*root.reload">
-            <label for="{{ *data }}">{{ *data }}</label>
+            <input pow type="radio" $id="$data" $checked="$data == root.currentBranch" name="branch"
+                $onchange="$root.reload">
+            <label for="{{ $data }}">{{ $data }}</label>
         </template>
         <p>{{ repo }}@{{ currentBranch }}</p>
         <ul pow if="Array.isArray(commits)">

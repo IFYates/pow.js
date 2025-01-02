@@ -1,0 +1,47 @@
+<h1>Bindings / Conditions</h1>
+
+<hr />
+<h2>
+    <code class="html"><span class="attr">if</span>="<span class="expr">condition</span>"</code>
+    / <code class="html"><span class="attr">ifnot</span>="<span class="expr">condition</span>"</code>
+</h2>
+<p>
+    The <code class="attr">if</code> and <code class="attr">ifnot</code> attributes can be used to conditionally render
+    any bound element.
+</p>
+<p>
+    If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
+</p>
+<div class="example">
+    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
+    First block
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+    Second block
+&lt;/div></code></pre>
+    <pre><code>&lt;div>
+    First block
+&lt;/div></code></pre>
+</div>
+
+<hr />
+<h2>
+    <code class="attr">else</code>
+    / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
+    / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
+</h2>
+<p>
+    If a conditional element has been processed, the following sibling elements can make use of the
+    <code class="attr">else*</code> attributes to further conditionally render an element.
+</p>
+<div class="example">
+    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+    First block
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>
+    Second block
+&lt;/div></code></pre>
+    <pre><code>&lt;div>
+    Second block
+&lt;/div></code></pre>
+</div>

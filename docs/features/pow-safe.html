@@ -1,0 +1,76 @@
+<h1>Features / pow.safe</h1>
+
+<template pow if="version(1.0, 1.1)">
+    <p>
+        Not available
+    </p>
+</template>
+
+<template pow if="version(1.1)">
+
+    <blockquote>
+        <span pow template="nav" data="{ id: 'syntax-expressions', text: 'Full expression support' }"></span> requires a
+        fully trusted browser environment. In situations where this isn't possible, <template pow
+            template="pow.safe"></template> can be used to replace dynamic expression parsing with some simpler logic.
+    </blockquote>
+
+    <p>
+        Basic expression support of data properties is possible:
+    </p>
+    <pre class="block"><code pow stop class="js">{{ property }}</code></pre>
+    <pre class="block"><code pow stop class="js">{{ child.property }}</code></pre>
+    <p>
+        The internal data properties are available as normal.
+    </p>
+
+    <template pow if="version(1.2, 2.0)">
+        <h3>Functions</h3>
+        <p>
+            There is support for no-argument functions:
+        </p>
+        <pre>
+    <code pow stop class="js">{{ func() }}</code>
+</pre>
+
+        <p>
+            The function will receive a single object argument containing the context and should return the expression
+            result:
+        </p>
+        <pre class="block"><code class="js">function func($data, $root) {
+    return $data.text
+}</code></pre>
+        <p>
+            Functions will be invoked from context properties or the global scope.
+        </p>
+    </template>
+
+    <template pow if="version(2.0)">
+        <p>
+            When invoked, the bound function will receive the current context object in full and should return the
+            expression result:
+        </p>
+        <pre class="block"><code class="js">function func(context) {
+    return context.text // also: context.$data.text
+}</code></pre>
+        <p>
+            Functions will be invoked from context properties or the global scope.
+        </p>
+    </template>
+
+    <template pow if="version(1.3)">
+        <h3>Events</h3>
+        <p>
+            <template pow template="pow.safe"></template> will also rebind element events, to remove any dynamic code:
+        </p>
+        <pre class="block"><code>&lt;!-- Normal pow event binding -->
+&lt;button onclick="<span pow stop class="expr">{{ clicked }}</span>">&lt;/button></code></pre>
+        <p>
+            This only applies to element attributes that start with "on".
+        </p>
+        <p>
+            The event function will be invoked with the same arguments <span pow template="nav"
+                data="{ id: 'features-interaction', text: 'as documented' }"></span>.
+        </p>
+    </template>
+
+</template>

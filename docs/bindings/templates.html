@@ -1,0 +1,164 @@
+<h1>Bindings / Template</h1>
+
+<template pow if="version(1.0, 1.2)">
+    <p>
+        Not available
+    </p>
+</template>
+
+<template pow if="version(1.2)">
+
+    <hr />
+    <h2><code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code></h2>
+
+    <template pow if="version(1.2, 2.0)">
+        <p>
+            The <code class="attr">template</code> binding will replace the element with the contents of the specified
+            template, allowing you to reuse structures.
+        </p>
+        <div class="example">
+            <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
+&lt;template id="my-component">
+    <span class="expr">{{ text }}</span>
+&lt;/template></code></pre>
+            <pre><code pow stop>Hello, world!
+&lt;template id="my-component">
+    <span class="expr">{{ text }}</span>
+&lt;/template></code></pre>
+        </div>
+    </template>
+
+    <template pow if="version(2.0)">
+        <p>
+            The <code class="attr">template</code> binding will replace the contents of the bound element with the
+            contents of the specified template, allowing you to reuse structures.
+        </p>
+        <div class="example">
+            <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
+&lt;template id="my-component">
+    <span class="expr">{{ text }}</span>
+&lt;/template></code></pre>
+            <pre><code pow stop>&lt;div>
+    Hello, world!
+&lt;/div>
+&lt;template id="my-component">
+    <span class="expr">{{ text }}</span>
+&lt;/template></code></pre>
+        </div>
+    </template>
+
+    <p>
+        If there is no element matching the <span class="value">id</span>, the existing contents will be processed
+        without modification.
+    </p>
+    <div class="example">
+        <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+    <span class="expr">{{ text }}</span>
+&lt;/div></code></pre>
+        <pre><code>&lt;div>
+    Hello, world!
+&lt;/div></code></pre>
+    </div>
+
+    <p>
+        As with any other <span pow template="nav"
+            data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if the bound element is a
+        <code class="html">&lt;template&gt;</code>, the entire element is replaced.
+    </p>
+
+    <p>
+        The <code class="value">id</code> will be used before <span pow template="nav"
+            data="{ id: 'syntax-expressions', text: 'expressions' }"></span> are interpolated, so it is not possible to
+        use an expression to dynamically select a template.
+    </p>
+
+    <p>
+        Note: Reusable templates should always be stored outside of any bound elements, otherwise they will be modified
+        like anything else.
+    </p>
+
+    <template pow if="version(1.4, 2.0)">
+        <h2>Dynamic <code class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code>
+        </h2>
+
+        <p>
+            Since <span pow template="nav"
+                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span> are
+            evaluated <em>after</em> the element bindings, they can not be used to modify the binding value.
+        </p>
+        <div class="example">
+            <pre class="js"><code class="js">{ value: 1 }</code></pre>
+            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+    Unmatched
+&lt;/div>
+&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></code></pre>
+            <pre><code>&lt;div template="case-1">
+    Unmatched
+&lt;/div>
+&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></code></pre>
+        </div>
+    </template>
+
+    <template pow if="version(2.0)">
+        <hr />
+        <h2>Dynamic <code class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code>
+        </h2>
+
+        <p>
+            Originally, <span pow template="nav"
+                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span> were
+            evaluated after the bindings values and so could not be used to modify bindings behaviour.<br />
+            With the change to processing order in v2.0, an interpolated <code class="attr">:template</code> attribute
+            can be used to dynamically select the target template, which gives a convenient structure for simulating a
+            switch statement.
+        </p>
+        <div class="example">
+            <pre class="js"><code class="js">{ value: 1 }</code></pre>
+            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+    Unmatched
+&lt;/div>
+&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></code></pre>
+            <br />
+            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">case-1</span>">
+    Unmatched
+&lt;/div>
+&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></code></pre>
+            <pre><code>&lt;div>
+    One
+&lt;/div>
+&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></code></pre>
+        </div>
+    </template>
+
+    <hr />
+    <h2>Template configuration</h2>
+    <p>
+        A useful way to bind a template and add additional configuration is to use <code
+            class="attr">{{ version(2.0) ? 'data' : 'item' }}</code> with an expanded object.
+    </p>
+    <div class="example">
+        <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre><code>&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"
+        <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">{ ...$data, color: 'red' }</span>">&lt;/template>
+&lt;template id="my-component">
+    <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
+&lt;/template></code></pre>
+        <pre><code>&lt;div style="color: red">
+    Hello, world!
+&lt;/div></code></pre>
+    </div>
+
+</template>
