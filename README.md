@@ -5,12 +5,12 @@ An extremely small and lightweight templating framework.
 ![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
 
 
-> 😲 Only 140 LOCs!  
+> 😲 Less than 140 LOCs!  
 > 🤏 <2&frac13; KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)
 
-### [Read the full documentation](https://ifyates.github.io/pow.js/docs/)
+### [Check out the interactive documentation](https://ifyates.github.io/pow.js/docs/)
 
 # Project goals
 * A very small library that can be included without additional dependencies
@@ -47,20 +47,19 @@ Looking at CDN hosting soon.
     }
     pow.apply(document.body, data)
 </script>
-<body>
-    <h1>{{ title }}</h1>
-    <h2>{{ description }}</h2>
-    <p><a href="{{ url }}">See project page</a></p>
-    <p pow data="creation">
-        Created by <em>{{ author }}</em> on {{ date }}
-    </p>
-    <p>
-        Tags:
-        <template pow array="tags">
-            [<span>{{ $data }}</span>]<span ifnot="$last">, </span>
-        </template>
-    </p>
-</body>
+
+<h1>{{ title }}</h1>
+<h2>{{ description }}</h2>
+<p><a href="{{ url }}">See project page</a></p>
+<p pow data="creation">
+    Created by <em>{{ author }}</em> on {{ date }}
+</p>
+<p>
+    Tags:
+    <template pow array="tags">
+        [<span>{{ $data }}</span>]<span ifnot="$last">, </span>
+    </template>
+</p>
 ```
 
 # Learn more
