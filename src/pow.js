@@ -23,6 +23,7 @@ const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_DATA, 
 
 // Interpolates text templates
 const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
+const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } :  { ...state.$data, ...state })
 
@@ -61,8 +62,6 @@ const processCondition = (element, active, always) => {
     return (always | !active) && element.remove()
 }
 
-const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
-
 const processElement = (element, state, isRoot, value) => {
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]')) {
@@ -73,7 +72,7 @@ const processElement = (element, state, isRoot, value) => {
     for (let { name, value } of [...element.attributes].filter($ => $.name[0] == ':')) {
         _attribute.remove(element, name)
         if (value = resolveExpr(value, state)) {
-            _attribute.set(element, name.slice(1), escape(value, isRoot))
+            _attribute.set(element, name.slice(1), value)
         }
     }
 
@@ -161,8 +160,7 @@ const bind = (element) => {
             window[$id] = {}
 
             try {
-                const root = { $id, $data: data, $path: '$root' }
-                processElement(element, { ...root, $root: root }, 1)
+                processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
             } finally {
                 element.innerHTML = element.innerHTML.replace(/​/g, '')
                 delete binding.$pow

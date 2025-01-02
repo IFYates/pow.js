@@ -39,11 +39,10 @@ body {
 }
 
 .logo-text {
-    font-size: 2rem;
-    background: linear-gradient(45deg, #6b8cff, #8b9fff);
+    font-size: 2.5rem;
+    background-color: #6b8cff;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transition: opacity 0.3s ease;
 }
 
 .notification-badge {

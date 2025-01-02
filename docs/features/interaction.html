@@ -1,9 +1,10 @@
 <h1>Features / Interactivity</h1>
 
 <p>
-    By using a <a href="?/syntax-expressions/#functions">function expression</a>, any element event can be bound to with
-    a <code class="html"><code class="attr">on(event)</code>="<code pow stop class="value">{{ function }}</code>"</code>
-    attribute.
+    By using a <span pow template="nav"
+        data="{ id: 'syntax-expressions', hash: 'functions', text: 'function expression' }"></span>, any element event
+    can be bound to with a <code class="html"><code class="attr">on(event)</code>="<code pow stop
+        class="value">{{ function }}</code>"</code> attribute.
 </p>
 <div class="example nogrid">
     <pre><code>&lt;button <span class="pow">pow</span> <span class="attr">onclick</span>="<span pow stop class="expr">{{ clicked }}</span>">
@@ -38,7 +39,7 @@
 }
 </code></pre>
     </div>
-    
+
     <p>
         It can be cleaner to map the argument to the properties needed, providing compatibility with older versions.
     </p>

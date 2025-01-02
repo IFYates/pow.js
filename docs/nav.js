@@ -7,13 +7,6 @@ window.refreshMain = () => {
     // TODO: scroll to top
 }
 
-window.activeVersion = 1.4 //2.0
-window.setActiveVersion = function(context) {
-    window.activeVersion = context.$data
-    window.refreshMain()
-}
-window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
-
 window.fn = (value) => typeof value == 'function' ? value() : value
 
 const nav = {
@@ -21,7 +14,7 @@ const nav = {
     navigate: function (item) {
         this.href = 'javascript:void(0)'
         nav.current = item.id ?? item
-        history.pushState(null, null, `?/${item.id}/`)
+        history.pushState(null, null, `?/${nav.current}/`)
         refreshMain()
         return false
     },
@@ -29,6 +22,15 @@ const nav = {
         console.log(this, a, b, c)
         return false
     },
+
+    versions: [
+        '2.0',
+        '1.4',
+        '1.3',
+        '1.2',
+        '1.1',
+        '1.0'
+    ],
 
     pages: [
         { id: 'home', name: 'Home', icon: 'fas fa-home' },
@@ -77,7 +79,13 @@ const nav = {
         { id: 'repo', name: 'Repository', url: 'https://github.com/IFYates/pow.js', icon: 'fab fa-github' },
     ]
 }
-console.log(nav.current)
+
+window.activeVersion = nav.versions[0]
+window.setActiveVersion = function(context) {
+    window.activeVersion = context.$data
+    window.refreshMain()
+}
+window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
 
 pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)

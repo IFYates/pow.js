@@ -9,10 +9,9 @@
 <template pow if="version(1.1)">
 
     <blockquote>
-        <a href="?/syntax-expressions/">Full expression support</a> requires a fully trusted browser environment. In
-        situations where this isn't
-        possible, <template pow template="pow.safe"></template> can be used to replace dynamic expression
-        parsing with some simpler logic.
+        <span pow template="nav" data="{ id: 'syntax-expressions', text: 'Full expression support' }"></span> requires a
+        fully trusted browser environment. In situations where this isn't possible, <template pow
+            template="pow.safe"></template> can be used to replace dynamic expression parsing with some simpler logic.
     </blockquote>
 
     <p>
@@ -69,7 +68,8 @@
             This only applies to element attributes that start with "on".
         </p>
         <p>
-            The event function will be invoked with the same arguments <a href="?/syntax-events/">as documented</a>.
+            The event function will be invoked with the same arguments <span pow template="nav"
+                data="{ id: 'features-interaction', text: 'as documented' }"></span>.
         </p>
     </template>
 

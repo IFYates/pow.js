@@ -1,10 +1,10 @@
-<h1 class="text-2xl font-bold">Bindings / Loops</h1>
+<h1>Bindings / Loops</h1>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">
+<h2>
     <code class="html"><code class="attr">array</code>="<code class="expr">expression</code>"</code>
     / <code class="attr">array</code>
 </h2>
-<p class="mt-2 text-gray-600">
+<p>
     This binding will repeat the element hierarchy for each item in the array.
 </p>
 <div class="example ">
@@ -18,7 +18,7 @@
     &lt;div>3&lt;/div>
 &lt;/div></code></pre>
 </div>
-<p class="mt-2 text-gray-600">
+<p>
     If an expression is not provided, it is the same as <code class="html"><code class="attr">array</code>="<code
         class="expr">{{ version(2.0) ? '$data' : '*data' }}</code>"</code>.
 </p>
@@ -34,14 +34,15 @@
 &lt;/div></code></pre>
 </div>
 
-<p class="mt-2 text-gray-600">
+<p>
     If the expresson evaluates to <code class="js">null</code> or an empty array, the element will not be rendered.
 </p>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">Internal values</h2>
-<p class="mt-2 text-gray-600">
-    There are additional <a href="?/syntax-expressions/#internal-values">internal values</a> that are available while
-    iterating over an array:
+<h2>Internal values</h2>
+<p>
+    There are additional <span pow template="nav"
+        data="{ id: 'syntax-expressions', hash: 'internal-values', text: 'internal values' }"></span> that are available
+    while iterating over an array:
 </p>
 <template pow if="version(1.0, 2.0)">
     <ul>
@@ -82,8 +83,8 @@
 &lt;/div></code></pre>
 </div>
 
-<h2 class="mt-3 text-xl font-bold text-gray-600">Objects</h2>
-<p class="mt-2 text-gray-600">
+<h2>Objects</h2>
+<p>
     If an object is provided, it will iterate over the keys and values.
 </p>
 <div class="example">
@@ -96,13 +97,13 @@
 </div>
 
 <template pow if="version(1.2)">
-    <h2 class="mt-3 text-xl font-bold text-gray-600">
+    <h2>
         Post-loop conditions:
         <code class="attr">else</code>
         / <code class="html"><code class="attr">else-if</code>="<code class="expr">condition</code>"</code>
         / <code class="html"><code class="attr">else-ifnot</code>="<code class="expr">condition</code>"</code>
     </h2>
-    <p class="mt-2 text-gray-600">
+    <p>
         If there are no elements in the array, the following sibling elements can make use of the
         <code class="attr">else*</code> attributes to further conditionally render an element.
     </p>
