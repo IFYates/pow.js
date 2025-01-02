@@ -13,19 +13,14 @@
 </p>
 
 <div class="example">
-    <pre><code><span pow stop class="expr">{{ $path }}</span>
-&lt;p <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
-    <span pow stop class="expr">{{ $path }}</span>
+    <pre class="example-data" style="display: none;"><code class="js">{ child: 1 }</code></pre>
+    <pre class="live-example"><code>Outside: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
+&lt;p <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child</span>">
+    Inside: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
     &lt;!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
-    &lt;div <span class="pow">pow</span> <span class="attr">array</span>>
-        <span pow stop class="expr">{{ $path }}</span>
+    &lt;div>
+        Invalid child: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
     &lt;/div>
 &lt;/p></code></pre>
-    <pre><code>$root
-&lt;p>
-    $root.list
-&lt;/p>
-&lt;div>
-    $root
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
