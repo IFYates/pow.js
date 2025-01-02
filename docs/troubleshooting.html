@@ -1,4 +1,5 @@
 <h1>Troubleshooting</h1>
+<hr />
 
 <h2>Malformed HTML</h2>
 <p>
@@ -8,16 +9,16 @@
 </p>
 <p>
     A particularly common mistake is not closing tags correctly or incorrect nestings (e.g., <code
-        class="html">div</code> tags cannot be inside <code class="html">p</code> tags).
+        class="html">&lt;div&gt;</code> tags cannot be inside <code class="html">&lt;p&gt;</code> tags).
 </p>
 
 <div class="example">
-    <pre><code><span class="expr">{{ $path }}</span>
-&lt;p <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">list</span>">
-    <span class="expr">{{ $path }}</span>
+    <pre><code><span pow stop class="expr">{{ $path }}</span>
+&lt;p <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
+    <span pow stop class="expr">{{ $path }}</span>
     &lt;!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
     &lt;div <span class="pow">pow</span> <span class="attr">array</span>>
-        <span class="expr">{{ $path }}</span>
+        <span pow stop class="expr">{{ $path }}</span>
     &lt;/div>
 &lt;/p></code></pre>
     <pre><code>$root

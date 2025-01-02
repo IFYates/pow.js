@@ -1,7 +1,8 @@
 <h1>Bindings / Loops</h1>
 
+<hr />
 <h2>
-    <code class="html"><code class="attr">array</code>="<code class="expr">expression</code>"</code>
+    <code class="html"><span class="attr">array</span>="<span class="expr">expression</span>"</code>
     / <code class="attr">array</code>
 </h2>
 <p>
@@ -19,8 +20,8 @@
 &lt;/div></code></pre>
 </div>
 <p>
-    If an expression is not provided, it is the same as <code class="html"><code class="attr">array</code>="<code
-        class="expr">{{ version(2.0) ? '$data' : '*data' }}</code>"</code>.
+    If an expression is not provided, it is the same as <code class="html"><span class="attr">array</span>="<span
+        class="expr">{{ version(2.0) ? '$data' : '*data' }}</span>"</code>.
 </p>
 <div class="example">
     <pre class="js"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
@@ -38,6 +39,7 @@
     If the expresson evaluates to <code class="js">null</code> or an empty array, the element will not be rendered.
 </p>
 
+<hr />
 <h2>Internal values</h2>
 <p>
     There are additional <span pow template="nav"
@@ -83,6 +85,7 @@
 &lt;/div></code></pre>
 </div>
 
+<hr />
 <h2>Objects</h2>
 <p>
     If an object is provided, it will iterate over the keys and values.
@@ -97,11 +100,12 @@
 </div>
 
 <template pow if="version(1.2)">
+    <hr />
     <h2>
         Post-loop conditions:
         <code class="attr">else</code>
-        / <code class="html"><code class="attr">else-if</code>="<code class="expr">condition</code>"</code>
-        / <code class="html"><code class="attr">else-ifnot</code>="<code class="expr">condition</code>"</code>
+        / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
+        / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
     </h2>
     <p>
         If there are no elements in the array, the following sibling elements can make use of the

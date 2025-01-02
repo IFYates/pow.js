@@ -68,8 +68,8 @@ blockquote {
 .attr {
     padding: 3px 5px;
     border-radius: 5px;
-    background-color: lightblue;
-    color: darkblue;
+    color: lightblue;
+    background-color: darkblue;
 }
 
 .value {

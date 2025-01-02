@@ -1,5 +1,6 @@
 <h1>Syntax / Bindings</h1>
 
+<hr />
 <p>
     <template pow template="pow"></template> exposes two functions for binding an element hierarchy:
 <ul>
@@ -44,6 +45,9 @@
 </ul>
 </p>
 
+<hr />
+<h2 pow>Processing order</h2>
+
 <p pow if="version(1.0, 2.0)">
     This is also the order that they will be evaluated in; so, the context of an <code class="attr">if</code> will
     not be altered by any <code class="attr">item</code>/<code class="attr">array</code>
@@ -74,13 +78,14 @@
     <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">data</span>="<span class="expr">child</span>">
     <span pow stop class="expr">{{ text }}</span>
 &lt;/div><hr/>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
-<span pow stop class="expr">{{ text }}</span>
+    <span pow stop class="expr">{{ text }}</span>
 &lt;/div></code></pre>
     <pre><code>&lt;div>
     Hello, world!
 &lt;/div><hr />&lt;!-- Not rendered because 'if' is looking for 'child.child' --></code></pre>
 </div>
 
+<hr />
 <h2 id="data"><code
         class="html"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>="<code
         class="expr">expression</code>"</code></h2>
@@ -114,6 +119,7 @@
 </p>
 
 <template pow if="version(1.4)">
+    <hr />
     <h2 id="stop"><code class="attr">stop</code></h2>
     <p>
         Prevents any further bindings from being applied to the element hierarchy.
@@ -135,10 +141,11 @@
     </p>
 </template>
 
+<hr />
 <h2 id="templates">Templates</h2>
 <p>
-    Most examples use <code class="html">div</code> elements to clearly show how it will appear in the result, but if
-    the bound element is a <code class="html">template</code>, the entire element is replaced.<br />
+    Most examples use <code class="html">&lt;div&gt;</code> elements to clearly show how it will appear in the result, but if
+    the bound element is a <code class="html">&lt;template&gt;</code>, the entire element is replaced.<br />
     This is a good way to hide unprocessed elements until rendering is complete.
 </p>
 <div class="example">
