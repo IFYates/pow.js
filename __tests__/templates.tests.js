@@ -34,6 +34,15 @@ test('Can reference existing template', () => {
   expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div><template id="text-view">{{ text }}</template>')
 })
 
+test('Parses content if no match', () => {
+  document.body.innerHTML = '<div id="main"><template pow template="text-view">{{ text }}</template></div>'
+
+  const target = document.getElementById('main')
+  pow.apply(target, { text: 'Hello, world!' })
+
+  expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div>')
+})
+
 test.each([ [true, '1, 2, 3, 4, 5, '], [false, ''] ])('Template processed after other bindings', (condition, expected) => {
   document.body.innerHTML = '<template id="main"><template pow if="check" array="list" template="list-view"></template></template><template id="list-view">{{ $data }}, </template>'
 

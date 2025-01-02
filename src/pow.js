@@ -9,30 +9,17 @@ const _attribute = { set: (element, name, value) => element.setAttribute(name, v
 const _rand = Math.random
 const _selectChild = (element, selector) => (element.content ?? element).querySelectorAll(selector)
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
-const ATTR_POW = 'pow'
-
-// Resolves next pow binding
-const consumeBinding = (element, bindings = [B_IF, B_IFNOT, B_TEMPLATE, B_DATA, B_ARRAY], attr) => {
-    for (const { name, value } of [...element.attributes]) {
-        if (bindings.includes(name)) {
-            _attribute.remove(element, name)
-            return { attr: name, expr: value }
-        }
-    }
-}
+const ATTR_POW = 'pow', INN_HTML = 'innerHTML'
 
 // Interpolates text templates
 const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
 const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
-
-const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } :  { ...state.$data, ...state })
 
 // Resolves an expression to a value
 const resolveExpr = (expr, state, context = getContext(state)) => {
     try {
         // Execute the expression as JS code, mapping to the state data
         const value = pow._eval(expr, context)
-        // TODO: recursive so $parent is $parent.$data, but $parent.$parent works, too
 
         // If the result is a function, bind it for later
         if (typeof value == 'function') {
@@ -45,15 +32,20 @@ const resolveExpr = (expr, state, context = getContext(state)) => {
         console.warn('Interpolation failed', { $path: state.$path, expr }, e)
     }
 }
+const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } : { ...state.$data, ...state })
 
 // Updates the next sibling condition
 const updateSiblingCondition = (sibling, active) => {
     if (sibling?.attributes.pow) {
-        const { attr, expr } = consumeBinding(sibling, [B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE]) || 0
-        if (attr && active) {
-            return !sibling.remove()
-        } else if (attr && attr != B_ELSE) {
-            _attribute.set(sibling, attr.slice(5), expr)
+        for (const { name, value } of sibling.attributes) {
+            if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
+                _attribute.remove(sibling, name)
+                if (active) {
+                    return !sibling.remove()
+                } else if (name != B_ELSE) {
+                    _attribute.set(sibling, name.slice(5), value) // Convert to if/ifnot
+                }
+            }
         }
     }
 }
@@ -62,81 +54,88 @@ const processCondition = (element, active, always) => {
     return (always | !active) && element.remove()
 }
 
-const processElement = (element, state, isRoot, value) => {
+const processElement = (element, state, isRoot, val) => {
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]')) {
         child.replaceWith(document.createRange().createContextualFragment(escape(child.outerHTML)))
     }
 
-    // Process interpolated attributes
-    for (let { name, value } of [...element.attributes].filter($ => $.name[0] == ':')) {
+    _attribute.remove(element, ATTR_POW)
+
+    // Process each attribute in order
+    for (const { name, value } of [...element.attributes]) {
         _attribute.remove(element, name)
-        if (value = resolveExpr(value, state)) {
-            _attribute.set(element, name.slice(1), value)
-        }
-    }
 
-    const { attr, expr } = consumeBinding(element) || 0
+        // Apply template
+        if (name == B_TEMPLATE) {
+            if (val = document.getElementById(value)) {
+                element[INN_HTML] = val.cloneNode(1)[INN_HTML]
+            }
+            return processElement(element, state)
+        }
 
-    if (attr == B_TEMPLATE) {
-        if (value = document.getElementById(expr)) {
-            element.innerHTML = value.cloneNode(1).innerHTML
+        // Standard attribute
+        if (name[0] != ':' && ![B_IF, B_IFNOT, B_DATA, B_ARRAY].includes(name)) {
+            if (val = parseText(value, state, isRoot)) {
+                _attribute.set(element, name, val)
+            }
+            continue
         }
-        return processElement(element, state)
-    }
 
-    value = expr ? resolveExpr(expr, state) : state.$data
-    if (attr == B_IF | attr == B_IFNOT) {
-        if (value) {
-            processElement(element, state, isRoot)
+        // Remainder logic uses resolved expressions
+        val = value ? resolveExpr(value, state) : state.$data
+
+        if (name[0] == ':') {
+            // Interpolated attribute
+            if (val) {
+                _attribute.set(element, name.slice(1), val)
+            }
+            return processElement(element, state)
+        } else if (name == B_DATA && value) {
+            // Data binding
+            if (val == null) {
+                return element.remove()
+            }
+            return processElement(element, {
+                ...state,
+                $path: state.$path + '.' + value,
+                $data: val,
+                $parent: state
+            }, isRoot)
+        } else if (name == B_IF | name == B_IFNOT) {
+            // Conditional element
+            val = (name == B_IF) != !val
+            if (val) {
+                processElement(element, state, isRoot)
+            }
+            return processCondition(element, val)
         }
-        return processCondition(element, (attr == B_IF) != !value)
-    } else if (attr == B_DATA && expr) {
-        if (value == null) {
-            return element.remove()
-        }
-        return processElement(element, {
-            ...state,
-            $path: state.$path + '.' + expr,
-            $data: value,
-            $parent: state
-        }, isRoot)
-    } else if (attr == B_ARRAY) {
-        value = !value | Array.isArray(value) ? value
-            : Object.entries(value).map(([key, value]) => ({ key, value }))
-        for (let $index = 0; $index < value?.length; ++$index) {
+
+        // Element loop
+        val = !val | Array.isArray(val) ? val
+            : Object.entries(val).map(([key, value]) => ({ key, value }))
+        for (let i = 0; i < val?.length; ++i) {
             const child = element.cloneNode(1)
             element.parentNode.insertBefore(child, element)
             processElement(child, {
                 ...state,
-                $path: state.$path + (expr ? '.' + expr : '') + '[' + $index + ']',
-                $index, $first: !$index, $last: $index > value.length - 2,
-                $data: value[$index],
-                $array: value,
+                $path: state.$path + (value ? '.' + value : '') + '[' + i + ']',
+                $index: i, $first: !i, $last: i > val.length - 2,
+                $data: val[i],
+                $array: val,
                 $parent: state
             })
         }
-        return processCondition(element, value?.length, 1)
+        return processCondition(element, val?.length, 1)
     }
-
-    _attribute.remove(element, ATTR_POW)
 
     // Process every child 'pow' template
-    while (value = _selectChild(element, '*[pow]:not([pow] [pow])')[0]) {
-        processElement(value, state)
-    }
-
-    // Interpolate literal attributes
-    for (let { name, value } of [...element.attributes]) {
-        if (value = parseText(value, state, isRoot)) {
-            _attribute.set(element, name, value)
-        } else {
-            _attribute.remove(element, name)
-        }
+    while (val = _selectChild(element, '*[pow]:not([pow] [pow])')[0]) {
+        processElement(val, state)
     }
 
     // Parse inner HTML
-    element.innerHTML = parseText(element.innerHTML, state, isRoot)
+    element[INN_HTML] = parseText(element[INN_HTML], state, isRoot)
     if (element.tagName == 'TEMPLATE') {
         element.replaceWith(...element.content.childNodes)
     }
@@ -144,7 +143,7 @@ const processElement = (element, state, isRoot, value) => {
 
 const bind = (element) => {
     //element = element.at ? nextChildTemplate(document, element) : element
-    const originalHTML = element.innerHTML
+    const originalHTML = element[INN_HTML]
     const attributes = [...element.attributes]
     const $id = '$pow_' + _rand().toString(36).slice(2)
     const binding = {
@@ -155,14 +154,14 @@ const bind = (element) => {
             binding.$pow = 1
 
             // Reset global state
-            element.innerHTML = originalHTML
+            element[INN_HTML] = originalHTML
             attributes.forEach($ => _attribute.set(element, $.name, $.value))
             window[$id] = {}
 
             try {
                 processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
             } finally {
-                element.innerHTML = element.innerHTML.replace(/​/g, '')
+                element[INN_HTML] = element[INN_HTML].replace(/​/g, '')
                 delete binding.$pow
             }
 

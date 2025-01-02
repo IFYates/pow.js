@@ -8,7 +8,8 @@
 
 <template pow if="version(1.2)">
 
-    <h2><code class="html"><code class="attr">template</code>="<code class="value">id</code>"</code></h2>
+    <hr />
+    <h2><code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code></h2>
 
     <template pow if="version(1.2, 2.0)">
         <p>
@@ -65,7 +66,7 @@
     <p>
         As with any other <span pow template="nav"
             data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if the bound element is a
-        <code class="html">template</code>, the entire element is replaced.
+        <code class="html">&lt;template&gt;</code>, the entire element is replaced.
     </p>
 
     <p>
@@ -106,6 +107,7 @@
     </template>
 
     <template pow if="version(2.0)">
+        <hr />
         <h2>Dynamic <code class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code>
         </h2>
 
@@ -141,6 +143,7 @@
         </div>
     </template>
 
+    <hr />
     <h2>Template configuration</h2>
     <p>
         A useful way to bind a template and add additional configuration is to use <code

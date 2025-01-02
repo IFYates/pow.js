@@ -16,6 +16,9 @@ const nav = {
         nav.current = item.id ?? item
         history.pushState(null, null, `?/${nav.current}/`)
         refreshMain()
+        if (item.hash) {
+            location.hash = item.hash
+        }
         return false
     },
     isCurrent: (a, b, c) => {
@@ -51,10 +54,10 @@ const nav = {
             icon: 'fas fa-link',
             children: [
                 { id: 'bindings-loops', name: 'array' },
-                { id: 'bindings-data', name: () => activeVersion >= 2.0 ? 'data' : 'item', url: '?/syntax-binding/#data' },
+                { id: 'syntax-binding', hash: 'data', name: () => activeVersion >= 2.0 ? 'data' : 'item' },
                 { id: 'bindings-conditions', name: 'if / ifnot / else' },
-                { id: 'bindings-stop', name: 'stop', url: '?/syntax-binding/#stop' },
-                { id: 'bindings-templates', name: 'template' },
+                { id: 'bindings-templates', name: 'template', visible: () => activeVersion >= 1.2 },
+                { id: 'syntax-binding', hash: 'stop', name: 'stop', visible: () => activeVersion >= 1.4 },
             ]
         },
         {
@@ -64,7 +67,7 @@ const nav = {
             children: [
                 { id: 'features-interaction', name: 'Interactivity' },
                 { id: 'features-reactivity', name: 'Reactivity' },
-                { id: 'features-pow-safe', name: 'pow.safe' },
+                { id: 'features-pow-safe', name: 'pow.safe', visible: () => activeVersion >= 1.1 },
             ]
         },
         // {
@@ -81,15 +84,17 @@ const nav = {
 }
 
 window.activeVersion = nav.versions[0]
-window.setActiveVersion = function(context) {
-    window.activeVersion = context.$data
-    window.refreshMain()
-}
-window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
 
-pow.apply(document.getElementsByTagName('nav')[0], nav)
+const navBinding = pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)
 HTMLImportElement.whenInitialised(() => {
     mainBinding.apply(nav)
     // requestAnimationFrame(() => hljs.highlightAll())
 })
+
+window.setActiveVersion = function (context) {
+    window.activeVersion = context.$data
+    window.refreshMain()
+    navBinding.refresh()
+}
+window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
