@@ -3,8 +3,8 @@
 <h2>Overview</h2>
 <blockquote pow if="version(1.1)">
     <strong>Note:</strong> This page only covers core <span pow template="pow"></span> functionality. If you are using
-    <a href="?/features-pow-safe/"><span pow template="pow.safe"></span></a> refer to that page instead, as it has a
-    different support for expressions.
+    <span pow template="nav" data="{ id: 'bindings-loops', text: `&lt;code>pow💥.safe&lt;/code>` }"></span> refer to
+    that page instead, as it has a different support for expressions.
 </blockquote>
 
 <p>
@@ -30,8 +30,8 @@
 
 <p>
     The context data is initially the root data passed in to <code class="js">apply()</code>, but it can be changed
-    using the
-    <a href="?/syntax-data/"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> binding.
+    using the <code class="attr" pow template="nav"
+        data="{ id: 'syntax-binding', hash: 'data', text: version(2.0) ? 'data' : 'item' }"></code> binding.
 </p>
 
 <h2 id="functions">Functions</h2>
@@ -42,7 +42,7 @@
 
 <p>
     If a function is used without any arguments, the output will be a bound function reference, which can be
-    used to <a href="?/syntax-events/">bind element events</a>.
+    used to <span pow template="nav" data="{ id: 'features-interaction', text: 'bind element events' }"></span>.
 </p>
 <pre class="block"><code pow stop class="js">{{ func }}</code></pre>
 
@@ -104,7 +104,8 @@
     </p>
 
     <p>
-        When used in an <a href="?/syntax-arrays/">array context</a>, there are additional internal values:
+        When used in an <span pow template="nav" data="{ id: 'bindings-loops', text: 'array context' }"></span>, there
+        are additional internal values:
     <ul>
         <li>
             <code class="expr">*index</code>: The index of the current item in the array.
@@ -149,7 +150,8 @@
     </p>
 
     <p>
-        When used in an <a href="?/syntax-arrays/">array context</a>, there are additional internal values:
+        When used in an <span pow template="nav" data="{ id: 'bindings-loops', text: 'array context' }"></span>, there
+        are additional internal values:
     <ul>
         <li>
             <code class="expr">$array</code>: The data context of the current array binding.
@@ -185,13 +187,13 @@
     path to the current context.
 </p>
 <div pow if="version(1.0, 2.0)" class="example">
-    <pre class="html"><code pow stop class="language-html">&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
+    <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">value</span>">
         <span class="expr">{{ *path }}</span>
         <span class="expr">{{ *parent }}</span>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre class="html"><code class="language-html">&lt;div>
+    <pre><code>&lt;div>
     &lt;div>
         *root.child.value
         [object root.child]
@@ -199,7 +201,7 @@
 &lt;/div></code></pre>
 </div>
 <div pow if="version(2.0)" class="example">
-    <pre class="html"><code pow stop class="language-html">&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
+    <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">grandchild</span>">
         &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>">
             <span class="expr">{{ $path }}</span>
@@ -209,7 +211,7 @@
         &lt;/div>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre class="html"><code class="language-html">&lt;div>
+    <pre><code>&lt;div>
     &lt;div>
         &lt;div>
             $root.child.grandchild.value

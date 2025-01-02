@@ -16,6 +16,10 @@ Copy-Item -Path "dist" -Recurse -Destination "$dest/v$($package.version)"
 Remove-Item -Path "$dest/latest" -Recurse -Force
 Copy-Item -Path "dist" -Recurse -Destination "$dest/latest"
 
+# Documentation
+Remove-Item -Path "$dest/docs" -Recurse -Force
+Copy-Item -Path "docs" -Recurse -Destination "$dest/docs"
+
 # NPM
 if ($GoLive) {
     npm publish

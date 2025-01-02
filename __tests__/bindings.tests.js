@@ -111,6 +111,18 @@ test('Can stop parsing of elements', () => {
   expect(document.body.innerHTML).toBe('$root<div pow="" stop="" attr="{{ $path }}">{{ $path }} <div pow="" data="child">{{ $path }}</div></div>$root')
 })
 
+test('Can stop parsing of child elements', () => {
+  document.body.innerHTML = '<template pow>{{ $path }}<div pow stop attr="{{ $path }}">{{ $path }} <div pow data="child">{{ $path }}</div></div>{{ $path }}</template>'
+
+  const consoleWarnMock = jest.spyOn(console, 'warn')
+    .mockImplementation(() => { })
+
+  pow.apply(document.body, { child: {} })
+
+  expect(consoleWarnMock.mock.calls).toHaveLength(0)
+  expect(document.body.innerHTML).toBe('$root<div pow="" stop="" attr="{{ $path }}">{{ $path }} <div pow="" data="child">{{ $path }}</div></div>$root')
+})
+
 test('Can have subsequent bindings of stopped child', () => {
   document.body.innerHTML = '{{ text }}<div pow stop id="child">{{ text }}</div>{{ text }}'
 
