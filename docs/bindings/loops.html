@@ -8,31 +8,23 @@
 <p>
     This binding will repeat the element hierarchy for each item in the array.
 </p>
-<div class="example ">
-    <pre class="js"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">list</span>">
+<div class="example">
+    <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">list</span>">
     &lt;div><span pow ifnot="version(2.0)" class="expr"><span pow stop>{{ *data }}</span></span><span pow if="version(2.0)" class="expr"><span pow stop>{{ $data }}</span></span>&lt;/div>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    &lt;div>1&lt;/div>
-    &lt;div>2&lt;/div>
-    &lt;div>3&lt;/div>
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 <p>
     If an expression is not provided, it is the same as <code class="html"><span class="attr">array</span>="<span
         class="expr">{{ version(2.0) ? '$data' : '*data' }}</span>"</code>.
 </p>
 <div class="example">
-    <pre class="js"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
+    <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">array</span>><span pow ifnot="version(2.0)" class="expr"><span pow stop>{{ *data }}</span></span><span pow if="version(2.0)" class="expr"><span pow stop>{{ $data }}</span></span>&lt;/div>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    &lt;div>1&lt;/div>
-    &lt;div>2&lt;/div>
-    &lt;div>3&lt;/div>
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 
 <p>
@@ -76,13 +68,10 @@
     </ul>
 </template>
 <div class="example">
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[ 1, 2, 3 ]</span>">
-    <span pow if="version(2.0)"><span pow stop class="expr">{{ $data }}</span></span><span pow else><span pow stop class="expr">{{ *data }}</span></span>
-    &lt;template <span class="pow">pow</span> <span class="attr">ifnot</span>="<span pow if="version(2.0)" class="expr">$last</span><span pow else class="expr">*last</span>">, &lt;/template>
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[ 1, 2, 3 ]</span>">
+    <span pow if="version(2.0)"><span pow stop class="expr">{{ $data }}</span></span><span pow else><span pow stop class="expr">{{ *data }}</span></span>&lt;template <span class="pow">pow</span> <span class="attr">ifnot</span>="<span pow if="version(2.0)" class="expr">$last</span><span pow else class="expr">*last</span>">, &lt;/template>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    1 , 2 , 3
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 
 <hr />
@@ -91,12 +80,10 @@
     If an object is provided, it will iterate over the keys and values.
 </p>
 <div class="example">
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">{ first: 1, second: 2, third: 3 }</span>">
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">{ first: 1, second: 2, third: 3 }</span>">
     <span pow stop>{{ key }}: {{ value }}</span>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>first: 1&lt;/div>
-&lt;div>second: 2&lt;/div>
-&lt;div>third: 3&lt;/div></code></pre>
+    <pre></pre>
 </div>
 
 <template pow if="version(1.2)">
@@ -112,14 +99,12 @@
         <code class="attr">else*</code> attributes to further conditionally render an element.
     </p>
     <div class="example">
-        <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[]</span>">
+        <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[]</span>">
     Array block
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">else</span>>
     Array was empty
 &lt;/div></code></pre>
-        <pre><code>&lt;div>
-    Array was empty
-&lt;/div></code></pre>
-        </pre>
+        <pre></pre>
+    </div>
 </template>

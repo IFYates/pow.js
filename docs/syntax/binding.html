@@ -26,7 +26,8 @@
 <p>
     The possible binding attributes are:
 <ul>
-    <li pow if="version(1.4)"><a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this element hierarchy.</li>
+    <li pow if="version(1.4)"><a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this
+        element hierarchy.</li>
     <li>
         <a pow href="?/bindings-conditions/" onclick="{{ () => $root.navigate('bindings-conditions') }}">
             <code class="attr">if</code>
@@ -37,81 +38,87 @@
         </a>
         Conditional elements.
     </li>
-    <li><a href="#data"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> Change the data context of the current element.</li>
-    <li><code class="attr" pow template="nav" data="{ id: 'bindings-loops', text: 'array' }"></code> Repeat this element for each item in the array.
+    <li><a href="#data"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> Change the data context of
+        the current element.</li>
+    <li><code class="attr" pow template="nav" data="{ id: 'bindings-loops', text: 'array' }"></code> Repeat this element
+        for each item in the array.
     </li>
-    <li pow if="version(1.2)"><code class="attr" pow template="nav" data="{ id: 'bindings-templates', text: 'template' }"></code> Insert a named
+    <li pow if="version(1.2)"><code class="attr" pow template="nav"
+            data="{ id: 'bindings-templates', text: 'template' }"></code> Insert a named
         template.</li>
 </ul>
 </p>
 
-<hr />
-<h2 pow>Processing order</h2>
-
-<p pow if="version(1.0, 2.0)">
-    This is also the order that they will be evaluated in; so, the context of an <code class="attr">if</code> will
-    not be altered by any <code class="attr">item</code>/<code class="attr">array</code>
-    expression.
+<p pow if="version(1.0, 1.2)">
+    Elements may only have one binding attribute.
 </p>
-<div pow if="version(1.0, 2.0)" class="example">
-    <pre style="grid-column: span 2"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">item</span>="<span class="expr">child</span>">
-    <span pow stop class="expr">{{ text }}</span>
-&lt;/div><hr/>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
-    <span pow stop class="expr">{{ text }}</span>
-&lt;/div></code></pre>
-    <pre><code>&lt;div>
-    Hello, world!
-&lt;/div><hr />&lt;div>
-    Hello, world!
-&lt;/div></code></pre>
-</div>
 
-<p pow if="version(2.0)">
-    The attributes are processed in the order they appear in the element. This means that the context of an <code
-        class="attr">if</code> attribute is affected by whether it comes before or after a <code
-        class="attr">data</code>/<code class="attr">array</code> attribute on the same
-    element.
-</p>
-<div pow if="version(2.0)" class="example">
-    <pre style="grid-column: span 2"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">data</span>="<span class="expr">child</span>">
+<template pow if="version(1.2)">
+    <hr />
+    <h2>Processing order</h2>
+
+    <template pow if="version(1.2, 2.0)">
+        <p>
+            This is also the order that they will be evaluated in; so, the context of an <code class="attr">if</code>
+            will not be altered by any <code class="attr">item</code>/<code class="attr">array</code> expression on the
+            same element.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
+            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">item</span>="<span class="expr">child</span>">
     <span pow stop class="expr">{{ text }}</span>
-&lt;/div><hr/>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
+&lt;/div>
+---
+&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
     <span pow stop class="expr">{{ text }}</span>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    Hello, world!
-&lt;/div><hr />&lt;!-- Not rendered because 'if' is looking for 'child.child' --></code></pre>
-</div>
+            <pre></pre>
+        </div>
+    </template>
+
+    <template pow if="version(2.0)">
+        <p>
+            The attributes are processed in the order they appear in the element. This means that the context of an
+            <code class="attr">if</code> attribute is affected by whether it comes before or after a <code
+                class="attr">data</code>/<code class="attr">array</code> attribute on the same
+            element.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
+            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">child</span>" <span class="attr">data</span>="<span class="expr">child</span>">
+    <span pow stop class="expr">{{ text }}</span>
+&lt;/div>
+---
+&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>" <span class="attr">if</span>="<span class="expr">child</span>">
+    <span pow stop class="expr">{{ text }}</span>
+&lt;/div></code></pre>
+            <pre></pre>
+        </div>
+    </template>
+</template>
 
 <hr />
-<h2 id="data"><code
-        class="html"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>="<code
+<h2 id="data"><code class="html"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>="<code
         class="expr">expression</code>"</code></h2>
 <p>
     Sets the data context for the binding of the hierarchy from this element.
 </p>
 <div class="example">
-    <pre style="grid-column: span 2"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child</span>">
+    <pre class="example-data"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child</span>">
     <span pow stop class="expr">{{ text }}</span>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    Hello, world!
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 
 <p>
     Because the attribute takes an expression, the value does not have to be in the data context.
 </p>
 <div class="example">
-    <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
+    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
     <span pow stop class="expr">{{ text }}</span>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    Hello, world!
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 
 <p pow if="version(1.3)">
@@ -125,12 +132,10 @@
         Prevents any further bindings from being applied to the element hierarchy.
     </p>
     <div class="example">
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">stop</span>>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">stop</span>>
     {{ text }}
 &lt;/div></code></pre>
-        <pre><code pow stop>&lt;div>
-    {{ text }}
-&lt;/div></code></pre>
+        <pre></pre>
     </div>
     <p>
         If an explicit call to <code class="js">apply()</code> is made for this element, the
@@ -144,17 +149,16 @@
 <hr />
 <h2 id="templates">Templates</h2>
 <p>
-    Most examples use <code class="html">&lt;div&gt;</code> elements to clearly show how it will appear in the result, but if
+    Most examples use <code class="html">&lt;div&gt;</code> elements to clearly show how it will appear in the result,
+    but if
     the bound element is a <code class="html">&lt;template&gt;</code>, the entire element is replaced.<br />
     This is a good way to hide unprocessed elements until rendering is complete.
 </p>
 <div class="example">
-    <pre><code pow stop>&lt;div>
+    <pre class="live-example"><code pow stop>&lt;div>
     &lt;template <span class="pow">pow</span>>
         Hello, world!
     &lt;/template>
 &lt;/div></code></pre>
-    <pre><code pow stop>&lt;div>
-    Hello, world!
-&lt;/div></code></pre>
+    <pre></pre>
 </div>

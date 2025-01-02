@@ -16,7 +16,7 @@
 <p>
     Any valid javascript expression can be used.
 </p>
-<pre class="block"><code pow stop class="js">{{ text.toUpperCase }}</code></pre>
+<pre class="block"><code pow stop class="js">{{ text.toUpperCase() }}</code></pre>
 
 <p>
     If a referenced property is not found, the result will be blank and a warning will be raised. To suppress the
@@ -91,7 +91,7 @@
         <li>
             <code class="expr">*root</code>: The data originally passed to <code class="js">apply()</code>.
         </li>
-        <li pow if="version(1.0, 1.3)">
+        <li pow if="version(1.0, 1.4)">
             <code class="expr">*data</code>: The current data context.
         </li>
         <li pow if="version(1.4)">
@@ -191,21 +191,18 @@
     path to the current context.
 </p>
 <div pow if="version(1.0, 2.0)" class="example">
-    <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
+    <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
+    <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">value</span>">
         <span class="expr">{{ *path }}</span>
         <span class="expr">{{ *parent }}</span>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    &lt;div>
-        *root.child.value
-        [object root.child]
-    &lt;/div>
-&lt;/div></code></pre>
+    <pre></pre>
 </div>
 <div pow if="version(2.0)" class="example">
-    <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
+    <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
+    <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">grandchild</span>">
         &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>">
             <span class="expr">{{ $path }}</span>
@@ -215,14 +212,5 @@
         &lt;/div>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre><code>&lt;div>
-    &lt;div>
-        &lt;div>
-            $root.child.grandchild.value
-            $root.child.grandchild
-            $root.child
-            $root
-        &lt;/div>
-    &lt;/div>
-&lt;/div></code></pre>
+    <pre></pre>
 </div>

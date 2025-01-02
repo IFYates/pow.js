@@ -13,19 +13,17 @@
 
     <template pow if="version(1.2, 2.0)">
         <p>
-            The <code class="attr">template</code> binding will replace the element with the contents of the specified
+            The <code class="attr">template</code> binding will <em>replace</em> the element with the contents of the
+            specified
             template, allowing you to reuse structures.
         </p>
         <div class="example">
-            <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
+            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
 &lt;template id="my-component">
     <span class="expr">{{ text }}</span>
 &lt;/template></code></pre>
-            <pre><code pow stop>Hello, world!
-&lt;template id="my-component">
-    <span class="expr">{{ text }}</span>
-&lt;/template></code></pre>
+            <pre></pre>
         </div>
     </template>
 
@@ -35,17 +33,12 @@
             contents of the specified template, allowing you to reuse structures.
         </p>
         <div class="example">
-            <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
+            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
 &lt;template id="my-component">
     <span class="expr">{{ text }}</span>
 &lt;/template></code></pre>
-            <pre><code pow stop>&lt;div>
-    Hello, world!
-&lt;/div>
-&lt;template id="my-component">
-    <span class="expr">{{ text }}</span>
-&lt;/template></code></pre>
+            <pre></pre>
         </div>
     </template>
 
@@ -54,13 +47,11 @@
         without modification.
     </p>
     <div class="example">
-        <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
-        <pre><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     <span class="expr">{{ text }}</span>
 &lt;/div></code></pre>
-        <pre><code>&lt;div>
-    Hello, world!
-&lt;/div></code></pre>
+        <pre></pre>
     </div>
 
     <p>
@@ -81,8 +72,8 @@
     </p>
 
     <template pow if="version(1.4, 2.0)">
-        <h2>Dynamic <code class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code>
-        </h2>
+        <hr />
+        <h2>Dynamic <code class="html"><code class="attr">:template</code>="<code class="expr">expression</code>"</code></h2>
 
         <p>
             Since <span pow template="nav"
@@ -90,19 +81,14 @@
             evaluated <em>after</em> the element bindings, they can not be used to modify the binding value.
         </p>
         <div class="example">
-            <pre class="js"><code class="js">{ value: 1 }</code></pre>
-            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
     Unmatched
 &lt;/div>
 &lt;template id="case-1">One&lt;/template>
 &lt;template id="case-2">Two&lt;/template>
 &lt;template id="case-3">Three&lt;/template></code></pre>
-            <pre><code>&lt;div template="case-1">
-    Unmatched
-&lt;/div>
-&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></code></pre>
+            <pre></pre>
         </div>
     </template>
 
@@ -120,45 +106,45 @@
             switch statement.
         </p>
         <div class="example">
-            <pre class="js"><code class="js">{ value: 1 }</code></pre>
-            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
     Unmatched
 &lt;/div>
 &lt;template id="case-1">One&lt;/template>
 &lt;template id="case-2">Two&lt;/template>
 &lt;template id="case-3">Three&lt;/template></code></pre>
-            <br />
-            <pre><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">case-1</span>">
-    Unmatched
-&lt;/div>
-&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></code></pre>
-            <pre><code>&lt;div>
-    One
-&lt;/div>
-&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></code></pre>
+            <pre></pre>
         </div>
     </template>
 
-    <hr />
-    <h2>Template configuration</h2>
-    <p>
-        A useful way to bind a template and add additional configuration is to use <code
-            class="attr">{{ version(2.0) ? 'data' : 'item' }}</code> with an expanded object.
-    </p>
-    <div class="example">
-        <pre class="js"><code class="js">{ text: 'Hello, world!' }</code></pre>
-        <pre><code>&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"
-        <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">{ ...$data, color: 'red' }</span>">&lt;/template>
+    <template pow if="version(1.4)">
+        <hr />
+        <h2>Template configuration</h2>
+        <p>
+            A useful way to bind a template and add additional configuration is to use <code
+                class="attr">{{ version(2.0) ? 'data' : 'item' }}</code> with an expanded object.
+        </p>
+        <div class="example" pow if="version(1.4, 2.0)">
+            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">{ ...this, color: 'red' }</span>">
+    &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template>
+&lt;/div>
 &lt;template id="my-component">
     <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
 &lt;/template></code></pre>
-        <pre><code>&lt;div style="color: red">
-    Hello, world!
-&lt;/div></code></pre>
-    </div>
+            <pre></pre>
+        </div>
+        <div class="example" pow if="version(2.0)">
+            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre class="live-example"><code>&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"
+        <span class="attr">data</span>="<span class="expr">{ ...$data, color: 'red' }</span>">&lt;/template>
+&lt;/div>
+&lt;template id="my-component">
+    <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
+&lt;/template></code></pre>
+            <pre></pre>
+        </div>
+    </template>
 
 </template>
