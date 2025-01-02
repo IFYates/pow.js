@@ -22,9 +22,10 @@ div.example.nogrid {
 }
 
 div.example pre {
-    border: 1px solid #aaaaaa;
+    border: 1px solid #777777;
     background-color: #22232a;
     padding: 10px;
+    border-radius: 8px;
 }
 
 div.example code {
@@ -99,21 +100,28 @@ blockquote {
     -webkit-text-fill-color: transparent;
 }
 
-pre.live-example {
+pre.live-example,
+pre.example-data {
     -webkit-user-modify: read-write;
     position: relative;
 }
 
+pre.live-example:hover,
+pre.example-data:hover {
+    cursor: text;
+    border-color: white;
+}
+
 pre.example-data {
     grid-column: span 2;
-    -webkit-user-modify: read-write;
 }
 
 .element {
     position: relative;
 }
 
-pre.live-example::before {
+pre.live-example::before,
+pre.example-data::before {
     font-family: 'Font Awesome 6 Free';
     content: '\f304';
     font-weight: 900;
@@ -121,6 +129,6 @@ pre.live-example::before {
     position: absolute;
     z-index: 0;
     right: 8px;
-    bottom: 5px;
+    bottom: 3px;
     font-size: 1.5rem;
 }
