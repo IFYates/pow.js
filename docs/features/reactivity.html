@@ -10,13 +10,14 @@
 <div class="example">
     <pre class="live-example" style="grid-row: span 2">&lt;head>
     &lt;script type="module">
-<div class="js" style="margin-left: 2em">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
+<div class="js" style="margin-left: 2em; width: fit-content">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'
 
 const binding = pow.bind(document.body)
 const data = {
     count: 0,
-    increment: () => {
-        data.count += 1
+    step: 1,
+    increment: (step) => {
+        data.count += step
         binding.refresh()
     }
 }
@@ -24,7 +25,7 @@ binding.apply(data)</div>   &lt;/script>
 &lt;/head>
 &lt;body>
     &lt;div>Current value: <span pow stop class="expr">{{ count }}</span>&lt;/div>
-    &lt;button onclick="<span pow stop class="expr">{{ increment }}</span>">Add 1&lt;/button>
+    &lt;button onclick="<span pow stop class="expr">{{ () => increment(step) }}</span>">Add <span pow stop class="expr">{{ step }}</span>&lt;/button>
 &lt;/body></pre>
     <pre></pre>
     <pre class="example-live" style="background-color:white"></pre>

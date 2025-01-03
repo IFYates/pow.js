@@ -1,93 +1,111 @@
 <h1>Bindings / Loops</h1>
 
-<hr />
-<h2>
-    <code class="html"><span class="attr">array</span>="<span class="expr">expression</span>"</code>
-    / <code class="attr">array</code>
-</h2>
-<p>
-    This binding will repeat the element hierarchy for each item in the array.
-</p>
-<div class="example">
-    <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">list</span>">
+<block>
+    <h2>
+        <code class="html"><span class="attr">array</span>="<span class="expr">expression</span>"</code>
+        / <code class="attr">array</code>
+    </h2>
+
+    <p>
+        This binding will repeat the element hierarchy for each item in the array.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">list</span>">
     &lt;div><span pow ifnot="version(2.0)" class="expr"><span pow stop>{{ *data }}</span></span><span pow if="version(2.0)" class="expr"><span pow stop>{{ $data }}</span></span>&lt;/div>
 &lt;/div></pre>
-    <pre></pre>
-</div>
-<p>
-    If an expression is not provided, it is the same as <code class="html"><span class="attr">array</span>="<span
+        <pre></pre>
+    </div>
+
+    <p>
+        If an expression is not provided, it is the same as <code class="html"><span class="attr">array</span>="<span
         class="expr">{{ version(2.0) ? '$data' : '*data' }}</span>"</code>.
-</p>
-<div class="example">
-    <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">list</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">array</span>><span pow ifnot="version(2.0)" class="expr"><span pow stop>{{ *data }}</span></span><span pow if="version(2.0)" class="expr"><span pow stop>{{ $data }}</span></span>&lt;/div>
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
 
-<p>
-    If the expresson evaluates to <code class="js">null</code> or an empty array, the element will not be rendered.
-</p>
+    <p>
+        If the expresson evaluates to <code class="js">null</code> or an empty array, the element will not be rendered.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;div>
+    &lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[]</span>">
+        Not rendered
+    &lt;/div>
+&lt;/div></pre>
+        <pre></pre>
+    </div>
+</block>
 
-<hr />
-<h2>Internal values</h2>
-<p>
-    There are additional <span pow template="nav"
-        data="{ id: 'syntax-expressions', hash: 'internal-values', text: 'internal values' }"></span> that are available
-    while iterating over an array:
-</p>
-<template pow if="version(2.0)">
-    <ul>
-        <li>
-            <code class="expr">$array</code>: The data context of the current array binding.
-        </li>
-        <li>
-            <code class="expr">$index</code>: The index of the current item in the array.
-        </li>
-        <li>
-            <code class="expr">$first</code>: <code class="js">true</code> if this is the first item in the array.
-        </li>
-        <li>
-            <code class="expr">$last</code>: <code class="js">true</code> if this is the last item in the array.
-        </li>
-    </ul>
-</template>
-<template pow else>
-    <ul>
-        <li>
-            <code class="expr">*index</code>: The index of the current item in the array.
-        </li>
-        <li>
-            <code class="expr">*first</code>: <code class="js">true</code> if this is the first item in the array.
-        </li>
-        <li>
-            <code class="expr">*last</code>: <code class="js">true</code> if this is the last item in the array.
-        </li>
-    </ul>
-</template>
-<div class="example">
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[ 1, 2, 3 ]</span>">
+<block id="internal">
+    <h2>Internal values</h2>
+
+    <div>
+        <p>
+            There are additional <span pow template="nav"
+                data="{ id: 'syntax-expressions', hash: 'internal-values', text: 'internal values' }"></span> that are
+            available
+            while iterating over an array:
+        </p>
+        <template pow if="version(2.0)">
+            <ul>
+                <li>
+                    <code class="expr">$array</code>: The data context of the current array binding.
+                </li>
+                <li>
+                    <code class="expr">$index</code>: The index of the current item in the array.
+                </li>
+                <li>
+                    <code class="expr">$first</code>: <code class="js">true</code> if this is the first item in the
+                    array.
+                </li>
+                <li>
+                    <code class="expr">$last</code>: <code class="js">true</code> if this is the last item in the array.
+                </li>
+            </ul>
+        </template>
+        <template pow else>
+            <ul>
+                <li>
+                    <code class="expr">*index</code>: The index of the current item in the array.
+                </li>
+                <li>
+                    <code class="expr">*first</code>: <code class="js">true</code> if this is the first item in the
+                    array.
+                </li>
+                <li>
+                    <code class="expr">*last</code>: <code class="js">true</code> if this is the last item in the array.
+                </li>
+            </ul>
+        </template>
+    </div>
+    <div class="example">
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[ 1, 2, 3 ]</span>">
     <span pow if="version(2.0)"><span pow stop class="expr">{{ $data }}</span></span><span pow else><span pow stop class="expr">{{ *data }}</span></span>&lt;template <span class="pow">pow</span> <span class="attr">ifnot</span>="<span pow if="version(2.0)" class="expr">$last</span><span pow else class="expr">*last</span>">, &lt;/template>
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
+</block>
 
-<hr />
-<h2>Objects</h2>
-<p>
-    If an object is provided, it will iterate over the keys and values.
-</p>
-<div class="example">
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">{ first: 1, second: 2, third: 3 }</span>">
+<block id="objects">
+    <h2>Objects</h2>
+    <p>
+        If an object is provided, it will iterate over the keys and values.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">{ first: 1, second: 2, third: 3 }</span>">
     <span pow stop><span class="expr">{{ key }}</span>: <span class="expr">{{ value }}</span></span>
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
+</block>
 
-<template pow if="version(1.2)">
-    <hr />
+<block pow if="version(1.2)" id="post-loop">
     <h2>
         Post-loop conditions:
         <code class="attr">else</code>
@@ -107,4 +125,4 @@
 &lt;/div></pre>
         <pre></pre>
     </div>
-</template>
+</block>

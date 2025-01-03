@@ -25,6 +25,30 @@ blockquote {
     background-color: hsl(232, 11%, 15%);
 }
 
+block {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 20px;
+}
+
+block::before {
+    content: "";
+    border-top: 1px solid #60626a;
+    margin-bottom: 1em;
+}
+
+@media (min-width: 1500px) {
+    block {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    block>h2,
+    block>blockquote,
+    block::before {
+        grid-column: span 2;
+    }
+}
+
 .html {
     border-radius: 5px;
     background-color: #7a7a7a;

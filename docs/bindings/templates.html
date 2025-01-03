@@ -1,13 +1,11 @@
 <h1>Bindings / Template</h1>
 
-<template pow if="version(1.0, 1.2)">
+<block pow if="version(1.0, 1.2)">
     <p>
         Not available
     </p>
-</template>
-
-<template pow if="version(1.2)">
-    <hr />
+</block>
+<block pow else>
     <h2><code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code></h2>
 
     <blockquote>
@@ -15,11 +13,10 @@
         along with other elements in the hierarchy.
     </blockquote>
 
-    <template pow if="version(1.2, 2.0)">
+    <template pow if="version(2.0)">
         <p>
-            The <code class="attr">template</code> binding will <em>replace</em> the element with the contents of the
-            specified
-            template, allowing you to reuse structures.
+            The <code class="attr">template</code> binding will replace the contents of the bound element with the
+            contents of the specified template, allowing you to reuse structures.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
@@ -31,11 +28,10 @@
 &lt;/template></code></pre>
         </div>
     </template>
-
-    <template pow if="version(2.0)">
+    <template pow else>
         <p>
-            The <code class="attr">template</code> binding will replace the contents of the bound element with the
-            contents of the specified template, allowing you to reuse structures.
+            The <code class="attr">template</code> binding will <em>replace</em> the element with the contents of the
+            specified template, allowing you to reuse structures.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
@@ -60,45 +56,25 @@
         <pre></pre>
     </div>
 
-    <p>
-        As with any other <span pow template="nav"
-            data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if the bound element is a
-        <code class="html">&lt;template&gt;</code>, the entire element is replaced.
-    </p>
-
-    <p>
-        The <code class="value">id</code> will be used before <span pow template="nav"
-            data="{ id: 'syntax-expressions', text: 'expressions' }"></span> are interpolated, so it is not possible to
-        use an expression to dynamically select a template.
-    </p>
-
-    <template pow if="version(1.4, 2.0)">
-        <hr />
-        <h2 id="dynamic">Dynamic <code class="html"><span class="attr">:template</span>="<span
-                class="expr">expression</span>"</code></h2>
-
+    <div>
         <p>
-            Since <span pow template="nav"
-                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span> are
-            evaluated <em>after</em> the element bindings, they <em>can not</em> be used to modify the binding value.
+            As with any other <span pow template="nav"
+                data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if the bound element
+            is a <code class="html">&lt;template&gt;</code>, the entire element is replaced.
         </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
-    Unmatched
-&lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></pre>
-        </div>
-    </template>
+        <p>
+            The <code class="value">id</code> will be used before <span pow template="nav"
+                data="{ id: 'syntax-expressions', text: 'expressions' }"></span> are interpolated, so it is not possible
+            to use an expression to dynamically select a template.
+        </p>
+    </div>
+</block>
+
+<block pow if="version(1.4)" id="dynamic">
+    <h2 id="dynamic">Dynamic <code class="html"><span class="attr">:template</span>="<span
+        class="expr">expression</span>"</code></h2>
 
     <template pow if="version(2.0)">
-        <hr />
-        <h2 id="dynamic">Dynamic <code class="html"><span class="attr">:template</span>="<span
-                class="expr">expression</span>"</code></h2>
-
         <p>
             Originally, <span pow template="nav"
                 data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span> were
@@ -118,40 +94,59 @@
 &lt;template id="case-3">Three&lt;/template></pre>
         </div>
     </template>
-
-    <template pow if="version(1.4)">
-        <hr />
-        <h2 id="configuration">Template configuration</h2>
+    <template pow else>
         <p>
-            A useful way to bind a template and add additional configuration is to use <code
-                class="attr">{{ version(2.0) ? 'data' : 'item' }}</code> with an expanded object.
+            Since <span pow template="nav"
+                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span> are
+            evaluated <em>after</em> the element bindings, they <em>can not</em> be used to modify the binding value.
         </p>
-        <div class="example" pow if="version(1.4, 2.0)">
-            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">{ ...this, color: 'red' }</span>">
-    &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+    Unmatched
 &lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="my-component">
-    <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
-&lt;/template></pre>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></pre>
         </div>
-        <div class="example" pow if="version(2.0)">
-            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre class="live-example">&lt;div>
+    </template>
+</block>
+
+<block pow if="version(1.4)" id="configuration">
+    <h2>Template configuration</h2>
+
+    <p>
+        A useful way to bind a template and add additional configuration is to use <code
+            class="attr">{{ version(2.0) ? 'data' : 'item' }}</code> with an expanded object.
+    </p>
+    <div class="example" pow if="version(2.0)">
+        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre class="live-example">&lt;div>
     &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"
         <span class="attr">data</span>="<span class="expr">{ ...$data, color: 'red' }</span>">&lt;/template>
 &lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="my-component">
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code">&lt;template id="my-component">
     <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
 &lt;/template></pre>
-        </div>
-    </template>
+    </div>
+    <div class="example" pow else>
+        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">{ ...this, color: 'red' }</span>">
+    &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template>
+&lt;/div></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code">&lt;template id="my-component">
+    <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
+&lt;/template></pre>
+    </div>
+</block>
 
-    <template pow if="version(2.1)">
-        <hr />
-        <h2 id="subcontent">Template subcontent</h2>
+<block pow if="version(2.1)" id="subcontent">
+    <h2>Template subcontent</h2>
+
+    <div>
         <p>
             For templates that require more complicated subcontent, you can use child <code
                 class="html">&lt;template&gt;</code>
@@ -162,45 +157,48 @@
             Child <code class="html">&lt;template&gt;</code> elements are used because they will never be displayed if
             something prevents the template from rendering.
         </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+    </div>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     &lt;template><span pow stop class="expr">{{ text }}</span>&lt;/template>
 &lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="my-component">
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code">&lt;template id="my-component">
     &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param>&lt;/span>
 &lt;/template></pre>
-        </div>
-        <p>
-            If multiple subcontent elements are needed, the <code class="attr">id</code> attribute can be used to
-            distinguish them.<br />
-            Not providing an <code class="attr">id</code> will always refer to the content of the first <code
-                class="html">&lt;template&gt;</code> element.
-        </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ text: 'Your action was successful.' }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">message-box</span>">
+    </div>
+
+    <p>
+        If multiple subcontent elements are needed, the <code class="attr">id</code> attribute can be used to
+        distinguish them.<br />
+        Not providing an <code class="attr">id</code> will always refer to the content of the first <code
+            class="html">&lt;template&gt;</code> element.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Your action was successful.' }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">message-box</span>">
     &lt;template id="actions">&lt;button>Okay&lt;/button>&lt;/template>
     &lt;template id="message"><span pow stop class="expr">{{ text }}</span>&lt;/template>
 &lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="message-box">
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code">&lt;template id="message-box">
     &lt;div>&lt;param <code class="attr">id</code>="<code class="value">message</code>">&lt;/div>
     &lt;div>&lt;param>&lt;/div>
 &lt;/template></pre>
-        </div>
-        <p>
-            If the template cannot be found, the subcontent can still be used in the default content.
-        </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+    </div>
+
+    <p>
+        If the template cannot be found, the subcontent can still be used in the default content.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     &lt;template><span pow stop class="expr">{{ text }}</span>&lt;/template>
     &lt;span>&lt;param>&lt;/span>
 &lt;/div></pre>
-            <pre></pre>
-        </div>
-    </template>
+        <pre></pre>
+    </div>
+</block>
 
-</template>
+</block>
