@@ -13,12 +13,12 @@
     If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
 </p>
 <div class="example">
-    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
+    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
     First block
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
     Second block
-&lt;/div></code></pre>
+&lt;/div></pre>
     <pre></pre>
 </div>
 
@@ -33,11 +33,34 @@
     <code class="attr">else*</code> attributes to further conditionally render an element.
 </p>
 <div class="example">
-    <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
     First block
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">else</span>>
     Second block
-&lt;/div></code></pre>
+&lt;/div></pre>
+    <pre></pre>
+</div>
+
+<p>
+    This can be chained for as many elements as needed.
+</p>
+<div class="example">
+    <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">value == 1</span>">
+    One
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else-if</span>="<span class="expr">value == 2</span>">
+    Two
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else-if</span>="<span class="expr">value == 3</span>">
+    Three
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else-ifnot</span>="<span class="expr">value > 0</span>">
+    Negative
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>
+    More than 3
+&lt;/div></pre>
     <pre></pre>
 </div>

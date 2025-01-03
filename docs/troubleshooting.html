@@ -14,13 +14,13 @@
 
 <div class="example">
     <pre class="example-data" style="display: none;"><code class="js">{ child: 1 }</code></pre>
-    <pre class="live-example"><code>Outside: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
+    <pre class="live-example">Outside: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
 &lt;p <span class="pow">pow</span> <span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">child</span>">
     Inside: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
     &lt;!-- 'div' element cannot be inside a 'p' and will be shifted outside -->
     &lt;div>
         Invalid child: <template pow if="version(2.0)"><span pow stop class="expr">{{ $path }}</span></template><template pow ifnot="version(2.0)"><span pow stop class="expr">{{ *path }}</span></template>
     &lt;/div>
-&lt;/p></code></pre>
+&lt;/p></pre>
     <pre></pre>
 </div>

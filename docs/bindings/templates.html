@@ -24,7 +24,7 @@
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
             <pre
-                class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div></code></pre>
+                class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
             <pre class="example-code"><code pow stop>&lt;template id="my-component">
     <span class="expr">{{ text }}</span>
@@ -40,7 +40,7 @@
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
             <pre
-                class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div></code></pre>
+                class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
             <pre class="example-code"><code pow stop>&lt;template id="my-component">
     <span class="expr">{{ text }}</span>
@@ -74,8 +74,8 @@
 
     <template pow if="version(1.4, 2.0)">
         <hr />
-        <h2 id="dynamic">Dynamic <code class="html"><code class="attr">:template</code>="<code
-                class="expr">expression</code>"</code></h2>
+        <h2 id="dynamic">Dynamic <code class="html"><span class="attr">:template</span>="<span
+                class="expr">expression</span>"</code></h2>
 
         <p>
             Since <span pow template="nav"
@@ -84,20 +84,20 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
     Unmatched
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="case-1">One&lt;/template>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
 &lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></code></pre>
+&lt;template id="case-3">Three&lt;/template></pre>
         </div>
     </template>
 
     <template pow if="version(2.0)">
         <hr />
-        <h2 id="dynamic">Dynamic <code class="html"><code class="attr">:template</code>="<code
-                class="expr">expression</code>"</code></h2>
+        <h2 id="dynamic">Dynamic <code class="html"><span class="attr">:template</span>="<span
+                class="expr">expression</span>"</code></h2>
 
         <p>
             Originally, <span pow template="nav"
@@ -109,13 +109,13 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
     Unmatched
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="case-1">One&lt;/template>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
 &lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></code></pre>
+&lt;template id="case-3">Three&lt;/template></pre>
         </div>
     </template>
 
@@ -128,24 +128,24 @@
         </p>
         <div class="example" pow if="version(1.4, 2.0)">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">{ ...this, color: 'red' }</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">{ ...this, color: 'red' }</span>">
     &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template>
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="my-component">
+            <pre class="example-code">&lt;template id="my-component">
     <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
-&lt;/template></code></pre>
+&lt;/template></pre>
         </div>
         <div class="example" pow if="version(2.0)">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-            <pre class="live-example"><code>&lt;div>
+            <pre class="live-example">&lt;div>
     &lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"
         <span class="attr">data</span>="<span class="expr">{ ...$data, color: 'red' }</span>">&lt;/template>
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="my-component">
+            <pre class="example-code">&lt;template id="my-component">
     <span pow stop>&lt;div style="color: <span class="expr">{{ color }}</span>"><span class="expr">{{ text }}</span>&lt;/div></span>
-&lt;/template></code></pre>
+&lt;/template></pre>
         </div>
     </template>
 
@@ -164,13 +164,13 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     &lt;template><span pow stop class="expr">{{ text }}</span>&lt;/template>
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="my-component">
+            <pre class="example-code">&lt;template id="my-component">
     &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param>&lt;/span>
-&lt;/template></code></pre>
+&lt;/template></pre>
         </div>
         <p>
             If multiple subcontent elements are needed, the <code class="attr">id</code> attribute can be used to
@@ -180,25 +180,25 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Your action was successful.' }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">message-box</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">message-box</span>">
     &lt;template id="actions">&lt;button>Okay&lt;/button>&lt;/template>
     &lt;template id="message"><span pow stop class="expr">{{ text }}</span>&lt;/template>
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
-            <pre class="example-code"><code>&lt;template id="message-box">
+            <pre class="example-code">&lt;template id="message-box">
     &lt;div>&lt;param <code class="attr">id</code>="<code class="value">message</code>">&lt;/div>
     &lt;div>&lt;param>&lt;/div>
-&lt;/template></code></pre>
+&lt;/template></pre>
         </div>
         <p>
             If the template cannot be found, the subcontent can still be used in the default content.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     &lt;template><span pow stop class="expr">{{ text }}</span>&lt;/template>
     &lt;span>&lt;param>&lt;/span>
-&lt;/div></code></pre>
+&lt;/div></pre>
             <pre></pre>
         </div>
     </template>
