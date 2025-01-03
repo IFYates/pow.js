@@ -2,17 +2,21 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.0.1
+ * @version 2.1.0
  */
 
-const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
-const _rand = Math.random
-const _selectChild = (element, selector) => (element.content ?? element).querySelectorAll(selector)
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
-const ATTR_POW = 'pow', INN_HTML = 'innerHTML'
+const ATTR_POW = 'pow', INN_HTML = 'innerHTML', CONTENT = 'content'
+const _attribute = {
+    set: (element, name, value) => element.setAttribute(name, value),
+    remove: (element, name) => element.removeAttribute(name)
+}
+const _rand = Math.random
+const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
 // Interpolates text templates
-const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
+const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs,
+    (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
 const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
 
 // Resolves an expression to a value
@@ -66,32 +70,24 @@ const processElement = (element, state, isRoot, val) => {
 
         // Apply template
         if (name == B_TEMPLATE) {
-            if (val = document.getElementById(value)) {
-                element[INN_HTML] = val.cloneNode(1)[INN_HTML]
-            }
+            val = document.getElementById(value)?.cloneNode(1) || element
+            element[INN_HTML] = val[INN_HTML].replace(/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
+                (_, id) => _selectChild(element, 'template' + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
             return processElement(element, state)
         }
 
-        // Standard attribute
-        if (name[0] != ':' && ![B_IF, B_IFNOT, B_DATA, B_ARRAY].includes(name)) {
-            if (val = parseText(value, state, isRoot)) {
-                _attribute.set(element, name, val)
-            }
-            continue
-        }
-
-        // Remainder logic uses resolved expressions
-        val = value ? resolveExpr(value, state) : state.$data
+        // Some logic requires resolved expressions
+        val = () => val = (value ? resolveExpr(value, state) : state.$data)
 
         if (name[0] == ':') {
             // Interpolated attribute
-            if (val) {
+            if (val()) {
                 _attribute.set(element, name.slice(1), val)
             }
             return processElement(element, state)
         } else if (name == B_DATA && value) {
             // Data binding
-            if (val == null) {
+            if (val() == null) {
                 return element.remove()
             }
             return processElement(element, {
@@ -102,27 +98,32 @@ const processElement = (element, state, isRoot, val) => {
             }, isRoot)
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
-            val = (name == B_IF) != !val
+            val = (name == B_IF) != !val()
             processCondition(element, val)
             return val && processElement(element, state, isRoot)
+        } else if (name == B_ARRAY) {
+            // Element loop
+            val = !val() | Array.isArray(val) ? val
+                : Object.entries(val).map(([key, value]) => ({ key, value }))
+            for (let i = 0; i < val?.length; ++i) {
+                const child = element.cloneNode(1)
+                element.parentNode.insertBefore(child, element)
+                processElement(child, {
+                    ...state,
+                    $path: state.$path + (value ? '.' + value : '') + '[' + i + ']',
+                    $index: i, $first: !i, $last: i > val.length - 2,
+                    $data: val[i],
+                    $array: val,
+                    $parent: state
+                })
+            }
+            return processCondition(element, val?.length, 1)
         }
 
-        // Element loop
-        val = !val | Array.isArray(val) ? val
-            : Object.entries(val).map(([key, value]) => ({ key, value }))
-        for (let i = 0; i < val?.length; ++i) {
-            const child = element.cloneNode(1)
-            element.parentNode.insertBefore(child, element)
-            processElement(child, {
-                ...state,
-                $path: state.$path + (value ? '.' + value : '') + '[' + i + ']',
-                $index: i, $first: !i, $last: i > val.length - 2,
-                $data: val[i],
-                $array: val,
-                $parent: state
-            })
+        // Standard attribute
+        if (val = parseText(value, state, isRoot)) {
+            _attribute.set(element, name, val)
         }
-        return processCondition(element, val?.length, 1)
     }
 
     // Process every child 'pow' template
@@ -133,7 +134,7 @@ const processElement = (element, state, isRoot, val) => {
     // Parse inner HTML
     element[INN_HTML] = parseText(element[INN_HTML], state, isRoot)
     if (element.tagName == 'TEMPLATE') {
-        element.replaceWith(...element.content.childNodes)
+        element.replaceWith(...element[CONTENT].childNodes)
     }
 }
 

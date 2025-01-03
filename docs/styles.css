@@ -11,32 +11,6 @@ a {
     color: #ff0037;
 }
 
-div.example {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
-}
-
-div.example.nogrid {
-    grid-template-columns: auto;
-}
-
-div.example pre {
-    border: 1px solid #777777;
-    background-color: #22232a;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-div.example code {
-    margin-bottom: 0;
-    height: 100%;
-}
-
-div.example pre.js {
-    grid-column: span 2;
-}
-
 pre.block {
     margin-left: 4ex;
 }
@@ -100,13 +74,44 @@ blockquote {
     -webkit-text-fill-color: transparent;
 }
 
+div.example {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 10px;
+    column-gap: 10px;
+    margin-bottom: 2rem;
+}
+
+div.example.nogrid {
+    grid-template-columns: auto;
+}
+
+div.example pre {
+    border: 1px solid #777777;
+    background-color: #22232a;
+    padding: 10px;
+    margin: 0;
+    border-radius: 8px;
+}
+
+div.example code {
+    margin-bottom: 0;
+    height: 100%;
+}
+
+div.example pre.js {
+    grid-column: span 2;
+}
+
 pre.live-example,
+pre.example-code,
 pre.example-data {
     -webkit-user-modify: read-write;
     position: relative;
 }
 
 pre.live-example:hover,
+pre.example-code:hover,
 pre.example-data:hover {
     cursor: text;
     border-color: white;
@@ -121,6 +126,7 @@ pre.example-data {
 }
 
 pre.live-example::before,
+pre.example-code::before,
 pre.example-data::before {
     font-family: 'Font Awesome 6 Free';
     content: '\f304';

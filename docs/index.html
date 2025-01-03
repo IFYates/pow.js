@@ -32,7 +32,9 @@
             <div style="color:#a0a3bd; align-self:center">
                 Version:&nbsp;
                 <select onchange="{{ function() { setActiveVersion.call(this, { $data: this.value }) } }}">
-                    <option pow array="versions" value="{{ $data }}" :selected="window.activeVersion == $data ? 'selected' : null">{{ $data }}{{ $first ? ' (latest)' : '' }}
+                    <option pow array="versions" value="{{ $data }}"
+                        :selected="window.activeVersion == $data ? 'selected' : null">{{ $data }}{{ $first ? ' (latest)'
+                        : '' }}
                     </option>
                 </select>
             </div>
@@ -46,7 +48,8 @@
                             <span class="hide-on-collapse">{{ fn(name) }}</span>
                         </a>
 
-                        <template pow array="children" data="{ ...$data, classes: 'ps-5' }" template="navitem"></template>
+                        <template pow array="children" data="{ ...$data, classes: 'ps-5' }"
+                            template="navitem"></template>
                     </template>
 
                     <!-- Item without children -->
@@ -85,15 +88,16 @@
     <!-- Display templates -->
     <template id="navitem">
         <a pow href="?/{{ id }}/{{ this.hash ? '#' + this.hash : '' }}" if="fn(this.visible ?? true)" :href="this.url"
-            onclick="{{ this.url ? '' : $root.navigate }}" class="sidebar-link text-decoration-none p-2 {{ this.classes }}">
+            onclick="{{ this.url ? '' : $root.navigate }}"
+            class="sidebar-link text-decoration-none p-2 {{ this.classes }}">
             <i pow if="this.icon" class="fa-fw {{ icon }} me-3"></i>
             <span class="hide-on-collapse">{{ fn(name) }}</span>
         </a>
     </template>
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
-    <template id="nav"><a href="?/{{ id }}/{{ this.hash ? '#' + this.hash : '' }}"
-            onclick="{{ function () { $root.navigate.call(this, id) } }}">{{ text }}</a></template>
+    <template id="nav"><a href="?/{{ this.id ?? $data }}/{{ this.hash ? '#' + this.hash : '' }}"
+            onclick="{{ function () { $root.navigate.call(this, id) } }}">{{ text }}<param></a></template>
 </body>
 
 </html>

@@ -1,8 +1,8 @@
 <h1>Syntax / Attributes</h1>
 
 <hr />
+<h2>Attribute order</h2>
 <template pow if="version(1.0, 1.4)">
-    <h2>Attribute order</h2>
     <p>
         After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been evaluated,
         all attributes will be processed.
@@ -16,7 +16,6 @@
     </div>
 </template>
 <template pow if="version(1.4, 2.0)">
-    <h2>Attribute order</h2>
     <p>
         After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been evaluated,
         interpolated attributes will be evaluated and then all attributes will be processed.
@@ -30,14 +29,13 @@
     </div>
 </template>
 <template pow if="version(2.0)">
-    <h2>Attribute order</h2>
     <p>
         Attributes are processed in the order they appear, irregardless of whether they are <span pow template="nav"
-            data="{ id: 'syntax-binding', text: 'bindings' }"></span>, interpolated, or literal.<br />
+            data="'syntax-binding'"><template>bindings</template></span>, interpolated, or literal.<br />
         This means that the effect of one attribute is able to modify the behaviour of a later one.
     </p>
     <div class="example">
-        <pre  class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
         <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> before="<span class="expr">{{ text }}</span>"
         <span class="attr">data</span>="<span class="expr">child</span>"
         after="<span class="expr">{{ text }}</span>">&lt;/div></code></pre>
@@ -54,7 +52,8 @@
 </p>
 <div class="example">
     <pre class="example-data"><code class="js">{ style: 'my-class' }</code></pre>
-    <pre class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
+    <pre
+        class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
     <pre><code pow stop>&lt;div class="my-class"></code></pre>
 </div>
 
@@ -84,8 +83,10 @@
             class="attr">item</code> or <code class="attr">array</code> binding.
     </p>
     <div pow if="version(1.4, 2.0)" class="example">
-        <pre class="example-data"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
-        <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
+        <pre
+            class="example-data"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
+        <pre
+            class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
         <pre></pre>
     </div>
 
@@ -94,8 +95,10 @@
         set binding attributes that will then be processed.
     </p>
     <div pow if="version(2.0)" class="example">
-        <pre class="example-data"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
-        <pre class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
+        <pre
+            class="example-data"><code class="js">{ item: 'child1', text: 'Parent', child1: { text: 'Child 1' } }</code></pre>
+        <pre
+            class="live-example"><code>&lt;div <span class="pow">pow</span> <span class="attr">:{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">item</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></code></pre>
         <pre></pre>
     </div>
 </template>

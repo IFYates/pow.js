@@ -1,4 +1,4 @@
-window.renderExample = function (el, elData) {
+window.renderExample = function (el, elData, elCode) {
     const elResult = el.nextElementSibling
     if (elResult?.tagName !== 'PRE') {
         return
@@ -10,11 +10,19 @@ window.renderExample = function (el, elData) {
     }
     el.setAttribute('state', 'run')
 
-    let html = el.innerText
     let ver = window.activeVersion
     const id = '$' + Math.random().toString(36).substring(2)
     if ([...ver].filter($ => $ == '.').length < 2) {
         ver = `${ver}.0`
+    }
+
+    let html = el.innerText, target = ''
+    if (elCode) {
+        html = `<body><div id="example">${html}</div>${elCode.innerText}</body>`
+        target = '#example'
+    }
+    if (!html.includes('<body')) {
+        html = `<body>${html}</body>`
     }
     if (!html.includes('import pow ')) {
         html = `<head>
@@ -22,7 +30,7 @@ window.renderExample = function (el, elData) {
         import pow from 'https://ifyates.github.io/pow.js/v${ver}/pow.min.js'
         try {
             const data = ${!elData ? '{}' : `new Function('return ${elData.innerText.replace(/'/g, '\\\'')}')()`}
-            pow.apply(document.body, data)
+            pow.apply(${target ? 'document.querySelector(\'' + target + '\')' : 'document.body'}, data)
         } catch (e) {
             parent['${id}'] = e
         }
@@ -46,8 +54,8 @@ window.renderExample = function (el, elData) {
             return
         }
 
-        const body = iframe.contentDocument.documentElement.getElementsByTagName('body')[0]
-        const html = el.innerText.includes('<body') ? body.outerHTML : body.innerHTML
+        const result = iframe.contentDocument.documentElement.querySelector(target || 'body')
+        const html = el.innerText.includes('<body') ? result.outerHTML : result.innerHTML
         elResult.innerHTML = html.trim().replace(/</g, '&lt;')
             .replace(/=""(?=[ >])/g, '')
             .replace(/>/g, '&gt;')
@@ -64,7 +72,7 @@ window.renderExample = function (el, elData) {
 
         if (el.getAttribute('state') == 'dirty') {
             el.removeAttribute('state')
-            renderExample(el, elData)
+            renderExample(el, elData, elCode)
         } else {
             el.removeAttribute('state')
         }
@@ -77,10 +85,13 @@ const observer = new MutationObserver(() => {
         const now = new Date().getTime()
         if (el.isConnected && (!el.hasAttribute('r') || el.getAttribute('r') < now)) {
             el.setAttribute('r', now + 1000)
-            const elData = el.parentElement.querySelectorAll('pre.example-data')?.[0]
-            el.addEventListener('keyup', () => renderExample(el, elData))
-            elData?.addEventListener('keyup', () => renderExample(el, elData))
-            renderExample(el, elData)
+            const elData = el.parentElement.querySelector('pre.example-data')
+            const elCode = el.parentElement.querySelector('pre.example-code')
+            const fn = () => renderExample(el, elData, elCode)
+            el.addEventListener('keyup', fn)
+            elData?.addEventListener('keyup', fn)
+            elCode?.addEventListener('keyup', fn)
+            fn()
         }
     }
 })

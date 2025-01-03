@@ -1,6 +1,6 @@
 {
   "name": "pow-templating",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An extremely small and lightweight templating framework",
   "main": "./dist/pow.min.js",
   "type": "module",
