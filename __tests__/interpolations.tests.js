@@ -54,6 +54,14 @@ test('Function result interpolation', () => {
   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
 })
 
+// test('Function result interpolation (async)', () => {
+//   document.body.innerHTML = '<div>{{ func(name) }}</div>'
+
+//   pow.apply(document.body, { name: 'world', func: async (name) => new Promise((resolve) => resolve('Hello, ' + name + '!')) })
+
+//   expect(document.body.innerHTML).toBe('<div>Hello, world!</div>')
+// })
+
 test('Function interpolation', () => {
   document.body.innerHTML = '<div>{{ fn }}</div>'
 

@@ -61,4 +61,56 @@ test('Can process stop in existing template', () => {
   expect(document.body.innerHTML).toBe('<div id="main"><div pow="" stop="">{{ text }}</div></div><template id="text-view"><div pow="" stop="">{{ text }}</div></template>')
 })
 
+test('Can include single subcontent in template', () => {
+  document.body.innerHTML = `<div pow template="test">
+  <template>my sub content</template>
+</div>
+<template id="test">[<param>]</template>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe(`<div>[my sub content]</div>
+<template id="test">[<param>]</template>`)
+})
+
+test('Can include named subcontents in template', () => {
+  document.body.innerHTML = `<div pow template="test">
+  <template id="text1">my sub content</template>
+  <template id="text2">second content</template>
+</div>
+<template id="test">[<param id="text1">, <param id="text2">]</template>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe(`<div>[my sub content, second content]</div>
+<template id="test">[<param id="text1">, <param id="text2">]</template>`)
+})
+
+test('Undefined subcontent in template is blank', () => {
+  document.body.innerHTML = `<div pow template="test">
+</div>
+<template id="test">[<param>]</template>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe(`<div>[]</div>
+<template id="test">[<param>]</template>`)
+})
+
+test('Subcontents still work in unmatched template', () => {
+  document.body.innerHTML = `<div pow template="test">
+  <template id="text1">my sub content</template>
+  <template id="text2">second content</template>
+  [<param id="text2">, <param>]
+</div>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe(`<div>
+  <template id="text1">my sub content</template>
+  <template id="text2">second content</template>
+  [second content, my sub content]
+</div>`)
+})
+
 // TODO: pow array template / pow item template

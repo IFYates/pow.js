@@ -27,6 +27,7 @@ const nav = {
     },
 
     versions: [
+        '2.1',
         '2.0',
         '1.4',
         '1.3',
@@ -89,6 +90,11 @@ const navBinding = pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)
 HTMLImportElement.whenInitialised(() => {
     mainBinding.apply(nav)
+    if (location.hash)  {
+        const value = location.hash
+        location.hash = ''
+        location.hash = value
+    }
 })
 
 window.setActiveVersion = function (context) {
