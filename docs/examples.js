@@ -42,8 +42,17 @@ window.renderExample = function (el, elData, elCode) {
     const iframe = document.createElement('iframe')
     const doc = new DOMParser().parseFromString(html, 'text/html')
     iframe.srcdoc = doc.documentElement.outerHTML
-    iframe.style.display = 'none'
-    document.body.appendChild(iframe)
+
+    if (elResult.nextElementSibling?.classList.contains('example-live')) {
+        while (elResult.nextElementSibling.firstChild) {
+            elResult.nextElementSibling.removeChild(elResult.nextElementSibling.firstChild)
+        }
+        elResult.nextElementSibling.appendChild(iframe)
+    } else {
+        iframe.style.display = 'none'
+        document.body.appendChild(iframe)
+    }
+
     iframe.addEventListener('load', () => {
         if (el.getAttribute('hash') != hash) {
             return
@@ -61,13 +70,7 @@ window.renderExample = function (el, elData, elCode) {
             .replace(/=""(?=[ >])/g, '')
             .replace(/>/g, '&gt;')
 
-        if (elResult.nextElementSibling?.classList.contains('example-live')) {
-            while (elResult.nextElementSibling.firstChild) {
-                elResult.nextElementSibling.removeChild(elResult.nextElementSibling.firstChild)
-            }
-            elResult.nextElementSibling.appendChild(iframe)
-            iframe.style.display = ''
-        } else {
+        if (iframe.style.display) {
             iframe.remove()
         }
 

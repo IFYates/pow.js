@@ -1,53 +1,59 @@
 <h1>Bindings / Conditions</h1>
 
-<hr />
-<h2>
-    <code class="html"><span class="attr">if</span>="<span class="expr">condition</span>"</code>
-    / <code class="html"><span class="attr">ifnot</span>="<span class="expr">condition</span>"</code>
-</h2>
-<p>
-    The <code class="attr">if</code> and <code class="attr">ifnot</code> attributes can be used to conditionally render
-    any bound element.
-</p>
-<p>
-    If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
-</p>
-<div class="example">
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
+<block>
+    <h2>
+        <code class="html"><span class="attr">if</span>="<span class="expr">condition</span>"</code>
+        / <code class="html"><span class="attr">ifnot</span>="<span class="expr">condition</span>"</code>
+    </h2>
+
+    <div>
+        <p>
+            The <code class="attr">if</code> and <code class="attr">ifnot</code> attributes can be used to conditionally
+            render
+            any bound element.
+        </p>
+        <p>
+            If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
+        </p>
+    </div>
+    <div class="example">
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
     First block
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
     Second block
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
+</block>
 
-<hr />
-<h2>
-    <code class="attr">else</code>
-    / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
-    / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
-</h2>
-<p>
-    If a conditional element has been processed, the following sibling elements can make use of the
-    <code class="attr">else*</code> attributes to further conditionally render an element.
-</p>
-<div class="example">
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
+<block id="else">
+    <h2>
+        <code class="attr">else</code>
+        / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
+        / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
+    </h2>
+
+    <p>
+        If a conditional element has been processed, the following sibling elements can make use of the
+        <code class="attr">else*</code> attributes to further conditionally render an element.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
     First block
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">else</span>>
     Second block
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
 
-<p>
-    This can be chained for as many elements as needed.
-</p>
-<div class="example">
-    <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-    <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">value == 1</span>">
+    <p>
+        This can be chained for as many elements as needed.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">value == 1</span>">
     One
 &lt;/div>
 &lt;div <span class="pow">pow</span> <span class="attr">else-if</span>="<span class="expr">value == 2</span>">
@@ -62,5 +68,6 @@
 &lt;div <span class="pow">pow</span> <span class="attr">else</span>>
     More than 3
 &lt;/div></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
+</block>

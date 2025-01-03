@@ -4,7 +4,8 @@
 <h2>Overview</h2>
 <blockquote pow if="version(1.1)">
     <strong>Note:</strong> This page only covers core <span pow template="pow"></span> functionality. If you are using
-    <span pow template="nav" data="'features-pow-safe'"><template><span pow template="pow.safe"></span></template></span> refer to
+    <span pow template="nav" data="'features-pow-safe'"><template><span pow
+                template="pow.safe"></span></template></span> refer to
     that page instead, as it has a different support for expressions.
 </blockquote>
 
@@ -178,31 +179,32 @@
     </blockquote>
 </template>
 
-<hr />
-<h2 id="context">Context</h2>
-<p>
-    The context object is built as each <code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>/<code
-        class="attr">array</code> binding is
-    processed.<br />
-    The <code class="js">{{ version(2.0) ? '$' : '*' }}parent</code> property points to the previous binding context,
-    <span pow if="version(2.0)">and
-        can be chained until the root is reached,</span> while the <code
-        class="js">{{ version(2.0) ? '$' : '*' }}path</code> property contains the
-    path to the current context.
-</p>
-<div pow if="version(1.0, 2.0)" class="example">
-    <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
-    <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
+<block id="context">
+    <h2>Context</h2>
+    <p>
+        The context object is built as each <code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>/<code
+            class="attr">array</code> binding is
+        processed.<br />
+        The <code class="js">{{ version(2.0) ? '$' : '*' }}parent</code> property points to the previous binding
+        context,
+        <span pow if="version(2.0)">and
+            can be chained until the root is reached,</span> while the <code
+            class="js">{{ version(2.0) ? '$' : '*' }}path</code> property contains the
+        path to the current context.
+    </p>
+    <div pow if="version(1.0, 2.0)" class="example">
+        <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">item</span>="<span class="expr">value</span>">
         <span class="expr">{{ *path }}</span>
         <span class="expr">{{ *parent }}</span>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre></pre>
-</div>
-<div pow if="version(2.0)" class="example">
-    <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
-    <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
+        <pre></pre>
+    </div>
+    <div pow if="version(2.0)" class="example">
+        <pre class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</pre>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">
     &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">grandchild</span>">
         &lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>">
             <span class="expr">{{ $path }}</span>
@@ -212,5 +214,6 @@
         &lt;/div>
     &lt;/div>
 &lt;/div></code></pre>
-    <pre></pre>
-</div>
+        <pre></pre>
+    </div>
+</block>
