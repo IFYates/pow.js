@@ -72,17 +72,20 @@
     </script>
 
     <!-- Page preload -->
-    <div style="display:none" id="preloader">
-        <template pow array="pages">
-            <template pow array="this.children">
-                <div pow ifnot="this.url" id="page-{{ id }}"><html-import src="{{ id.replace('-', '/', 1) }}.html"
-                        replace></html-import></div>
+    <template pow stop id="preloader" array="pages">
+        <div pow if="this.children || !this.url" style="display:none">
+            <template pow array="this.children" ifnot="this.url">
+                <div id="page-{{ id }}">
+                    <html-import src="{{ id.replace('-', '/', 1) }}.html" replace></html-import>
+                </div>
             </template>
             <template pow else>
-                <div pow ifnot="this.url" id="page-{{ id }}"><html-import src="{{ id }}.html" replace></html-import></div>
+                <div id="page-{{ id }}">
+                    <html-import src="{{ id }}.html" replace></html-import>
+                </div>
             </template>
-        </template>
-    </div>
+        </div>
+    </template>
 
     <!-- Display templates -->
     <template id="navitem">
@@ -96,7 +99,9 @@
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="nav"><a href="?/{{ this.id || $data }}/{{ this.hash ? '#' + this.hash : '' }}"
-            onclick="{{ function () { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
+            onclick="{{ function () { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}
+            <param>
+        </a></template>
 </body>
 
 </html>

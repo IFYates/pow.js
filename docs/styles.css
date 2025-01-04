@@ -51,44 +51,44 @@ block::before {
 
 .html {
     border-radius: 5px;
-    background-color: #7a7a7a;
-    color: #262626;
+    background-color: hsl(0, 0%, 60%);
+    color: hsl(0, 0%, 10%);
 }
 
 .js {
     padding: 3px 5px;
     border-radius: 5px;
-    background-color: #592f7f;
-    color: #dbb3ff;
+    background-color: hsl(272, 100%, 90%);
+    color: hsl(272, 100%, 20%);
 }
 
 .pow {
     padding: 3px 5px;
     border-radius: 7px;
-    background-color: pink;
-    color: darkred;
+    background-color: hsl(0, 60%, 20%);
+    color: hsl(0, 100%, 90%);
 }
 
 .attr {
     padding: 3px 5px;
     border-radius: 5px;
-    color: lightblue;
-    background-color: darkblue;
+    background-color: hsl(195, 100%, 80%);
+    color: hsl(195, 100%, 10%);
 }
 
 .value {
     padding: 3px 5px;
     border-radius: 5px;
-    background-color: lightgreen;
-    color: darkgreen;
+    background-color: hsl(120, 60%, 75%);
+    color: hsl(120, 100%, 10%);
     font-style: italic;
 }
 
 .expr {
     padding: 3px 5px;
     border-radius: 5px;
-    background-color: #664200;
-    color: #ffdb99;
+    background-color: hsl(39, 100%, 90%);
+    color: hsl(39, 100%, 10%);
     font-style: italic;
 }
 
