@@ -1,0 +1,73 @@
+<h1>Features / Custom elements</h1>
+
+<block pow if="version(2.2)">
+    <div>
+        <p>
+            Custom elements are a way to use <pow:nav data="'bindings-templates'"><template>templates</template>
+            </pow:nav> more succinctly, by using the template <code class="attr">id</code> as the element name.
+        </p>
+        <p>
+            The following lines of code are identical ways of using the <code class="value">my-component</code>
+            template:
+        </p>
+        <pre
+            class="block"><code class="html">&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template></code></pre>
+        <pre
+            class="block"><code class="html">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></code></pre>
+    </div>
+    <div></div>
+
+    <p>
+        Custom elements are replaced with the parsed contents of the same template.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre
+            class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code"><code pow stop>&lt;template id="my-component">
+    <span class="expr">{{ text }}</span>
+&lt;/template></code></pre>
+    </div>
+
+    <p>
+        Because custom elements work in the same way as templates, the element content is parsed if there is no
+        matching template.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
+    Default content
+&lt;/pow:my-component></pre>
+        <pre style="grid-row: span 2"></pre>
+    </div>
+
+    <p>
+        Subcontent also works the same way as templates.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
+    &lt;template>Title&lt;/template>
+&lt;/pow:my-component></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code"><code pow stop>&lt;template id="my-component">
+    &lt;div>&lt;param />&lt;/div>
+&lt;/template></code></pre>
+    </div>
+    </template>
+
+    <p>
+        Because a custom element is a <code class="html">&lt;template&gt;</code> element with a <code
+            class="pow">pow</code> binding, other <pow:pow></pow:pow> binding attributes are directly supported.
+    </p>
+    <div class="example">
+        <pre
+            class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
+        <span class="attr">data</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
+&lt;/pow:my-component></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code"><code pow stop>&lt;template id="my-component">
+    &lt;div>{{ text }}&lt;/div>
+&lt;/template></code></pre>
+    </div>
+    </template>
+</block>

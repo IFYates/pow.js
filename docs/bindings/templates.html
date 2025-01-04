@@ -1,11 +1,6 @@
 <h1>Bindings / Template</h1>
 
-<block pow if="version(1.0, 1.2)">
-    <p>
-        Not available
-    </p>
-</block>
-<block pow else>
+<block pow if="version(1.2)">
     <h2><code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code></h2>
 
     <blockquote>
@@ -68,6 +63,11 @@
             to use an expression to dynamically select a template.
         </p>
     </div>
+</block>
+<block pow else>
+    <p>
+        Not available
+    </p>
 </block>
 
 <block pow if="version(1.4)" id="dynamic">
@@ -199,6 +199,4 @@
 &lt;/div></pre>
         <pre></pre>
     </div>
-</block>
-
 </block>

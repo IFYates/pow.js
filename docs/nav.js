@@ -27,6 +27,7 @@ const nav = {
     },
 
     versions: [
+        '2.2',
         '2.1',
         '2.0',
         '1.4',
@@ -68,6 +69,7 @@ const nav = {
             children: [
                 { id: 'features-interaction', name: 'Interactivity' },
                 { id: 'features-reactivity', name: 'Reactivity' },
+                { id: 'features-custom', name: 'Custom elements', visible: () => activeVersion >= 2.2 },
                 { id: 'features-pow-safe', name: 'pow.safe', visible: () => activeVersion >= 1.1 },
             ]
         },

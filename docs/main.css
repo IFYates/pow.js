@@ -12,6 +12,7 @@ body {
     height: 100vh;
     background: linear-gradient(135deg, #1a1c2e 0%, #16181f 100%);
     transition: all 0.3s ease;
+    overflow-y: auto;
 }
 
 .sidebar.collapsed {
