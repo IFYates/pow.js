@@ -2,22 +2,19 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.1.0
+ * @version 2.2.0
  */
 
+// TODO: v3.0.0: else-if and else-ifnot are unnecessary: "else if" and "else ifnot" work the same
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
-const ATTR_POW = 'pow', INN_HTML = 'innerHTML', CONTENT = 'content'
-const _attribute = {
-    set: (element, name, value) => element.setAttribute(name, value),
-    remove: (element, name) => element.removeAttribute(name)
-}
+const ATTR_POW = 'pow', CONTENT = 'content', INN_HTML = 'innerHTML', OUT_HTML = 'outerHTML', REPLACE = 'replace'
+const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
 const _rand = Math.random
 const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
 // Interpolates text templates
-const parseText = (text, state, isRoot) => escape(text.replace(/{{\s*(.*?)\s*}}/gs,
-    (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
-const escape = (text, isRoot) => isRoot ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
+const parseText = (text, state, isRoot) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
+const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 
 // Resolves an expression to a value
 const resolveExpr = (expr, state, context = getContext(state)) => {
@@ -44,9 +41,8 @@ const updateSiblingCondition = (sibling, active) => {
         for (const { name, value } of sibling.attributes) {
             if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
                 _attribute.remove(sibling, name)
-                return active
-                    ? !sibling.remove()
-                    : name != B_ELSE && _attribute.set(sibling, name.slice(5), value) // Convert to if/ifnot
+                // Convert to if/ifnot
+                return active ? !sibling.remove() : name != B_ELSE && _attribute.set(sibling, name.slice(5), value)
             }
         }
     }
@@ -57,9 +53,14 @@ const processCondition = (element, active, always) => {
 }
 
 const processElement = (element, state, isRoot, val) => {
+    // Prepare custom elements
+    for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:'))) {
+        el[OUT_HTML] = el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`)
+    }
+
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]')) {
-        child.replaceWith(document.createRange().createContextualFragment(escape(child.outerHTML)))
+        child.replaceWith(document.createRange().createContextualFragment(escape(child[OUT_HTML])))
     }
 
     _attribute.remove(element, ATTR_POW)
@@ -71,8 +72,7 @@ const processElement = (element, state, isRoot, val) => {
         // Apply template
         if (name == B_TEMPLATE) {
             val = document.getElementById(value)?.cloneNode(1) || element
-            element[INN_HTML] = val[INN_HTML].replace(/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
-                (_, id) => _selectChild(element, 'template' + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
+            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g, (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
             return processElement(element, state)
         }
 
@@ -87,15 +87,14 @@ const processElement = (element, state, isRoot, val) => {
             return processElement(element, state)
         } else if (name == B_DATA && value) {
             // Data binding
-            if (val() == null) {
-                return element.remove()
-            }
-            return processElement(element, {
-                ...state,
-                $path: state.$path + '.' + value,
-                $data: val,
-                $parent: state
-            }, isRoot)
+            return val() == null
+                ? element.remove()
+                : processElement(element, {
+                    ...state,
+                    $path: state.$path + '.' + value,
+                    $data: val,
+                    $parent: state
+                }, isRoot)
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
             if (processCondition(element, (name == B_IF) != !val())) {
@@ -158,7 +157,7 @@ const bind = (element) => {
             try {
                 processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
             } finally {
-                element[INN_HTML] = element[INN_HTML].replace(/​/g, '')
+                element[INN_HTML] = element[INN_HTML][REPLACE](/​/g, '')
                 delete binding.$pow
             }
 
