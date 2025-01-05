@@ -99,9 +99,7 @@
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="nav"><a href="?/{{ this.id || $data }}/{{ this.hash ? '#' + this.hash : '' }}"
-            onclick="{{ function () { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}
-            <param>
-        </a></template>
+            onclick="{{ function () { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
 </body>
 
 </html>

@@ -54,10 +54,23 @@
     <pre class="example-data"><code class="js">{ style: 'my-class' }</code></pre>
     <pre
         class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
-    <pre><code pow stop>&lt;div class="my-class"></code></pre>
+    <pre></pre>
 </div>
 
 <template pow if="version(1.4)">
+    <p>
+        In addition to bound attributes being removed, any attribute on a bound element that resolves to a <span
+            class="js">falsey</span>
+        value (including empty), will be removed.
+    </p>
+    <div class="example">
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> no-value blank=""
+    empty="<span class="expr">{{ '' }}</span>" null="<span class="expr">{{ null }}</span>">&lt;/div>
+&lt;div no-value blank=""
+    empty="<span class="expr">{{ '' }}</span>" null="<span class="expr">{{ null }}</span>">&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+
     <hr />
     <h2 id="interpolated">Interpolated attributes</h2>
     <p>
