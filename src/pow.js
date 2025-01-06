@@ -12,29 +12,6 @@ const _attribute = { set: (element, name, value) => element.setAttribute(name, v
 const _rand = Math.random
 const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
-// Interpolates text templates
-const parseText = (text, state, isRoot) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr, state) ?? ''), isRoot)
-const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
-
-// Resolves an expression to a value
-const resolveExpr = (expr, state, context = getContext(state)) => {
-    try {
-        // Execute the expression as JS code, mapping to the state data
-        const value = pow._eval(expr, context)
-
-        // If the result is a function, bind it for later
-        if (typeof value == 'function') {
-            const id = _rand()
-            window[state.$id][id] = (el) => value.call(el, context)
-            return state.$id + '[' + id + '](this)'
-        }
-        return value
-    } catch (e) {
-        console.warn('Interpolation failed', { $path: state.$path, expr }, e)
-    }
-}
-const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } : { ...state.$data, ...state })
-
 // Updates the next sibling condition
 const updateSiblingCondition = (sibling, active) => {
     if (sibling?.attributes.pow) {
@@ -53,6 +30,29 @@ const processCondition = (element, active, always) => {
 }
 
 const processElement = (element, state, isRoot, val) => {
+    // Interpolates text templates
+    const parseText = (text) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr) ?? ''), isRoot)
+    const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
+
+    // Resolves an expression to a value
+    const resolveExpr = (expr, context = getContext(state)) => {
+        try {
+            // Execute the expression as JS code, mapping to the state data
+            const value = pow._eval(expr, context)
+
+            // If the result is a function, bind it for later
+            if (typeof value == 'function') {
+                const id = _rand()
+                window[state.$id][id] = (el) => value.call(el, context)
+                return state.$id + '[' + id + '](this)'
+            }
+            return value
+        } catch (e) {
+            console.warn('Interpolation failed', { $path: state.$path, expr }, e)
+        }
+    }
+    const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } : { ...state.$data, ...state })
+
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:'))) {
         el[OUT_HTML] = el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`)
@@ -77,7 +77,7 @@ const processElement = (element, state, isRoot, val) => {
         }
 
         // Some logic requires resolved expressions
-        val = () => val = (value ? resolveExpr(value, state) : state.$data)
+        val = () => val = (value ? resolveExpr(value) : state.$data)
 
         if (name[0] == ':') {
             // Interpolated attribute
@@ -119,7 +119,7 @@ const processElement = (element, state, isRoot, val) => {
             return processCondition(element, val?.length, 1)
         } else {
             // Standard attribute
-            if (val = parseText(value, state, isRoot)) {
+            if (val = parseText(value)) {
                 _attribute.set(element, name, val)
             }
         }
@@ -131,7 +131,7 @@ const processElement = (element, state, isRoot, val) => {
     }
 
     // Parse inner HTML
-    element[INN_HTML] = parseText(element[INN_HTML], state, isRoot)
+    element[INN_HTML] = parseText(element[INN_HTML])
     if (element.tagName == 'TEMPLATE') {
         element.replaceWith(...element[CONTENT].childNodes)
     }
