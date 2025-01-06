@@ -78,3 +78,11 @@ test('Attributes work on root element', () => {
 
   expect(document.body.innerHTML).toBe('<div id="root" attr1="attribute" attr2="attribute"></div>')
 })
+
+test('Empty attributes on bound elemenents are removed', () => {
+  document.body.innerHTML = '<div pow attribute></div><div attribute></div>'
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe('<div></div><div attribute=""></div>')
+})
