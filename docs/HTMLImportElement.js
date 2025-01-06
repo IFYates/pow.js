@@ -8,6 +8,8 @@
  * 
  * Methods:
  *   onCompleted(callback)
+ * 
+ * v1.0.1
  */
 class HTMLImportElement extends HTMLElement {
     static #docLoaded = document.readyState == 'complete'
@@ -32,7 +34,7 @@ class HTMLImportElement extends HTMLElement {
 
     #mounted() {
         const self = this
-        if (!self.attributes.src) {
+        if (!self.attributes.src || !self.isConnected) {
             self.#loaded()
             return
         }
@@ -40,13 +42,19 @@ class HTMLImportElement extends HTMLElement {
         // TODO: what to show if not 2xx?
         console.debug('html-import', 'importing', self.attributes.src.value)
         fetch(self.attributes.src.value)
-            .then(async r => {
-                self.innerHTML = await r.text()
+            .then(r => {
+                if (!r.ok) {
+                    throw new Error(r.status + ': ' + r.statusText)
+                }
+                return r.text()
+            })
+            .then(async html => {
+                self.innerHTML = html
                 const scripts = self.querySelectorAll('script')
                 if (self.hasAttribute('replace')) {
                     self.replaceWith(...self.childNodes)
                 }
-                
+
                 // Force imported scripts to load
                 scripts.forEach((src) => {
                     const script = document.createElement('script')

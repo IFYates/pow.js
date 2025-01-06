@@ -37,7 +37,7 @@ block::before {
     margin-bottom: 1em;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1400px) {
     block {
         grid-template-columns: 1fr 1fr;
     }

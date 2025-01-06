@@ -72,11 +72,11 @@
     </script>
 
     <!-- Page preload -->
-    <template pow stop id="preloader" array="pages">
-        <div pow if="this.children || !this.url" style="display:none">
+    <div id="preloader" style="display:none">
+        <template pow array="pages" if="this.children || !this.url">
             <template pow array="this.children" ifnot="this.url">
                 <div id="page-{{ id }}">
-                    <html-import src="{{ id.replace('-', '/', 1) }}.html" replace></html-import>
+                    <html-import src="{{ id.replace('-', '/').replaceAll('​', '') }}.html" replace></html-import>
                 </div>
             </template>
             <template pow else>
@@ -84,8 +84,8 @@
                     <html-import src="{{ id }}.html" replace></html-import>
                 </div>
             </template>
-        </div>
-    </template>
+        </template>
+    </div>
 
     <!-- Display templates -->
     <template id="navitem">
