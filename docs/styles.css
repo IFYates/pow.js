@@ -105,8 +105,8 @@ block::before {
 div.example {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    row-gap: 10px;
-    column-gap: 10px;
+    row-gap: 2px;
+    column-gap: 2px;
     margin-bottom: 2rem;
 }
 
@@ -119,7 +119,26 @@ div.example pre {
     background-color: #22232a;
     padding: 10px;
     margin: 0;
-    border-radius: 8px;
+}
+div.example pre:not([class]) {
+    background-color: #1b1c22;
+}
+div.example pre.example-data {
+    border-radius: 15px 15px 0 0;
+}
+div.example:not(:has(pre.example-data)) pre.live-example {
+    border-top-left-radius: 15px;
+}
+div.example:not(:has(pre.example-data)) pre:not([class]) {
+    border-top-right-radius: 15px;
+}
+div.example pre.example-code,
+div.example:not(:has(pre.example-code)) pre.live-example:nth-last-child(2) {
+    border-bottom-left-radius: 15px;
+}
+div.example:has(pre.example-code) pre:not([class]),
+div.example:not(:has(pre.example-code)) pre:last-of-type {
+    border-bottom-right-radius: 15px;
 }
 
 div.example code {
@@ -165,4 +184,5 @@ pre.example-data::before {
     right: 8px;
     bottom: 3px;
     font-size: 1.5rem;
+    pointer-events: none;
 }

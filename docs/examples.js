@@ -87,8 +87,8 @@ const observer = new MutationObserver((ev) => {
     for (const el of examples) {
         const now = new Date().getTime()
         if (el.isConnected) {
-            const elData = el.parentElement.querySelector('pre.example-data')
-            const elCode = el.parentElement.querySelector('pre.example-code')
+            const elData = el.parentElement.querySelector('.example-data')
+            const elCode = el.parentElement.querySelector('.example-code')
 
             const fn = () => renderExample(el, elData, elCode)
             el.addEventListener('keyup', fn)
