@@ -4,12 +4,6 @@ window.renderExample = function (el, elData, elCode) {
         return
     }
 
-    let ver = window.activeVersion
-    const id = '$' + Math.random().toString(36).substring(2)
-    if ([...ver].filter($ => $ == '.').length < 2) {
-        ver = `${ver}.0`
-    }
-
     let html = el.innerText, data = !elData ? '{}' : `new Function(\`return ${elData.innerText.replace(/'/g, '\\\'')}\`)()`, target = ''
     if (elCode) {
         html = `<body><div id="example">${html}</div>${elCode.innerText}</body>`
@@ -18,17 +12,18 @@ window.renderExample = function (el, elData, elCode) {
     if (!html.includes('<body')) {
         html = `<body>${html}</body>`
     }
-    
+
     let hash = checksum(data + html)
     if (el.getAttribute('hash') == hash) {
         return
     }
     el.setAttribute('hash', hash)
 
+    const id = '$' + Math.random().toString(36).substring(2)
     if (!html.includes('import pow ')) {
         html = `<head>
     <script type="module">
-        import pow from 'https://ifyates.github.io/pow.js/v${ver}/pow.min.js'
+        import pow from 'https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js'
         try {
             const data = ${data}
             pow.apply(${target ? 'document.querySelector(\'' + target + '\')' : 'document.body'}, data)
