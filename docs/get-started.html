@@ -32,6 +32,55 @@
 </block>
 
 <block class="full">
+    <h2>Principals</h2>
+    <p>
+        <pow:pow></pow:pow> binds the hierarchy of the element provided to the <span class="js">apply()</span> function,
+        and applies "<pow:nav id:="'syntax-binding'" text:="'binding'"></pow:nav>" logic to that element and any child elements with the <code class="pow">pow</code>
+        attribute.
+    </p>
+    <div class="overview" style="width: fit-content">
+        <div>
+            <div style="grid-row: span 8; grid-column: span 2">Unbound</div>
+            <pre>&lt;html></pre>
+            <pre>    &lt;head></pre>
+            <pre>        &lt;script type="module"></pre>
+            <pre>        import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'</pre>
+            <pre>        const data = { text: 'Hello, world!' }</pre>
+            <pre>        pow.apply(document.body, data)</pre>
+            <pre>        &lt;/script></pre>
+            <pre>    &lt;/head></pre>
+        </div>
+        <div class="bound">
+            <div style="grid-row: span 7">Bound hierarchy</div>
+            <span style="grid-column: span 2;">
+                <div class="bound-element">Bound element</div>
+                <pre class="bound-element">    &lt;body></pre>
+            </span>
+            <div></div>
+            <pre>        &lt;div></pre>
+            <span style="grid-column: span 2;">
+                <div class="bound-element">Bound element</div>
+                <pre class="bound-element">            &lt;template pow if="text"></pre>
+            </span>
+            <div></div>
+            <pre pow stop>                {{ text }}</pre>
+            <div></div>
+            <pre>            &lt;/template></pre>
+            <div></div>
+            <pre>        &lt;/div></pre>
+            <div></div>
+            <pre>    &lt;/body></pre>
+        </div>
+        <div>
+            <div></div>
+            <div>Unbound</div>
+            <pre>&lt;/html></pre>
+        </div>
+    </div>
+    <br />
+</block>
+
+<block class="full">
     <h2>Next steps</h2>
     <p>
         Now you have a working example, have a read over the important concepts of

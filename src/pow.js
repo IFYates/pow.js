@@ -8,7 +8,10 @@
 const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
 const ATTR_POW = 'pow', CONTENT = 'content', INN_HTML = 'innerHTML', OUT_HTML = 'outerHTML', REPLACE = 'replace'
-const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
+const _attribute = {
+    set: (element, name, value) => element.setAttribute(name, value),
+    remove: (element, name) => element.removeAttribute(name)
+}
 const _rand = Math.random
 const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
@@ -33,7 +36,7 @@ const processElement = (element, state, isRoot, val) => {
         while (updateSiblingCondition(element.nextElementSibling));
         return (always | !active) && !element.remove()
     }
-    
+
     // Resolves an expression to a value
     const resolveExpr = (expr, context = getContext(state)) => {
         try {
@@ -51,7 +54,9 @@ const processElement = (element, state, isRoot, val) => {
             console.warn('Interpolation failed', { [A_PATH]: state[A_PATH], expr }, e)
         }
     }
-    const getContext = (state) => (state[A_PARENT] ? { ...state[A_DATA], ...state, [A_PARENT]: getContext(state[A_PARENT]) } : { ...state[A_DATA], ...state })
+    const getContext = (state) => (state[A_PARENT]
+        ? { ...state[A_DATA], ...state, [A_PARENT]: getContext(state[A_PARENT]) }
+        : { ...state[A_DATA], ...state })
 
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:'))) {
@@ -72,7 +77,8 @@ const processElement = (element, state, isRoot, val) => {
         // Apply template
         if (name == B_TEMPLATE) {
             val = document.getElementById(value)?.cloneNode(1) || element
-            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g, (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
+            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
+                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
             return processElement(element, state)
         }
 
@@ -93,10 +99,8 @@ const processElement = (element, state, isRoot, val) => {
             return val() == null
                 ? element.remove()
                 : processElement(element, {
-                    ...state,
-                    [A_PATH]: state[A_PATH] + '.' + value,
-                    [A_DATA]: val,
-                    [A_PARENT]: state
+                    ...state, [A_PATH]: state[A_PATH] + '.' + value,
+                    [A_DATA]: val, [A_PARENT]: state
                 }, isRoot)
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
@@ -111,12 +115,8 @@ const processElement = (element, state, isRoot, val) => {
                 const child = element.cloneNode(1)
                 element.parentNode.insertBefore(child, element)
                 processElement(child, {
-                    ...state,
-                    [A_PATH]: state[A_PATH] + (value ? '.' + value : '') + '[' + i + ']',
-                    $index: i, $first: !i, $last: i > val.length - 2,
-                    [A_DATA]: val[i],
-                    $array: val,
-                    [A_PARENT]: state
+                    ...state, [A_PATH]: state[A_PATH] + (value ? '.' + value : '') + '[' + i + ']', $index: i,
+                    $first: !i, $last: i > val.length - 2, [A_DATA]: val[i], $array: val, [A_PARENT]: state
                 })
             }
             return processCondition(val?.length, 1)
@@ -170,6 +170,7 @@ const bind = (element) => {
     }
     return binding
 }
+
 const pow = {
     apply: (element, data) => bind(element).apply(data),
     bind,
