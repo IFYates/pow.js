@@ -42,29 +42,33 @@
         </div>
     </template>
 
-    <p>
-        If there is no element matching the <span class="value">id</span>, the existing contents will be processed
-        without modification.
-    </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+    <template pow ifnot="version(3.0)">
+        <p>
+            If there is no element matching the <span class="value">id</span>, the existing contents will be processed
+            without modification.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     <span class="expr">{{ text }}</span>
 &lt;/div></code></pre>
-        <pre></pre>
-    </div>
+            <pre></pre>
+        </div>
+    </template>
 
     <p>
         As with any other <span pow template="nav"
-            data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if the bound element
-        is a <code class="html">&lt;template&gt;</code>, the entire element is replaced.
+            data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if it is a <code
+            class="html">&lt;template&gt;</code>, the entire element is replaced.
     </p>
     <div class="example">
         <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-        <pre class="live-example"><code pow stop>&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+        <pre
+            class="live-example"><code pow stop>&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template></code></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code"><code pow stop>&lt;template id="my-component">
     <span class="expr">{{ text }}</span>
 &lt;/template></code></pre>
-        <pre></pre>
     </div>
 
     <p>
@@ -73,7 +77,8 @@
         to use an expression to dynamically select a template.
     </p>
     <div class="example">
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span pow stop class="value">{{ 'my-component' }}</span>">&lt;/div></code></pre>
+        <pre
+            class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span pow stop class="value">{{ 'my-component' }}</span>">&lt;/div></code></pre>
         <pre style="grid-row: span 2"></pre>
         <pre class="example-code"><code pow stop>&lt;template id="my-component">
     Hello, world!
@@ -84,6 +89,23 @@
     <p>
         Not available
     </p>
+</block>
+
+<block pow if="version(3.0)" id="else">
+    <h2><code class="attr">else</code></h2>
+
+    <p>
+        If there is no element matching the <span class="value">id</span>, the existing contents will be processed
+        without modification.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>
+    Template not found
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
 </block>
 
 <block pow if="version(1.4)" id="configuration">
@@ -117,7 +139,7 @@
 
     <template pow if="version(2.3)">
         <p>
-            The <pow:nav id:="'syntax-attributes'" href:="'data'" text:="'data attributes'"></pow:nav> feature can be
+            The <pow:nav id:="'syntax-attributes'" hash:="'data'">data attributes</pow:nav> feature can be
             used for a cleaner solution.
         </p>
         <div class="example">
@@ -134,54 +156,6 @@
     </template>
 </block>
 
-<block pow if="version(1.4)" id="dynamic">
-    <h2 id="dynamic">Dynamic matching</h2>
-
-    <p class="full">
-        <strong>Syntax:</strong>
-        <code class="html">:<span class="attr">template</span>="<span class="expr">expression</span>"</code>
-    </p>
-
-    <template pow if="version(2.0)">
-        <p>
-            Originally, <span pow template="nav"
-                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span>
-            were evaluated after the bindings values and so could not be used to modify bindings behaviour.<br />
-            With the change to processing order in v2.0, an interpolated <code class="attr">:template</code>
-            attribute can be used to dynamically select the target template, which gives a convenient structure for
-            simulating a switch statement.
-        </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
-    Unmatched
-&lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></pre>
-        </div>
-    </template>
-    <template pow else>
-        <p>
-            Since <span pow template="nav"
-                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span>
-            are evaluated <em>after</em> the element bindings, they <em>can not</em> be used to modify the binding
-            value.
-        </p>
-        <div class="example">
-            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
-    Unmatched
-&lt;/div></pre>
-            <pre style="grid-row: span 2"></pre>
-            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
-&lt;template id="case-2">Two&lt;/template>
-&lt;template id="case-3">Three&lt;/template></pre>
-        </div>
-    </template>
-</block>
-
 <block pow if="version(2.1)" id="subcontent">
     <h2>Template subcontent</h2>
 
@@ -194,15 +168,14 @@
 
     <div>
         <p>
-            For templates that require more complicated subcontent, you can use child <code
+            For templates that require complicated subcontent, you can use child <code
                 class="html">&lt;template&gt;</code> elements to define additional subcontent using the <code
                 class="html">&lt;param /&gt;</code> element.<br />
             The content is inserted in to the referenced template content before it is processed.
         </p>
         <p>
             Child <code class="html">&lt;template&gt;</code> elements are used because they will never be displayed
-            if
-            something prevents the template from rendering.
+            if something prevents the template from rendering.
         </p>
     </div>
     <div class="example">
@@ -235,15 +208,89 @@
 &lt;/template></pre>
     </div>
 
-    <p>
-        If the template cannot be found, the subcontent can still be used in the default content.
-    </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
+    <template pow if="version(3.0)">
+        <p>
+            If no child <code class="html">&lt;template&gt;</code> elements are defined, the entire contents of the
+            bound element will match against <code class="html">&lt;param /&gt;</code>.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></pre>
+            <pre style="grid-row: span 2"></pre>
+            <pre class="example-code">&lt;template id="my-component">
+    &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param />&lt;/span>
+&lt;/template></pre>
+        </div>
+    </template>
+
+    <template pow ifnot="version(3.0)">
+        <p>
+            If the binding <span class="value">id</span> cannot be found, the subcontent can still be used in the
+            default content.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">
     &lt;template><span pow stop class="expr">{{ text }}</span>&lt;/template>
     &lt;span>&lt;param />&lt;/span>
 &lt;/div></pre>
-        <pre></pre>
-    </div>
+            <pre></pre>
+        </div>
+    </template>
+</block>
+
+<block pow if="version(1.4)" id="dynamic">
+    <h2 id="dynamic">Dynamic matching</h2>
+
+    <p class="full">
+        <strong>Syntax:</strong>
+        <code class="html">:<span class="attr">template</span>="<span class="expr">expression</span>"</code>
+    </p>
+
+    <template pow if="version(2.0)">
+        <p>
+            Originally, <span pow template="nav"
+                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span>
+            were evaluated after the bindings values and so could not be used to modify bindings behaviour.<br />
+            With the change to processing order in v2.0, an interpolated <code class="attr">:template</code>
+            attribute can be used to dynamically select the target template, which gives a convenient structure for
+            simulating a switch statement.
+        </p>
+        <div pow if="version(3.0)" class="example">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>Unmatched&lt;/div></pre>
+            <pre style="grid-row: span 2"></pre>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></pre>
+        </div>
+        <div pow else class="example">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+    Unmatched
+&lt;/div></pre>
+            <pre style="grid-row: span 2"></pre>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></pre>
+        </div>
+    </template>
+    <template pow else>
+        <p>
+            Since <pow:nav id:="'syntax-attributes'" hash:="'interpolated'">interpolated attributes</pow:nav>
+            are evaluated <em>after</em> the element bindings, they <em>can not</em> be used to modify the binding
+            value.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">:template</span>="<span class="expr">'case-' + value</span>">
+    Unmatched
+&lt;/div></pre>
+            <pre style="grid-row: span 2"></pre>
+            <pre class="example-code">&lt;template id="case-1">One&lt;/template>
+&lt;template id="case-2">Two&lt;/template>
+&lt;template id="case-3">Three&lt;/template></pre>
+        </div>
+    </template>
 </block>

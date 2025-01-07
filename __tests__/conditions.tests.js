@@ -39,15 +39,15 @@ test.each([ null, undefined, false, 0, '' ])('IFNOT falsy', (value) => {
 })
 
 test('Ignores "else*" conditions on success', () => {
-  document.body.innerHTML = '<div pow if="true">1</div><div pow else-if="false">2</div><div pow else>3</div>'
+  document.body.innerHTML = '<div pow if="true">1</div><div pow else if="false">2</div><div pow else>3</div>'
 
   pow.apply(document.body)
 
   expect(document.body.innerHTML).toBe('<div>1</div>')
 })
 
-test('Uses first "else-if" conditions on success', () => {
-  document.body.innerHTML = '<div pow if="false">1</div><div pow else-if="true">2</div><div pow else>3</div>'
+test('Uses first "else if" conditions on success', () => {
+  document.body.innerHTML = '<div pow if="false">1</div><div pow else if="true">2</div><div pow else>3</div>'
 
   pow.apply(document.body)
 
@@ -55,7 +55,7 @@ test('Uses first "else-if" conditions on success', () => {
 })
 
 test('Falls through to "else" on all other failures', () => {
-  document.body.innerHTML = '<div pow if="false">1</div><div pow else-if="false">2</div><div pow else>3</div>'
+  document.body.innerHTML = '<div pow if="false">1</div><div pow else if="false">2</div><div pow else>3</div>'
 
   pow.apply(document.body)
 
@@ -63,7 +63,7 @@ test('Falls through to "else" on all other failures', () => {
 })
 
 test('Falls through to "else" on all other failures (ifnot)', () => {
-  document.body.innerHTML = '<div pow ifnot="true">1</div><div pow else-ifnot="true">2</div><div pow else>3</div>'
+  document.body.innerHTML = '<div pow ifnot="true">1</div><div pow else ifnot="true">2</div><div pow else>3</div>'
 
   pow.apply(document.body)
 
@@ -71,7 +71,9 @@ test('Falls through to "else" on all other failures (ifnot)', () => {
 })
 
 test.each([ [1], [2], [3] ])('Conditions work fully with template elements', (value) => {
-  document.body.innerHTML = '<template pow if="$data === 1">1</template><template pow else-if="$data === 2">2</template><template pow else>3</template>'
+  document.body.innerHTML = '<template pow if="$data === 1">1</template>'
+    + '<template pow else if="$data === 2">2</template>'
+    + '<template pow else>3</template>'
 
   pow.apply(document.body, value)
 

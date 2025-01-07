@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.3.0
+ * @version 3.0.0
  */
 
 const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
@@ -21,19 +21,10 @@ const processElement = (element, state, isRoot, val) => {
     const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 
     // Updates the siblings condition
-    const processCondition = (active, always) => {
-        const updateSiblingCondition = (sibling) => {
-            if (sibling?.attributes.pow) {
-                for (const { name, value } of sibling.attributes) {
-                    if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
-                        _attribute.remove(sibling, name)
-                        // Convert to if/ifnot
-                        return active ? !sibling.remove() : name != B_ELSE && _attribute.set(sibling, name.slice(5), value)
-                    }
-                }
-            }
+    const processCondition = (active, always, sibling = element.nextElementSibling) => {
+        if (!active && sibling?.attributes.pow && sibling.attributes[B_ELSE]) {
+            _attribute.remove(sibling, B_ELSE)
         }
-        while (updateSiblingCondition(element.nextElementSibling));
         return (always | !active) && !element.remove()
     }
 
@@ -76,10 +67,14 @@ const processElement = (element, state, isRoot, val) => {
 
         // Apply template
         if (name == B_TEMPLATE) {
-            val = document.getElementById(value)?.cloneNode(1) || element
-            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
-                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
-            return processElement(element, state)
+            if (!processCondition(val = document.getElementById(value)?.cloneNode(1))) {
+                element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
+                    // Find first child template or by id
+                    (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
+                    // No child template for default param, take whole content
+                    ?? (id || element[INN_HTML]))
+                return processElement(element, state)
+            }
         }
 
         // Some logic requires resolved expressions
@@ -96,8 +91,8 @@ const processElement = (element, state, isRoot, val) => {
             state = { ...state, [A_DATA]: { ...state[A_DATA], [name.slice(0, -1)]: val() } }
         } else if (name == B_DATA && value) {
             // Data binding
-            return val() == null
-                ? element.remove()
+            return processCondition(val() != null)
+                ? 0 // Removed as inactive
                 : processElement(element, {
                     ...state, [A_PATH]: state[A_PATH] + '.' + value,
                     [A_DATA]: val, [A_PARENT]: state
@@ -105,8 +100,11 @@ const processElement = (element, state, isRoot, val) => {
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
             if (processCondition((name == B_IF) != !val())) {
-                return
+                return // Removed as inactive
             }
+        } else if (name == B_ELSE) {
+            // If 'else' survives to here, the element isn't wanted
+            return element.remove()
         } else if (name == B_ARRAY) {
             // Element loop
             val = !val() | Array.isArray(val) ? val
@@ -138,6 +136,11 @@ const processElement = (element, state, isRoot, val) => {
     if (element.localName == B_TEMPLATE) {
         element.replaceWith(...element[CONTENT].childNodes)
     }
+
+    // // Transform complete element
+    // if ((val = element.getAttribute("transform")) && typeof (val = resolveExpr(val)) == FUNCTION) {
+    //     val(element, state)
+    // }
 }
 
 const bind = (element) => {

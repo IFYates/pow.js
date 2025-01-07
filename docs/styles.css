@@ -44,6 +44,7 @@ block::before {
 
     block:not(.full) p.full,
     block:not(.full)>h2,
+    block:not(.full)>h3,
     block:not(.full)>blockquote,
     block:not(.full)::before {
         grid-column: span 2;

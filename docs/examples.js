@@ -21,9 +21,11 @@ window.renderExample = function (el, elData, elCode) {
 
     const id = '$' + Math.random().toString(36).substring(2)
     if (!html.includes('import pow ')) {
+        const src = window.activeVersion == 3.0 ? '../src/pow.js' : `https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js`
+
         html = `<head>
     <script type="module">
-        import pow from 'https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js'
+        import pow from '${src}'
         try {
             const data = ${data}
             pow.apply(${target ? 'document.querySelector(\'' + target + '\')' : 'document.body'}, data)
