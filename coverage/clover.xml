@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736244794507" clover="3.2.0">
-  <project timestamp="1736244794508" name="All files">
+<coverage generated="1736255754475" clover="3.2.0">
+  <project timestamp="1736255754475" name="All files">
     <metrics statements="2" coveredstatements="2" conditionals="75" coveredconditionals="75" methods="34" coveredmethods="34" elements="111" coveredelements="111" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
     <file name="pow.min.js" path="F:\Dev\pow.js\dist\pow.min.js">
       <metrics statements="1" coveredstatements="1" conditionals="59" coveredconditionals="59" methods="26" coveredmethods="26"/>

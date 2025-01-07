@@ -1,87 +1,106 @@
 <h1>Syntax / Attributes</h1>
 
-<hr />
-<h2>Attribute order</h2>
-<template pow if="version(2.0)">
-    <p>
-        Attributes are processed in the order they appear, irregardless of whether they are <span pow template="nav"
-            data="'syntax-binding'"><template>bindings</template></span>, interpolated, or literal.<br />
-        This means that the effect of one attribute is able to modify the behaviour of a later one.
-    </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> before="<span class="expr">{{ text }}</span>"
-        <span class="attr">data</span>="<span class="expr">child</span>"
-        after="<span class="expr">{{ text }}</span>">&lt;/div></code></pre>
-        <pre></pre>
-    </div>
-</template>
-<template pow else if="version(1.4)">
-    <p>
-        After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been evaluated,
-        interpolated attributes will be evaluated and then all attributes will be processed.
-    </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> before="<span class="expr">{{ text }}</span>"
-        <span class="attr">data</span>="<span class="expr">child</span>"
-        after="<span class="expr">{{ text }}</span>">&lt;/div></code></pre>
-        <pre></pre>
-    </div>
-</template>
-<template pow else if="version(1.0)">
-    <p>
-        After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been evaluated,
-        all attributes will be processed.
-    </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> before="<span class="expr">{{ text }}</span>"
-        <span class="attr">item</span>="<span class="expr">child</span>"
-        after="<span class="expr">{{ text }}</span>">&lt;/div></code></pre>
-        <pre></pre>
-    </div>
-</template>
+<block>
+    <h2>Basic values</h2>
 
-<hr />
-<h2>Basic values</h2>
-<p>
-    As with any part of the bound document, <span pow template="nav"
-        data="{ id: 'syntax-expressions', text: 'expressions' }"></span> will be interpolated and can be used to set
-    attribute values.
-</p>
-<div class="example">
-    <pre class="example-data"><code class="js">{ style: 'my-class' }</code></pre>
-    <pre
-        class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
-    <pre></pre>
-</div>
-
-<template pow if="version(1.4)">
     <p>
-        In addition to bound attributes being removed, any attribute on a bound element that resolves to a <span
-            class="js">falsey</span>
-        value (including empty), will be removed.
+        As with any part of the bound document, <span pow template="nav"
+            data="{ id: 'syntax-expressions', text: 'expressions' }"></span> will be parsed and can be used to set
+        attribute values.
     </p>
     <div class="example">
-        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> no-value blank=""
+        <pre class="example-data"><code class="js">{ style: 'my-class' }</code></pre>
+        <pre
+            class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+
+    <template pow if="version(1.4)">
+        <p>
+            In addition to bound attributes being removed, any attribute on a bound element that resolves to a <span
+                class="js">falsey</span>
+            value (including empty), will be removed.
+        </p>
+        <div class="example">
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> no-value blank=""
     empty="<span class="expr">{{ '' }}</span>" null="<span class="expr">{{ null }}</span>">&lt;/div>
 &lt;div no-value blank=""
     empty="<span class="expr">{{ '' }}</span>" null="<span class="expr">{{ null }}</span>">&lt;/div></code></pre>
-        <pre></pre>
-    </div>
+            <pre></pre>
+        </div>
+    </template>
+</block>
 
-    <hr />
-    <h2 id="interpolated">Interpolated attributes</h2>
-    <p>
-        On a <span pow template="nav" data="{ id: 'syntax-binding', text: 'bound element' }"></span>, attributes with a
-        name starting <code class="attr">:</code> will be <span pow template="nav"
-            data="{ id: 'syntax-expressions', text: 'interpolated' }"></span>.
+<block>
+    <h2>Attribute order</h2>
+
+    <template pow if="version(2.0)">
+        <p>
+            Attributes are processed in the order they appear, irregardless of whether they are <span pow template="nav"
+                data="'syntax-binding'"><template>bindings</template></span>, <a href="#interpolated">interpolated</a>,
+            or literal.<br />
+            This means that the effect of one attribute is able to modify the behaviour of a later one.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> :before_expr="text"
+        before="<span class="expr">{{ text }}</span>"
+        <span class="attr">data</span>="<span class="expr">child</span>"
+        after="<span class="expr">{{ text }}</span>"
+        :after_expr="text">&lt;/div></code></pre>
+            <pre></pre>
+        </div>
+    </template>
+    <template pow else if="version(1.4)">
+        <p>
+            After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been
+            evaluated, <a href="#interpolated">interpolated attributes</a> will be evaluated and then all attributes
+            will be
+            processed.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> :before_expr="text"
+        before="<span class="expr">{{ text }}</span>"
+        <span class="attr">item</span>="<span class="expr">child</span>"
+        after="<span class="expr">{{ text }}</span>"
+        :after_expr="text">&lt;/div></code></pre>
+            <pre></pre>
+        </div>
+    </template>
+    <template pow else if="version(1.0)">
+        <p>
+            After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been
+            evaluated, all attributes will be processed.
+        </p>
+        <div class="example">
+            <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
+            <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> before="<span class="expr">{{ text }}</span>"
+        <span class="attr">item</span>="<span class="expr">child</span>"
+        after="<span class="expr">{{ text }}</span>">&lt;/div></code></pre>
+            <pre></pre>
+        </div>
+    </template>
+</block>
+
+<block pow if="version(1.4)" id="interpolated">
+    <h2>Interpolated attributes</h2>
+
+    <p class="full">
+        <strong>Syntax:</strong>
+        <code class="html">:<span class="value">attribute</span>="<span class="expr">expression</span>"</code>
     </p>
-    <p>
-        If the result is empty, the attribute will not be set; otherwise, the attribute will be set to the result,
-        replacing any existing value.
-    </p>
+
+    <div>
+        <p>
+            On a <pow:nav id:="'syntax-binding'" text:="'bound element'"></pow:nav>, attributes with a name starting <code
+                    class="attr">:</code> will be <pow:nav id:="'syntax-expressions'" text:="'parsed'"></pow:nav>.
+        </p>
+        <p>
+            If the result is empty, the attribute will not be set; otherwise, the attribute will be set to the result,
+            replacing any existing value.
+        </p>
+    </div>
     <div class="example">
         <pre class="example-data"><code class="js">{ style1: 'my-class', style2: null }</code></pre>
         <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">:class</span>="<span class="expr">style1</span>">&lt;/div>
@@ -104,7 +123,6 @@
             <pre></pre>
         </div>
     </template>
-
     <template pow else if="version(1.4)">
         <p>
             Interpolated attributes are evaluated <em>after</em> bindings have been applied, with the context of any
@@ -118,4 +136,43 @@
             <pre></pre>
         </div>
     </template>
-</template>
+</block>
+
+<block pow if="version(2.3)">
+    <h2>Data attributes</h2>
+
+    <p class="full">
+        <strong>Syntax:</strong>
+        <code class="html"><span class="value">property</span>:="<span class="expr">expression</span>"</code>
+    </p>
+
+    <p>
+        On a <pow:nav id:="'syntax-binding'" text:="'bound element'"></pow:nav>, attributes with a
+            name ending <code class="attr">:</code> will set the same property on the current <pow:nav id:="'syntax-binding'"
+                hash:="'context'" text:="'data context'"></pow:nav>.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ text: 'Hello?' }</code></pre>
+        <pre class="live-example"><code pow stop>&lt;div <span class="pow">pow</span> <span class="attr">text:</span>="<span class="expr">'Hello, world!'</span>">
+    {{ text }}
+&lt;/div>
+&lt;div>
+    {{ text }}
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+
+    <p>
+        This can be very useful when working with <pow:nav id:="'bindings-templates'" text:="'templates'"></pow:nav>,
+        as it allows you to set data that will be available to the template.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;dialog <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">message-box</span>"
+            <span class="attr">message:</span>="<span class="expr">'Hello, world!'</span>">&lt;/dialog></pre>
+        <pre style="grid-row: span 2"></pre>
+        <pre class="example-code">&lt;template id="message-box">
+    &lt;div><span pow stop class="expr">{{ message }}</span>&lt;/div>
+    &lt;button>Okay&lt;/button>
+&lt;/template></pre>
+    </div>
+</block>

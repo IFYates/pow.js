@@ -42,6 +42,7 @@ block::before {
         grid-template-columns: 1fr 1fr;
     }
 
+    block:not(.full) p.full,
     block:not(.full)>h2,
     block:not(.full)>blockquote,
     block:not(.full)::before {
@@ -185,4 +186,41 @@ pre.example-data::before {
     bottom: 3px;
     font-size: 1.5rem;
     pointer-events: none;
+}
+
+div.overview {
+    background-color: #22232a;
+}
+div.overview pre {
+    background-color: #1b1c22;
+    margin: 0;
+    height: -webkit-fill-available;
+    align-content: center;
+    text-align: left;
+    overflow: hidden;
+}
+div.overview>div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 4fr;
+    text-align: right;
+}
+div.overview div:not(:has(div)) {
+    padding: 0 10px;
+}
+div.overview>div>div {
+    margin: 0;
+    align-self: center;
+    text-align: right;
+}
+div.overview>div>span {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+div.overview .bound, div.overview .bound pre {
+    background-color: hsl(200, 100%, 20%);
+    color: hsl(195, 100%, 90%);
+}
+div.overview .bound-element, div.overview .bound-element pre {
+    background-color: hsl(30, 100%, 30%) !important;
+    color: hsl(30, 100%, 90%) !important;
 }
