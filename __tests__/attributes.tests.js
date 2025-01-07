@@ -79,10 +79,18 @@ test('Attributes work on root element', () => {
   expect(document.body.innerHTML).toBe('<div id="root" attr1="attribute" attr2="attribute"></div>')
 })
 
-test('Empty attributes on bound elemenents are removed', () => {
+test('Empty attributes on bound elements are removed', () => {
   document.body.innerHTML = '<div pow attribute></div><div attribute></div>'
 
   pow.apply(document.body)
 
   expect(document.body.innerHTML).toBe('<div></div><div attribute=""></div>')
+})
+
+test('Data attributes add data to current state', () => {
+  document.body.innerHTML = '<div pow data="child"><div pow before="{{ value }}" value:="1" after="{{ value }}">{{ value }}</div><div outside="{{ value }}">{{ value }}</div></div>'
+
+  pow.apply(document.body, { child: { value: 2 } })
+
+  expect(document.body.innerHTML).toBe('<div><div before="2" after="1">1</div><div outside="2">2</div></div>')
 })

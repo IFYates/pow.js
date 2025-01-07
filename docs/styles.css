@@ -38,13 +38,13 @@ block::before {
 }
 
 @media (min-width: 1400px) {
-    block {
+    block:not(.full) {
         grid-template-columns: 1fr 1fr;
     }
 
-    block>h2,
-    block>blockquote,
-    block::before {
+    block:not(.full)>h2,
+    block:not(.full)>blockquote,
+    block:not(.full)::before {
         grid-column: span 2;
     }
 }

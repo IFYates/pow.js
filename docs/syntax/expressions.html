@@ -21,8 +21,7 @@
 
 <p>
     If a referenced property is not found, the result will be blank and a warning will be raised. To suppress the
-    warning, access
-    optional properties from the <a href="#internal-values"><code
+    warning, access optional properties from the <a href="#internal-values"><code
             class="expr">{{ version(2.0) ? '$data' : '*data' }}</code></a> object.
 </p>
 
@@ -32,8 +31,8 @@
 
 <p>
     The context data is initially the root data passed in to <code class="js">apply()</code>, but it can be changed
-    using the <code class="attr" pow template="nav"
-        data="{ id: 'syntax-binding', hash: 'data', text: version(2.0) ? 'data' : 'item' }"></code> binding.
+    using the <pow:nav id:="'syntax-binding'" hash:="'data'"><template><code
+                class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></template></pow:nav> binding.
 </p>
 
 <hr />
