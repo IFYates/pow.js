@@ -2,38 +2,38 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.2.0
+ * @version 2.3.0
  */
 
-// TODO: v3.0.0: else-if and else-ifnot are unnecessary: "else if" and "else ifnot" work the same
+const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template'
 const ATTR_POW = 'pow', CONTENT = 'content', INN_HTML = 'innerHTML', OUT_HTML = 'outerHTML', REPLACE = 'replace'
 const _attribute = { set: (element, name, value) => element.setAttribute(name, value), remove: (element, name) => element.removeAttribute(name) }
 const _rand = Math.random
 const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
-// Updates the next sibling condition
-const updateSiblingCondition = (sibling, active) => {
-    if (sibling?.attributes.pow) {
-        for (const { name, value } of sibling.attributes) {
-            if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
-                _attribute.remove(sibling, name)
-                // Convert to if/ifnot
-                return active ? !sibling.remove() : name != B_ELSE && _attribute.set(sibling, name.slice(5), value)
-            }
-        }
-    }
-}
-const processCondition = (element, active, always) => {
-    while (updateSiblingCondition(element.nextElementSibling, active));
-    return (always | !active) && !element.remove()
-}
-
 const processElement = (element, state, isRoot, val) => {
     // Interpolates text templates
     const parseText = (text) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr) ?? ''), isRoot)
     const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 
+    // Updates the siblings condition
+    const processCondition = (active, always) => {
+        const updateSiblingCondition = (sibling) => {
+            if (sibling?.attributes.pow) {
+                for (const { name, value } of sibling.attributes) {
+                    if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
+                        _attribute.remove(sibling, name)
+                        // Convert to if/ifnot
+                        return active ? !sibling.remove() : name != B_ELSE && _attribute.set(sibling, name.slice(5), value)
+                    }
+                }
+            }
+        }
+        while (updateSiblingCondition(element.nextElementSibling));
+        return (always | !active) && !element.remove()
+    }
+    
     // Resolves an expression to a value
     const resolveExpr = (expr, context = getContext(state)) => {
         try {
@@ -48,10 +48,10 @@ const processElement = (element, state, isRoot, val) => {
             }
             return value
         } catch (e) {
-            console.warn('Interpolation failed', { $path: state.$path, expr }, e)
+            console.warn('Interpolation failed', { [A_PATH]: state[A_PATH], expr }, e)
         }
     }
-    const getContext = (state) => (state.$parent ? { ...state.$data, ...state, $parent: getContext(state.$parent) } : { ...state.$data, ...state })
+    const getContext = (state) => (state[A_PARENT] ? { ...state[A_DATA], ...state, [A_PARENT]: getContext(state[A_PARENT]) } : { ...state[A_DATA], ...state })
 
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:'))) {
@@ -77,7 +77,7 @@ const processElement = (element, state, isRoot, val) => {
         }
 
         // Some logic requires resolved expressions
-        val = () => val = (value ? resolveExpr(value) : state.$data)
+        val = () => val = (value ? resolveExpr(value) : state[A_DATA])
 
         if (name[0] == ':') {
             // Interpolated attribute
@@ -85,19 +85,22 @@ const processElement = (element, state, isRoot, val) => {
                 _attribute.set(element, name.slice(1), val)
             }
             return processElement(element, state)
+        } else if (name.at(-1) == ':') {
+            // Data attribute
+            state = { ...state, [A_DATA]: { ...state[A_DATA], [name.slice(0, -1)]: val() } }
         } else if (name == B_DATA && value) {
             // Data binding
             return val() == null
                 ? element.remove()
                 : processElement(element, {
                     ...state,
-                    $path: state.$path + '.' + value,
-                    $data: val,
-                    $parent: state
+                    [A_PATH]: state[A_PATH] + '.' + value,
+                    [A_DATA]: val,
+                    [A_PARENT]: state
                 }, isRoot)
         } else if (name == B_IF | name == B_IFNOT) {
             // Conditional element
-            if (processCondition(element, (name == B_IF) != !val())) {
+            if (processCondition((name == B_IF) != !val())) {
                 return
             }
         } else if (name == B_ARRAY) {
@@ -109,14 +112,14 @@ const processElement = (element, state, isRoot, val) => {
                 element.parentNode.insertBefore(child, element)
                 processElement(child, {
                     ...state,
-                    $path: state.$path + (value ? '.' + value : '') + '[' + i + ']',
+                    [A_PATH]: state[A_PATH] + (value ? '.' + value : '') + '[' + i + ']',
                     $index: i, $first: !i, $last: i > val.length - 2,
-                    $data: val[i],
+                    [A_DATA]: val[i],
                     $array: val,
-                    $parent: state
+                    [A_PARENT]: state
                 })
             }
-            return processCondition(element, val?.length, 1)
+            return processCondition(val?.length, 1)
         } else {
             // Standard attribute
             if (val = parseText(value)) {
@@ -132,22 +135,21 @@ const processElement = (element, state, isRoot, val) => {
 
     // Parse inner HTML
     element[INN_HTML] = parseText(element[INN_HTML])
-    if (element.tagName == 'TEMPLATE') {
+    if (element.localName == B_TEMPLATE) {
         element.replaceWith(...element[CONTENT].childNodes)
     }
 }
 
 const bind = (element) => {
-    //element = element.at ? nextChildTemplate(document, element) : element
     const originalHTML = element[INN_HTML]
     const attributes = [...element.attributes]
     const $id = '$pow_' + _rand().toString(36).slice(2)
     const binding = {
         apply: (data) => {
-            if (binding.$pow) {
+            if (binding.$) {
                 return console.warn('Binding already in progress')
             }
-            binding.$pow = 1
+            binding.$ = 1
 
             // Reset global state
             element[INN_HTML] = originalHTML
@@ -155,10 +157,10 @@ const bind = (element) => {
             window[$id] = {}
 
             try {
-                processElement(element, { $id, $path: '$root', $data: data, $root: data }, 1)
+                processElement(element, { $id, [A_PATH]: A_ROOT, [A_DATA]: data, [A_ROOT]: data }, 1)
             } finally {
                 element[INN_HTML] = element[INN_HTML][REPLACE](/​/g, '')
-                delete binding.$pow
+                delete binding.$
             }
 
             binding.refresh = () => binding.apply(data)
@@ -173,7 +175,7 @@ const pow = {
     bind,
     _eval: (expr, ctxt) => {
         const args = Object.entries(ctxt).filter($ => isNaN($[0]))
-        return (new Function(...args.map($ => $[0]), 'return ' + expr)).call(ctxt.$data, ...args.map($ => $[1]))
+        return (new Function(...args.map($ => $[0]), 'return ' + expr)).call(ctxt[A_DATA], ...args.map($ => $[1]))
     }
 }
 export default pow
