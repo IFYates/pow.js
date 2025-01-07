@@ -20,34 +20,58 @@ test('Replaces template contents repeated for loop', () => {
   document.body.innerHTML = '<div id="main"><template pow array="list">{{ $data }}, </template></div>'
 
   const target = document.getElementById('main')
-  pow.apply(target, { list: [ 1, 2, 3, 4, 5 ] })
+  pow.apply(target, { list: [1, 2, 3, 4, 5] })
 
   expect(document.body.innerHTML).toBe('<div id="main">1, 2, 3, 4, 5, </div>')
 })
 
 test('Can reference existing template', () => {
-  document.body.innerHTML = '<div id="main"><template pow template="text-view"></template></div><template id="text-view">{{ text }}</template>'
+  document.body.innerHTML = '<div id="main">'
+    + '<template pow template="text-view"></template>'
+    + '</div>'
+    + '<template id="text-view">{{ text }}</template>'
 
   const target = document.getElementById('main')
   pow.apply(target, { text: 'Hello, world!' })
 
-  expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div><template id="text-view">{{ text }}</template>')
+  expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div>'
+    + '<template id="text-view">{{ text }}</template>')
 })
 
-test('Parses content if no match', () => {
-  document.body.innerHTML = '<div id="main"><template pow template="text-view">{{ text }}</template></div>'
+test('Parses else sibling if no match', () => {
+  document.body.innerHTML = '<div id="main">'
+    + '<template pow template="text-view"></template>'
+    + '<template pow else>No match</template>'
+    + '</div>'
 
   const target = document.getElementById('main')
   pow.apply(target, { text: 'Hello, world!' })
 
-  expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div>')
+  expect(document.body.innerHTML).toBe('<div id="main">No match</div>')
 })
 
-test.each([ [true, '1, 2, 3, 4, 5, '], [false, ''] ])('Template processed after other bindings', (condition, expected) => {
-  document.body.innerHTML = '<template id="main"><template pow if="check" array="list" template="list-view"></template></template><template id="list-view">{{ $data }}, </template>'
+test('Ignores else sibling if match', () => {
+  document.body.innerHTML = '<div id="main">'
+    + '<template pow template="text-view"></template>'
+    + '<template pow else>No match</template>'
+    + '</div>'
+    + '<template id="text-view">{{ text }}</template>'
 
   const target = document.getElementById('main')
-  pow.apply(target, { check: condition, list: [ 1, 2, 3, 4, 5 ] })
+  pow.apply(target, { text: 'Hello, world!' })
+
+  expect(document.body.innerHTML).toBe('<div id="main">Hello, world!</div>'
+    + '<template id="text-view">{{ text }}</template>')
+})
+
+test.each([[true, '1, 2, 3, 4, 5, '], [false, '']])('Template processed after other bindings', (condition, expected) => {
+  document.body.innerHTML = '<template id="main">'
+    + '<template pow if="check" array="list" template="list-view"></template>'
+    + '</template>'
+    + '<template id="list-view">{{ $data }}, </template>'
+
+  const target = document.getElementById('main')
+  pow.apply(target, { check: condition, list: [1, 2, 3, 4, 5] })
 
   expect(document.body.innerHTML).toBe(expected + '<template id="list-view">{{ $data }}, </template>')
 })
@@ -86,31 +110,30 @@ test('Can include named subcontents in template', () => {
 <template id="test">[<param id="text1">, <param id="text2">]</template>`)
 })
 
-test('Undefined subcontent in template is blank', () => {
-  document.body.innerHTML = `<div pow template="test">
-</div>
-<template id="test">[<param>]</template>`
+test('Undefined subcontent in template uses content', () => {
+  document.body.innerHTML = '<div pow template="test">content</div>'
+    + '<template id="test">[<param>]</template>'
 
   pow.apply(document.body)
 
-  expect(document.body.innerHTML).toBe(`<div>[]</div>
-<template id="test">[<param>]</template>`)
+  expect(document.body.innerHTML).toBe('<div>[content]</div>'
+    + '<template id="test">[<param>]</template>')
 })
 
-test('Subcontents still work in unmatched template', () => {
-  document.body.innerHTML = `<div pow template="test">
-  <template id="text1">my sub content</template>
-  <template id="text2">second content</template>
-  [<param id="text2">, <param>]
-</div>`
+test('Subcontent does not work in unmatched template', () => {
+  document.body.innerHTML = '<div pow template="test">'
+    + '<template id="text1">my sub content</template>'
+    + '<template id="text2">second content</template>'
+    + '</div>'
+    + '<div pow else>'
+    + '[<param id="text2">, <param>]'
+    + '</div>'
 
   pow.apply(document.body)
 
-  expect(document.body.innerHTML).toBe(`<div>
-  <template id="text1">my sub content</template>
-  <template id="text2">second content</template>
-  [second content, my sub content]
-</div>`)
+  expect(document.body.innerHTML).toBe('<div>'
+    + '[<param id="text2">, <param>]'
+    + '</div>')
 })
 
 // TODO: pow array template / pow item template

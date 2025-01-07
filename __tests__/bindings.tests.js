@@ -99,6 +99,24 @@ test.each([null, undefined])('Binding to null data removes element without warni
   expect(document.body.innerHTML).toBe('')
 })
 
+test.each([null, undefined])('Binding to null data renders else sibling', (value) => {
+  document.body.innerHTML = '<div pow data="child">DO NOT SHOW</div>'
+    + '<div pow else>No child</div>'
+
+  pow.apply(document.body, { child: value })
+
+  expect(document.body.innerHTML).toBe('<div>No child</div>')
+})
+
+test('else sibling not rendered on valid binding', () => {
+  document.body.innerHTML = '<div pow data="child">{{ $data }}</div>'
+    + '<div pow else>No child</div>'
+
+  pow.apply(document.body, { child: 'OK' })
+
+  expect(document.body.innerHTML).toBe('<div>OK</div>')
+})
+
 test('Can stop parsing of elements', () => {
   document.body.innerHTML = '{{ $path }}<div pow stop attr="{{ $path }}">{{ $path }} <div pow data="child">{{ $path }}</div></div>{{ $path }}'
 
