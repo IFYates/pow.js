@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.0.0
+ * @version 3.0.1
  */
 
 const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
@@ -71,7 +71,7 @@ const processElement = (element, state, isRoot, val) => {
                 // Find first child template or by id
                 (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
                     // No child template for default param, take whole content
-                    ?? (id || element[INN_HTML]))
+                    ?? (id ? '' : element[INN_HTML]))
             return processElement(element, state)
         }
 
