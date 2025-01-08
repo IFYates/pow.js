@@ -27,13 +27,20 @@
 </block>
 
 <block id="else">
-    <h2>
+    <h2 pow if="version(3.0)">
+        <code class="attr">else</code>
+    </h2>
+    <h2 pow else>
         <code class="attr">else</code>
         / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
         / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
     </h2>
 
-    <p>
+    <p pow if="version(3.0)">
+        If a conditional element has been processed, the following sibling element can make use of the
+        <code class="attr">else</code> attribute to further conditionally render an element.
+    </p>
+    <p pow else>
         If a conditional element has been processed, the following sibling elements can make use of the
         <code class="attr">else*</code> attributes to further conditionally render an element.
     </p>
@@ -50,8 +57,27 @@
     <p>
         This can be chained for as many elements as needed.
     </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ value: 1 }</code></pre>
+    <div pow if="version(3.0)" class="example">
+        <pre class="example-data"><code class="js">{ value: 3 }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">value == 1</span>">
+    One
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span> <span class="attr">if</span>="<span class="expr">value == 2</span>">
+    Two
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span> <span class="attr">if</span>="<span class="expr">value == 3</span>">
+    Three
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span> <span class="attr">ifnot</span>="<span class="expr">value > 0</span>">
+    Negative
+&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>
+    More than 3
+&lt;/div></pre>
+        <pre></pre>
+    </div>
+    <div pow else class="example">
+        <pre class="example-data"><code class="js">{ value: 3 }</code></pre>
         <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">value == 1</span>">
     One
 &lt;/div>
@@ -69,12 +95,21 @@
 &lt;/div></pre>
         <pre></pre>
     </div>
-</block>
 
-<block class="full">
-    <h2>Loops</h2>
-    <p>
-        The <code class="attr">else</code> attribute can be used to conditionally render elements following a
-        <pow:nav id:="'bindings-loops'" hash:="'post-loop'"><template>loop</template></pow:nav>.
-    </p>
+    <template pow if="version(3.0)">
+        <h3>Other bindings</h3>
+        <p class="full">
+            The <code class="attr">else</code> attribute can also be used to conditionally render elements following a
+            <pow:nav id:="'syntax-binding'" hash:="'data'"><template>data</template></pow:nav>,
+            <pow:nav id:="'bindings-loops'" hash:="'post-loop'"><template>loop</template></pow:nav>, or
+            <pow:nav id:="'bindings-templates'" hash:="'else'"><template>template</template></pow:nav> binding.
+        </p>
+    </template>
+    <template pow else>
+        <h3>Loops</h3>
+        <p class="full">
+            The <code class="attr">else</code> attribute can also be used to conditionally render elements following a
+            <pow:nav id:="'bindings-loops'" hash:="'post-loop'"><template>loop</template></pow:nav>.
+        </p>
+    </template>
 </block>

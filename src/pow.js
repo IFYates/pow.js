@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 2.3.0
+ * @version 3.0.0
  */
 
 const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
@@ -17,28 +17,19 @@ const _selectChild = (element, selector) => (element[CONTENT] ?? element).queryS
 
 const processElement = (element, state, isRoot, val) => {
     // Interpolates text templates
-    const parseText = (text) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => resolveExpr(expr) ?? ''), isRoot)
+    const parseText = (text) => escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => parseExpr(expr) ?? ''), isRoot)
     const escape = (text, isRoot) => isRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 
     // Updates the siblings condition
-    const processCondition = (active, always) => {
-        const updateSiblingCondition = (sibling) => {
-            if (sibling?.attributes.pow) {
-                for (const { name, value } of sibling.attributes) {
-                    if ([B_ELSE + '-' + B_IF, B_ELSE + '-' + B_IFNOT, B_ELSE].includes(name)) {
-                        _attribute.remove(sibling, name)
-                        // Convert to if/ifnot
-                        return active ? !sibling.remove() : name != B_ELSE && _attribute.set(sibling, name.slice(5), value)
-                    }
-                }
-            }
+    const processCondition = (active, always, sibling = element.nextElementSibling) => {
+        if (!active && sibling?.attributes.pow) {
+            _attribute.remove(sibling, B_ELSE)
         }
-        while (updateSiblingCondition(element.nextElementSibling));
         return (always | !active) && !element.remove()
     }
 
     // Resolves an expression to a value
-    const resolveExpr = (expr, context = getContext(state)) => {
+    const parseExpr = (expr, context = getContext(state)) => {
         try {
             // Execute the expression as JS code, mapping to the state data
             const value = pow._eval(expr, context)
@@ -75,40 +66,39 @@ const processElement = (element, state, isRoot, val) => {
         _attribute.remove(element, name)
 
         // Apply template
-        if (name == B_TEMPLATE) {
-            val = document.getElementById(value)?.cloneNode(1) || element
+        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value)?.cloneNode(1))) {
             element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
-                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML] ?? '')
+                // Find first child template or by id
+                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
+                    // No child template for default param, take whole content
+                    ?? (id || element[INN_HTML]))
             return processElement(element, state)
         }
 
         // Some logic requires resolved expressions
-        val = () => val = (value ? resolveExpr(value) : state[A_DATA])
+        val = () => val = (value ? parseExpr(value) : state[A_DATA])
 
-        if (name[0] == ':') {
-            // Interpolated attribute
+        if (name[0] == ':') { // Interpolated attribute
             if (val()) {
                 _attribute.set(element, name.slice(1), val)
             }
             return processElement(element, state)
-        } else if (name.at(-1) == ':') {
-            // Data attribute
+        } else if (name.at(-1) == ':') { // Data attribute
             state = { ...state, [A_DATA]: { ...state[A_DATA], [name.slice(0, -1)]: val() } }
-        } else if (name == B_DATA && value) {
-            // Data binding
-            return val() == null
-                ? element.remove()
+        } else if (name == B_DATA && value) { // Data binding
+            return processCondition(val() != null)
+                ? 0 // Removed as inactive
                 : processElement(element, {
                     ...state, [A_PATH]: state[A_PATH] + '.' + value,
                     [A_DATA]: val, [A_PARENT]: state
                 }, isRoot)
-        } else if (name == B_IF | name == B_IFNOT) {
-            // Conditional element
+        } else if (name == B_IF | name == B_IFNOT) { // Conditional element
             if (processCondition((name == B_IF) != !val())) {
-                return
+                return // Removed as inactive
             }
-        } else if (name == B_ARRAY) {
-            // Element loop
+        } else if (name == B_ELSE) { // If 'else' survives to here, the element isn't wanted
+            return element.remove()
+        } else if (name == B_ARRAY) { // Element loop
             val = !val() | Array.isArray(val) ? val
                 : Object.entries(val).map(([key, value]) => ({ key, value }))
             for (let i = 0; i < val?.length; ++i) {
@@ -120,11 +110,8 @@ const processElement = (element, state, isRoot, val) => {
                 })
             }
             return processCondition(val?.length, 1)
-        } else {
-            // Standard attribute
-            if (val = parseText(value)) {
-                _attribute.set(element, name, val)
-            }
+        } else if (val = parseText(value)) { // Standard attribute
+            _attribute.set(element, name, val)
         }
     }
 
@@ -138,6 +125,11 @@ const processElement = (element, state, isRoot, val) => {
     if (element.localName == B_TEMPLATE) {
         element.replaceWith(...element[CONTENT].childNodes)
     }
+
+    // // Transform complete element
+    // if ((val = element.getAttribute("transform")) && typeof (val = resolveExpr(val)) == FUNCTION) {
+    //     val(element, state)
+    // }
 }
 
 const bind = (element) => {

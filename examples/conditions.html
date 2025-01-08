@@ -15,10 +15,11 @@
     <div>{{ value }}</div>
     <div pow if="value">'value' is set</div>
     <div pow if="value &lt; 5">'value' is less than 5</div>
-    <span pow if="value == 1">'value' must be 1</span>
-    <span pow else-if="value == 2">'value' must be 2</span>
-    <span pow else-if="value > 1">'value' is greater than 1</span>
-    <span pow else>'value' must be another number</span>
+    <div pow if="value == 1">'value' is 1</div>
+    <div pow else if="value == 2">'value' is 2</div>
+    <div pow else if="value > 2">'value' is greater than 2</div>
+    <div pow else if="value == 0">'value' is 0</div>
+    <div pow else>'value' must be negative</div>
 </body>
 
 </html>

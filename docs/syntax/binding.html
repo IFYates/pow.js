@@ -35,8 +35,8 @@
                 <code class="attr">if</code>
                 <code class="attr">ifnot</code>
                 <code class="attr">else</code>
-                <code class="attr">else-if</code>
-                <code class="attr">else-ifnot</code></template>
+                <code pow ifnot="version(3.0)" class="attr">else-if</code>
+                <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></template>
         </template>
         Conditional elements.
     </li>
@@ -70,18 +70,15 @@
     <h2>Processing order</h2>
 
     <p pow if="version(2.0)">
-        The attributes are processed in the order they appear in the element. This means that the context of an
-        <code class="attr">if</code> attribute is affected by whether it comes before or after a <code
-            class="attr">data</code>/<code class="attr">array</code> attribute on the same element.
+        The attributes are processed in the order they appear in the element.<br />
+        This means that the context of an <code class="attr">if</code> attribute is affected by whether it comes before
+        or after a <code class="attr">data</code>/<code class="attr">array</code> attribute on the same element.
     </p>
-
     <p pow else>
         The above is also the order that they will be evaluated in; so, the context of an <code class="attr">if</code>
         will not be altered by any <code class="attr">item</code>/<code class="attr">array</code> expression on the
-        same
-        element.
+        same element.
     </p>
-
     <div class="example">
         <pre class="example-data"><code class="js">{ child: { text: 'Hello, world!' } }</code></pre>
         <pre class="live-example">&lt;div>
@@ -139,6 +136,25 @@
 &lt;/div></pre>
         <pre></pre>
     </div>
+
+    <template pow if="version(3.0)">
+        <p>
+            The
+            <pow:nav id:="'bindings-conditions'" hash:="'else'" text:="'else'"></pow:nav> binding can be used to render
+            an element if the binding expression evaluates to <code class="js">null</code>.
+        </p>
+        <div class="example">
+            <pre class="live-example">&lt;div>
+    &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">1</span>">Has <span pow stop class="expr">{{ $data }}</span>&lt;/span>
+    &lt;span <span class="pow">pow</span> <span class="attr">else</span>>No data&lt;/span>
+&lt;/div>
+&lt;div>
+    &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">null</span>">Has <span pow stop class="expr">{{ $data }}</span>&lt;/span>
+    &lt;span <span class="pow">pow</span> <span class="attr">else</span>>No data&lt;/span>
+&lt;/div></pre>
+            <pre></pre>
+        </div>
+    </template>
 </block>
 
 <block pow if="version(1.4)" id="stop">
@@ -176,9 +192,8 @@
     <h2>Template elements</h2>
     <p>
         Most examples use <code class="html">&lt;div&gt;</code> elements to clearly show how it will appear in the
-        result,
-        but if
-        the bound element is a <code class="html">&lt;template&gt;</code>, the entire element is replaced.<br />
+        result, but if the bound element is a <code class="html">&lt;template&gt;</code>, the entire element is
+        replaced.<br />
         This is a good way to hide unprocessed elements until rendering is complete.
     </p>
     <div class="example">

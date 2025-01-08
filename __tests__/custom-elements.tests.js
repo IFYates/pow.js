@@ -8,13 +8,13 @@ test('Can reference existing template', () => {
   expect(target.innerHTML).toBe('<div>Hello, world!</div>')
 })
 
-test('Parses content if no match', () => {
-  document.body.innerHTML = '<div id="main"><pow:test-element>No match</pow:test-element></div>'
+test('Invokes else sibling if no match', () => {
+  document.body.innerHTML = '<div id="main"><pow:test-element></pow:test-element><div pow else>No match</div>'
 
   const target = document.getElementById('main')
   pow.apply(target, { text: 'Hello, world!' })
 
-  expect(target.innerHTML).toBe('No match')
+  expect(target.innerHTML).toBe('<div>No match</div>')
 })
 
 test('Other attributes are processed', () => {
@@ -29,6 +29,16 @@ test('Other attributes are processed', () => {
 
 test('Can include subcontent', () => {
   document.body.innerHTML = '<div id="main"><pow:test-element><template>Hello, world!</template>No match</pow:test-element></div>'
+    + '<template id="test-element"><div><param /></div></template>'
+
+  const target = document.getElementById('main')
+  pow.apply(target)
+
+  expect(target.innerHTML).toBe('<div>Hello, world!</div>')
+})
+
+test('Can include default subcontent', () => {
+  document.body.innerHTML = '<div id="main"><pow:test-element>Hello, world!</pow:test-element></div>'
     + '<template id="test-element"><div><param /></div></template>'
 
   const target = document.getElementById('main')
