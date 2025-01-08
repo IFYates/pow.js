@@ -140,6 +140,16 @@ test('Unnamed subcontent in template uses first content', () => {
     + '<template id="test">[<param>]</template>')
 })
 
+test('Support deep subcontent placeholders', () => {
+  document.body.innerHTML = `<div pow template="test"><template id="text"><em>Content</em></template></div>
+<template id="test"><template pow if="$content.text">[<param>]</template></template>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe(`<div>[<em>Content</em>]</div>
+<template id="test"><template pow="" if="$content.text">[<param>]</template></template>`)
+})
+
 test('Subcontent does not work in unmatched template', () => {
   document.body.innerHTML = '<div pow template="test">'
     + '<template id="text1">my sub content</template>'

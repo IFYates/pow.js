@@ -50,7 +50,7 @@ const processElement = (element, state, isRoot, val) => {
 
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:')))
-        el[OUT_HTML] = el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`)
+        _replace(el, el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`))
 
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]'))
@@ -74,12 +74,10 @@ const processElement = (element, state, isRoot, val) => {
             defaultContent ??= element[INN_HTML] // No templates, use whole content
 
             // Build content with replaced params
-            element[INN_HTML] = val[INN_HTML]
-            for (const param of _selectChild(element, 'param')) {
+            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
                 // Find templates by id or default first
                 // Default param (no id), takes whole content if there were no templates
-                _replace(param, param.id ? (content[param.id] || '') : defaultContent)
-            }
+                (_, id) => id ? (content[id] || '') : defaultContent)
 
             return processElement(element, { ...state, $content: content })
         }
