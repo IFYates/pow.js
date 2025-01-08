@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module">
+        import pow from '../src/pow.js'
+        
+        const data = {
+            text: 'this is my text',
+            wordCount: (str) => new Promise(resolve => setTimeout(() => resolve(str.split(' ').length), 1000))
+        }
+        pow.apply(document.body, data)
+    </script>
+</head>
+
+<body>
+    "{{ text }}" contains {{ await wordCount(text) }} words
+</body>
+
+</html>
