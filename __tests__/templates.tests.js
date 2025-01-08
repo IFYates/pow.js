@@ -87,13 +87,13 @@ test('Can process stop in existing template', () => {
 
 test('Can include single subcontent in template', () => {
   document.body.innerHTML = `<div pow template="test">
-  <template>my sub content</template>
+  <template><em>my</em> sub content</template>
 </div>
 <template id="test">[<param>]</template>`
 
   pow.apply(document.body)
 
-  expect(document.body.innerHTML).toBe(`<div>[my sub content]</div>
+  expect(document.body.innerHTML).toBe(`<div>[<em>my</em> sub content]</div>
 <template id="test">[<param>]</template>`)
 })
 
@@ -110,13 +110,13 @@ test('Can include named subcontents in template', () => {
 <template id="test">[<param id="text1">, <param id="text2">]</template>`)
 })
 
-test('Undefined + unnamed subcontent in template uses while content', () => {
-  document.body.innerHTML = '<div pow template="test">content</div>'
+test('Undefined + unnamed subcontent in template uses whole content', () => {
+  document.body.innerHTML = '<div pow template="test"><em>content</em></div>'
     + '<template id="test">[<param>]</template>'
 
   pow.apply(document.body)
 
-  expect(document.body.innerHTML).toBe('<div>[content]</div>'
+  expect(document.body.innerHTML).toBe('<div>[<em>content</em>]</div>'
     + '<template id="test">[<param>]</template>')
 })
 
@@ -128,6 +128,16 @@ test('Undefined named subcontent in template is blank', () => {
 
   expect(document.body.innerHTML).toBe('<div>[]</div>'
     + '<template id="test">[<param id="missing">]</template>')
+})
+
+test('Unnamed subcontent in template uses first content', () => {
+  document.body.innerHTML = '<div pow template="test"><template id="other">content</template></div>'
+    + '<template id="test">[<param>]</template>'
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe('<div>[content]</div>'
+    + '<template id="test">[<param>]</template>')
 })
 
 test('Subcontent does not work in unmatched template', () => {
