@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.0.0
+ * @version 3.1.0
  */
 
 const A_DATA = '$data', A_PARENT = '$parent', A_PATH = '$path', A_ROOT = '$root'
@@ -22,9 +22,8 @@ const processElement = (element, state, isRoot, val) => {
 
     // Updates the siblings condition
     const processCondition = (active, always, sibling = element.nextElementSibling) => {
-        if (!active && sibling?.attributes.pow) {
+        if (!active && sibling?.attributes.pow)
             _attribute.remove(sibling, B_ELSE)
-        }
         return (always | !active) && !element.remove()
     }
 
@@ -50,14 +49,12 @@ const processElement = (element, state, isRoot, val) => {
         : { ...state[A_DATA], ...state })
 
     // Prepare custom elements
-    for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:'))) {
+    for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:')))
         el[OUT_HTML] = el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`)
-    }
 
     // Disable child HTML for stopped bindings
-    for (const child of _selectChild(element, '*[pow][stop]')) {
+    for (const child of _selectChild(element, '*[pow][stop]'))
         child.replaceWith(document.createRange().createContextualFragment(escape(child[OUT_HTML])))
-    }
 
     _attribute.remove(element, ATTR_POW)
 
@@ -79,9 +76,8 @@ const processElement = (element, state, isRoot, val) => {
         val = () => val = (value ? parseExpr(value) : state[A_DATA])
 
         if (name[0] == ':') { // Interpolated attribute
-            if (val()) {
+            if (val())
                 _attribute.set(element, name.slice(1), val)
-            }
             return processElement(element, state)
         } else if (name.at(-1) == ':') { // Data attribute
             state = { ...state, [A_DATA]: { ...state[A_DATA], [name.slice(0, -1)]: val() } }
@@ -93,9 +89,8 @@ const processElement = (element, state, isRoot, val) => {
                     [A_DATA]: val, [A_PARENT]: state
                 }, isRoot)
         } else if (name == B_IF | name == B_IFNOT) { // Conditional element
-            if (processCondition((name == B_IF) != !val())) {
+            if (processCondition((name == B_IF) != !val()))
                 return // Removed as inactive
-            }
         } else if (name == B_ELSE) { // If 'else' survives to here, the element isn't wanted
             return element.remove()
         } else if (name == B_ARRAY) { // Element loop
@@ -116,20 +111,17 @@ const processElement = (element, state, isRoot, val) => {
     }
 
     // Process every child 'pow' template
-    while (val = _selectChild(element, '*[pow]:not([pow] [pow])')[0]) {
+    while (val = _selectChild(element, '*[pow]:not([pow] [pow])')[0])
         processElement(val, state)
-    }
 
     // Parse inner HTML
     element[INN_HTML] = parseText(element[INN_HTML])
-    if (element.localName == B_TEMPLATE) {
+    if (element.localName == B_TEMPLATE)
         element.replaceWith(...element[CONTENT].childNodes)
-    }
 
-    // // Transform complete element
-    // if ((val = element.getAttribute("transform")) && typeof (val = resolveExpr(val)) == FUNCTION) {
-    //     val(element, state)
-    // }
+    // Transform complete element
+    if ((val = element.getAttribute("transform")) && typeof (val = resolveExpr(val)) == FUNCTION)
+        val(element, state)
 }
 
 const bind = (element) => {
@@ -138,9 +130,8 @@ const bind = (element) => {
     const $id = '$pow_' + _rand().toString(36).slice(2)
     const binding = {
         apply: (data) => {
-            if (binding.$) {
+            if (binding.$)
                 return console.warn('Binding already in progress')
-            }
             binding.$ = 1
 
             // Reset global state
@@ -166,9 +157,7 @@ const bind = (element) => {
 const pow = {
     apply: (element, data) => bind(element).apply(data),
     bind,
-    _eval: (expr, ctxt) => {
-        const args = Object.entries(ctxt).filter($ => isNaN($[0]))
-        return (new Function(...args.map($ => $[0]), 'return ' + expr)).call(ctxt[A_DATA], ...args.map($ => $[1]))
-    }
+    _eval: (expr, ctxt, args = Object.entries(ctxt).filter($ => isNaN($[0]))) =>
+        (new Function(...args.map($ => $[0]), 'return ' + expr)).call(ctxt[A_DATA], ...args.map($ => $[1]))
 }
 export default pow
