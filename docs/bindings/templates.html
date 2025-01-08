@@ -242,15 +242,19 @@
     <template pow if="version(3.0)">
         <p>
             Subcontent elements can be accessed through the <code class="js">$content</code> property on the data
-            context.
+            context as literal (unprocessed) values.<br />
+            This is also useful for performing conditional logic based on the content.
         </p>
-        <div><!-- TODO: bug when custom element is used inside template -->
-            <pow:example text2:="'test2'">
-                <template id="data">{ text2: 'a' }</template>
-                <template pow text:="'test'" id="code">x {{ text }} y {{ text2 }} z</template>
-                <template id="extrax">x<template pow text:="'test'">{{ text }}</template>y</template>
-            </pow:example>
-        </div>
+        <pow:example>
+            <template pow id="code">&lt;div pow template="my-component" value:="'Hello'">
+    &lt;template id="two">{{ value }}&lt;/template>
+&lt;/div></template>
+            <template id="extra">&lt;template id="my-component">
+    &lt;template pow if="$content.one">Not set: {{ $content.one }}&lt;/template>
+    &lt;template pow if="$content.two">Literal: {{ $content.two }}&lt;/template>
+    &lt;template pow if="$content.two">Parsed: &lt;param id="two" />&lt;/template>
+&lt;/template></template>
+        </pow:example>
     </template>
 </block>
 
