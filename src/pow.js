@@ -68,7 +68,7 @@ const processElement = (element, state, isRoot, val) => {
                 // Find first child template or by id
                 (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
                     // No child template for default param, take whole content
-                    ?? (id || element[INN_HTML]))
+                    ?? (id ? '' : element[INN_HTML]))
             return processElement(element, state)
         }
 
