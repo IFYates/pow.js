@@ -15,25 +15,13 @@
     </script>
 </head>
 
-<body>
-    <strong>Loop a template</strong>
-    <div pow data="child">
-        {{ text }}:
-        <template pow array="values">
-            {{ $data }}<template pow ifnot="$last">, </template>
-        </template>
-    </div>
+<body><template id="my-component">
+    <div><param /></div>
+</template>
 
-    <hr />
-
-    <strong>Reuse a template</strong>
-    <div pow data="child">
-        {{ text }}:
-        <template pow if="values" array="values" template="array-item"></template>
-    </div>
-    <template id="array-item">
-        {{ $data }}<template pow ifnot="$last">, </template>
-    </template>
+<pow:my-component>
+    <strong>Title</strong>
+</pow:my-component>
 </body>
 
 </html>

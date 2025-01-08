@@ -6,6 +6,7 @@
         <code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code>
     </p>
 
+    <!-- TODO: is this true? 'template' without 'pow' not being parsed in 3.1 -->
     <blockquote>
         Note: Reusable templates should always be stored outside of any bound elements, otherwise they will be modified
         along with other elements in the hierarchy.
@@ -215,15 +216,15 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></pre>
+            <pre
+                class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
             <pre class="example-code">&lt;template id="my-component">
     &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param />&lt;/span>
 &lt;/template></pre>
         </div>
     </template>
-
-    <template pow ifnot="version(3.0)">
+    <template pow else>
         <p>
             If the binding <span class="value">id</span> cannot be found, the subcontent can still be used in the
             default content.
@@ -235,6 +236,20 @@
     &lt;span>&lt;param />&lt;/span>
 &lt;/div></pre>
             <pre></pre>
+        </div>
+    </template>
+
+    <template pow if="version(3.0)">
+        <p>
+            Subcontent elements can be accessed through the <code class="js">$content</code> property on the data
+            context.
+        </p>
+        <div><!-- TODO: bug when custom element is used inside template -->
+            <pow:example text2:="'test2'">
+                <template id="data">{ text2: 'a' }</template>
+                <template pow text:="'test'" id="code">x {{ text }} y {{ text2 }} z</template>
+                <template id="extrax">x<template pow text:="'test'">{{ text }}</template>y</template>
+            </pow:example>
         </div>
     </template>
 </block>

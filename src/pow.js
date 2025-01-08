@@ -15,6 +15,8 @@ const _escape = (text, asRoot) => asRoot ? text : text[REPLACE](/({|p)({|ow)/g, 
 const _rand = Math.random
 const _selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
 
+const _replace = (el, html) => el.replaceWith(document.createRange().createContextualFragment(html)) // TODO: better solution
+
 const processElement = (element, state, isRoot, val) => {
     // Interpolates text templates
     const parseText = (text) => _escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => parseExpr(expr) ?? ''), isRoot)
@@ -43,9 +45,8 @@ const processElement = (element, state, isRoot, val) => {
             console.warn('Interpolation failed', { [P_PATH]: state[P_PATH], expr }, e)
         }
     }
-    const getContext = (state) => (state[P_PARENT]
-        ? { ...state[P_DATA], ...state, [P_PARENT]: getContext(state[P_PARENT]) }
-        : { ...state[P_DATA], ...state })
+    const getContext = (state) => ({ ...state[P_DATA], ...state,
+        [P_PARENT]: state[P_PARENT] && getContext(state[P_PARENT]) })
 
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:')))
@@ -53,7 +54,7 @@ const processElement = (element, state, isRoot, val) => {
 
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]'))
-        child.replaceWith(document.createRange().createContextualFragment(_escape(child[OUT_HTML])))
+        _replace(child, _escape(child[OUT_HTML]))
 
     _attr.rem(element, ATTR_POW)
 
@@ -63,13 +64,24 @@ const processElement = (element, state, isRoot, val) => {
         _attr.rem(element, name)
 
         // Apply template
-        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value)?.cloneNode(1))) {
-            element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
-                // Find first child template or by id
-                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
-                    // No child template for default param, take whole content
-                    ?? (id ? '' : element[INN_HTML]))
-            return processElement(element, state)
+        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value))) {
+            // Gather content data
+            let content = { }, defaultContent = null
+            for (const child of _selectChild(element, B_TEMPLATE)) {
+                defaultContent ??= child[INN_HTML] // Remember first template
+                content[child.id] = child[INN_HTML]
+            }
+            defaultContent ??= element[INN_HTML] // No templates, use whole content
+
+            // Build content with replaced params
+            element[INN_HTML] = val[INN_HTML]
+            for (const param of _selectChild(element, 'param')) {
+                // Find templates by id or default first
+                // Default param (no id), takes whole content if there were no templates
+                _replace(param, param.id ? (content[param.id] || '') : defaultContent)
+            }
+
+            return processElement(element, { ...state, $content: content })
         }
 
         // Some logic requires resolved expressions
@@ -123,7 +135,7 @@ const processElement = (element, state, isRoot, val) => {
     // Parse inner HTML
     element[INN_HTML] = parseText(element[INN_HTML])
     if (element.localName == B_TEMPLATE)
-        element.replaceWith(...element[CONTENT].childNodes)
+        _replace(element, element[INN_HTML])
 }
 
 const bind = (element) => {
