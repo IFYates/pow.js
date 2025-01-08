@@ -8,12 +8,10 @@
             data="{ id: 'syntax-expressions', text: 'expressions' }"></span> will be parsed and can be used to set
         attribute values.
     </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ style: 'my-class' }</code></pre>
-        <pre
-            class="live-example"><code pow stop>&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></code></pre>
-        <pre></pre>
-    </div>
+    <pow:example>
+        <template id="data">{ style: 'my-class' }</template>
+        <template id="code">&lt;div class="<span class="expr">{{ style }}</span>">&lt;/div></template>
+    </pow:example>
 
     <template pow if="version(1.4)">
         <p>

@@ -5,7 +5,7 @@ An extremely small and lightweight templating framework.
 ![pow.min.js file size in bytes](https://img.shields.io/github/size/IFYates/pow.js/dist%2Fpow.min.js?label=pow.min.js)
 
 
-> 😲 Under 140 LOCs!  
+> 😲 Under 130 LOCs!  
 > 🤏 Less than 2&frac12; KiB minified script (+ header)  
 > 🧩 No other dependencies  
 > ✅ [100% test coverage](https://ifyates.github.io/pow.js/coverage/lcov-report)

@@ -88,6 +88,14 @@
     </div>
 
     <!-- Display templates -->
+    <template id="example">
+        <div class="example">
+            <pre class="example-data"><code class="js"><param id="data" /></code></pre>
+            <pre class="live-example" pow stop><param id="code" /></pre>
+            <pre></pre>
+            <pre class="example-code" pow transform="(el) => el.innerHTML.length &lt; 31 ? el.remove() : 0"><span pow stop><param id="extra" /></span></pre>
+        </div>
+    </template>
     <template id="navitem">
         <a pow href="?/{{ id }}/{{ this.hash ? '#' + this.hash : '' }}" if="fn(this.visible ?? true)" :href="this.url"
             onclick="{{ this.url ? '' : $root.navigate }}"

@@ -177,3 +177,25 @@ test('Binding order is important', () => {
 
   expect(document.body.innerHTML).toBe('<div>Child</div><div>Child</div>')
 })
+
+test('Transform binding can change whole element', () => {
+  document.body.innerHTML = '<div pow transform="toSpan">Original</div>'
+
+  window.toSpan = function (element, context) {
+    element.outerHTML = '<span>' + context.$path + '</span>'
+  }
+
+  pow.apply(document.body)
+
+  delete window.toSpan
+
+  expect(document.body.innerHTML).toBe('<span>$root</span>')
+})
+
+test.each([ ['toSpan'], ["'(el) => el.outerHTML = ``'"], ["{{ '(el) => el.outerHTML = ``' }}"] ])('Transform binding ignores non-function values', (expr) => {
+  document.body.innerHTML = `<div pow transform="${expr}">Original</div>`
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe('<div>Original</div>')
+})

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736329620066" clover="3.2.0">
-  <project timestamp="1736329620066" name="All files">
-    <metrics statements="2" coveredstatements="2" conditionals="76" coveredconditionals="75" methods="35" coveredmethods="34" elements="113" coveredelements="111" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
+<coverage generated="1736369638879" clover="3.2.0">
+  <project timestamp="1736369638879" name="All files">
+    <metrics statements="2" coveredstatements="2" conditionals="84" coveredconditionals="83" methods="35" coveredmethods="34" elements="121" coveredelements="119" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
     <file name="pow.min.js" path="F:\dev\pow.js\dist\pow.min.js">
-      <metrics statements="1" coveredstatements="1" conditionals="60" coveredconditionals="59" methods="27" coveredmethods="26"/>
-      <line num="7" count="1349" type="cond" truecount="59" falsecount="1"/>
+      <metrics statements="1" coveredstatements="1" conditionals="68" coveredconditionals="67" methods="27" coveredmethods="26"/>
+      <line num="7" count="1365" type="cond" truecount="67" falsecount="1"/>
     </file>
     <file name="pow.safe.min.js" path="F:\dev\pow.js\dist\pow.safe.min.js">
       <metrics statements="1" coveredstatements="1" conditionals="16" coveredconditionals="16" methods="8" coveredmethods="8"/>

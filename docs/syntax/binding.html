@@ -60,6 +60,8 @@
             </li>
         </ul>
     </li>
+    <li pow if="version(3.1)"><a href="#transform"><code class="attr">transform</code></a> Tranform a bound element
+        after all <pow:pow></pow:pow> processing has completed.</li>
 </ul>
 
 <p pow if="version(1.0, 1.2)">
@@ -100,6 +102,7 @@
     <h2><code
             class="html"><span class="attr">{{ version(2.0) ? 'data' : 'item' }}</span>="<span class="expr">expression</span>"</code>
     </h2>
+
     <p>
         Sets the data context for the binding of the hierarchy from this element.
     </p>
@@ -139,9 +142,8 @@
 
     <template pow if="version(3.0)">
         <p>
-            The
-            <pow:nav id:="'bindings-conditions'" hash:="'else'" text:="'else'"></pow:nav> binding can be used to render
-            an element if the binding expression evaluates to <code class="js">null</code>.
+            The <pow:nav id:="'bindings-conditions'" hash:="'else'" text:="'else'"></pow:nav> binding can be used to
+            render an element if the binding expression evaluates to <code class="js">null</code>.
         </p>
         <div class="example">
             <pre class="live-example">&lt;div>
@@ -159,6 +161,7 @@
 
 <block pow if="version(1.4)" id="stop">
     <h2><code class="attr">stop</code></h2>
+
     <p>
         Prevents any further bindings from being applied to the element hierarchy.
     </p>
@@ -188,8 +191,46 @@
     </p>
 </block>
 
+<block pow if="version(3.1)" id="transform">
+    <h2><code class="html"><span class="attr">transform</span>="<span class="expr">function</span>"</code></h2>
+
+    <p>
+        The <code class="expr">function</code> is invoked after all <pow:pow></pow:pow> processing has completed for the
+        element, and receives the current element as an argument and the current context as arguments.
+    </p>
+    <div class="example">
+        <pre
+            class="example-data"><code class="js">{ upperCase: (el, context) => el.innerHTML = context.$path + ' :: ' + el.innerHTML.toUpperCase() }</code></pre>
+        <pre class="live-example"><code>&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span class="expr">upperCase</span>">
+        Hello, world!
+    &lt;/template>
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+
+    <p>
+        The value of <code class="expr">function</code> must return a <code class="js">function</code>. Any other result
+        will be ignored, including expressions.
+    </p>
+    <div class="example">
+        <pre class="live-example"><code>&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">'Removed'</span>">
+        Non-function expression
+    &lt;/template>
+&lt;/div>
+&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">{{ '() => el.innerHTML = `Removed`' }}</span>">
+        Expression function
+    &lt;/template>
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+</block>
+
 <block id="templates">
     <h2>Template elements</h2>
+
     <p>
         Most examples use <code class="html">&lt;div&gt;</code> elements to clearly show how it will appear in the
         result, but if the bound element is a <code class="html">&lt;template&gt;</code>, the entire element is
