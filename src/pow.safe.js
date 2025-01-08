@@ -36,7 +36,7 @@ function rebindEvents(element) {
     const attrs = [...element.querySelectorAll('*')].map($ => [...$.attributes]).flat()
         .filter($ => $.name.startsWith('on'))
     for (const { ownerElement, name, value } of attrs) {
-        const match = /^(\$pow.+?)\[(.*?)\]\(/.exec(value)
+        const match = /^(\$pow.+?)\.(.*?)\(/.exec(value)
         if (match) {
             ownerElement.addEventListener(name.slice(2), () => window[match[1]][match[2]](ownerElement))
             ownerElement.removeAttribute(name)

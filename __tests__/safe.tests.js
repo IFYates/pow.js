@@ -76,7 +76,7 @@ test('Safe binding will not change function interpolation', () => {
   const bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
   expect(bindingKeys.length).toBe(1)
   const fn = Object.keys(window[bindingKeys])[0]
-  expect(document.body.innerHTML).toBe(`<div>${bindingKeys}[${fn}](this)</div>`)
+  expect(document.body.innerHTML).toBe(`<div>${bindingKeys}.${fn}(this)</div>`)
 })
 
 test('Safe binding will not rebind non-event attributes', () => {
@@ -87,7 +87,7 @@ test('Safe binding will not rebind non-event attributes', () => {
   const bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
   expect(bindingKeys.length).toBe(1)
   const fn = Object.keys(window[bindingKeys])[0]
-  expect(document.body.innerHTML).toBe(`<button click="${bindingKeys}[${fn}](this)" onclick="not-bound">Click</button>`)
+  expect(document.body.innerHTML).toBe(`<button click="${bindingKeys}.${fn}(this)" onclick="not-bound">Click</button>`)
 })
 
 test('Safe binding will rebind event functions', () => {

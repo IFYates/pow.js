@@ -38,6 +38,6 @@ test('Invokes element event function', () => {
   const bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
   expect(bindingKeys.length).toBe(1)
   const fn = Object.keys(window[bindingKeys])[0]
-  expect(document.body.innerHTML).toBe(`<button id="btn" onclick="${bindingKeys}[${fn}](this)">Click me</button>`)
+  expect(document.body.innerHTML).toBe(`<button id="btn" onclick="${bindingKeys}.${fn}(this)">Click me</button>`)
   expect(wasClicked).toBe(true)
 })
