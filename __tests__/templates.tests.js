@@ -110,7 +110,7 @@ test('Can include named subcontents in template', () => {
 <template id="test">[<param id="text1">, <param id="text2">]</template>`)
 })
 
-test('Undefined subcontent in template uses content', () => {
+test('Undefined + unnamed subcontent in template uses while content', () => {
   document.body.innerHTML = '<div pow template="test">content</div>'
     + '<template id="test">[<param>]</template>'
 
@@ -118,6 +118,16 @@ test('Undefined subcontent in template uses content', () => {
 
   expect(document.body.innerHTML).toBe('<div>[content]</div>'
     + '<template id="test">[<param>]</template>')
+})
+
+test('Undefined named subcontent in template is blank', () => {
+  document.body.innerHTML = '<div pow template="test">content</div>'
+    + '<template id="test">[<param id="missing">]</template>'
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML).toBe('<div>[]</div>'
+    + '<template id="test">[<param id="missing">]</template>')
 })
 
 test('Subcontent does not work in unmatched template', () => {
@@ -135,5 +145,3 @@ test('Subcontent does not work in unmatched template', () => {
     + '[<param id="text2">, <param>]'
     + '</div>')
 })
-
-// TODO: pow array template / pow item template
