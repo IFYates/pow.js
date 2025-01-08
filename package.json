@@ -1,6 +1,6 @@
 {
   "name": "pow-templating",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "An extremely small and lightweight templating framework",
   "main": "./dist/pow.min.js",
   "type": "module",
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/IFYates/pow.js/issues"
   },
-  "homepage": "https://github.com/IFYates/pow.js#readme",
+  "homepage": "https://ifyates.github.io/pow.js/docs/",
   "files": [
     "./dist"
   ],
