@@ -142,6 +142,9 @@ div.example:has(pre.example-code) pre:not([class]),
 div.example:not(:has(pre.example-code)) pre:last-of-type {
     border-bottom-right-radius: 15px;
 }
+div.example pre:has(+ pre.example-code) {
+    grid-row: span 2;
+}
 
 div.example code {
     margin-bottom: 0;

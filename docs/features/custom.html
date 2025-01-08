@@ -20,15 +20,13 @@
     <p>
         Custom elements are replaced with the parsed contents of the same template.
     </p>
-    <div class="example">
-        <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
-        <pre
-            class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></pre>
-        <pre style="grid-row: span 2"></pre>
-        <pre class="example-code"><code pow stop>&lt;template id="my-component">
+    <pow:example>
+        <template id="data">{ text: 'Hello, world!' }</template>
+        <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></template>
+        <template id="extra">&lt;template id="my-component">
     <span class="expr">{{ text }}</span>
-&lt;/template></code></pre>
-    </div>
+&lt;/template></template>
+    </pow:example>
 
     <p>
         Because custom elements work in the same way as templates, the element content is parsed if there is no
