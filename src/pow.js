@@ -12,7 +12,7 @@ const _attribute = {
     set: (element, name, value) => element.setAttribute(name, value),
     remove: (element, name) => element.removeAttribute(name)
 }
-const _rand = Math.random
+const _randomId = () => Math.random().toString(36).slice(2)
 const _selectChild = (element, selector) => (element[CONTENT] ?? element).querySelectorAll(selector)
 
 const processElement = (element, state, isRoot, val) => {
@@ -34,9 +34,14 @@ const processElement = (element, state, isRoot, val) => {
             // Execute the expression as JS code, mapping to the state data
             const value = pow._eval(expr, context)
 
-            // If the result is a function, bind it for later
-            if (typeof value == 'function') {
-                const id = _rand()
+            /*if (value instanceof Promise) {
+                // Resolve the promise when ready
+                context = _randomId()
+                value.then(v => _selectChild(document, '#' + context)[0][OUT_HTML] = v)
+                return `<i id="${context}"></i>`
+            } else*/ if (typeof value == 'function') {
+                // If the result is a function, bind it for later
+                const id = _randomId()
                 window[state.$id][id] = (el) => value.call(el, context)
                 return state.$id + '[' + id + '](this)'
             }
@@ -135,7 +140,7 @@ const processElement = (element, state, isRoot, val) => {
 const bind = (element) => {
     const originalHTML = element[INN_HTML]
     const attributes = [...element.attributes]
-    const $id = '$pow_' + _rand().toString(36).slice(2)
+    const $id = '$pow_' + _randomId()
     const binding = {
         apply: (data) => {
             if (binding.$) {
