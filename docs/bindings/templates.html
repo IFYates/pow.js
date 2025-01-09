@@ -6,6 +6,7 @@
         <code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code>
     </p>
 
+    <!-- TODO: is this true? 'template' without 'pow' not being parsed in 3.1 -->
     <blockquote>
         Note: Reusable templates should always be stored outside of any bound elements, otherwise they will be modified
         along with other elements in the hierarchy.
@@ -87,7 +88,7 @@
 </block>
 <block pow else>
     <p>
-        Not available
+        Not available before v1.2
     </p>
 </block>
 
@@ -215,15 +216,15 @@
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
-            <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></pre>
+            <pre
+                class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>"><span pow stop class="expr">{{ text }}</span>&lt;/div></pre>
             <pre style="grid-row: span 2"></pre>
             <pre class="example-code">&lt;template id="my-component">
     &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param />&lt;/span>
 &lt;/template></pre>
         </div>
     </template>
-
-    <template pow ifnot="version(3.0)">
+    <template pow else>
         <p>
             If the binding <span class="value">id</span> cannot be found, the subcontent can still be used in the
             default content.
@@ -236,6 +237,24 @@
 &lt;/div></pre>
             <pre></pre>
         </div>
+    </template>
+
+    <template pow if="version(3.2)">
+        <p>
+            Subcontent elements can be accessed through the <code class="js">$content</code> property on the data
+            context as literal (unprocessed) values.<br />
+            This is also useful for performing conditional logic based on the content.
+        </p>
+        <pow:example>
+            <template pow id="code">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>" <span class="attr">value:</span>="<span class="expr">'Hello'</span>">
+    &lt;template id="two"><span class="expr">{{ value }}</span>&lt;/template>
+&lt;/div></template>
+            <template id="extra">&lt;template id="my-component">
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.one</span>">Not set: <span class="expr">{{ $content.one }}</span>&lt;/template>
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.two</span>">Literal: <span class="expr">{{ $content.two }}</span>&lt;/template>
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.two</span>">Parsed: &lt;param id="two" />&lt;/template>
+&lt;/template></template>
+        </pow:example>
     </template>
 </block>
 

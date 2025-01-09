@@ -1,12 +1,13 @@
-window.renderExample = function (el, elData, elCode) {
+window.renderExample = function (el, elData, elExtraCode) {
     const elResult = el.nextElementSibling
     if (elResult?.tagName !== 'PRE') {
         return
     }
 
-    let html = el.innerText, data = !elData ? '{}' : `new Function(\`return ${elData.innerText.replace(/'/g, '\\\'')}\`)()`, target = ''
-    if (elCode) {
-        html = `<body><div id="example">${html}</div>${elCode.innerText}</body>`
+    const data = !elData ? '{}' : `new Function(\`return ${elData.innerText.replace(/'/g, '\\\'')}\`)()`
+    let html = el.innerText, target = ''
+    if (elExtraCode) {
+        html = `<body>${elExtraCode.innerText}<div id="example">${html}</div></body>`
         target = '#example'
     }
     if (!html.includes('<body')) {
@@ -21,7 +22,7 @@ window.renderExample = function (el, elData, elCode) {
 
     const id = '$' + Math.random().toString(36).substring(2)
     if (!html.includes('import pow ')) {
-        const src = window.activeVersion == 3.1 ? '../src/pow.js' : `https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js`
+        const src = window.activeVersion == 3.2 ? '../src/pow.js' : `https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js`
 
         html = `<head>
     <script type="module">
@@ -73,7 +74,7 @@ window.renderExample = function (el, elData, elCode) {
 
         if (el.getAttribute('state') == 'dirty') {
             el.removeAttribute('state')
-            renderExample(el, elData, elCode)
+            renderExample(el, elData, elExtraCode)
         } else {
             el.removeAttribute('state')
         }

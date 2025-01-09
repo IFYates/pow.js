@@ -31,27 +31,22 @@
         element hierarchy.</li>
     <li>
         <template pow template="nav" data="'bindings-conditions'">
-            <template>
-                <code class="attr">if</code>
-                <code class="attr">ifnot</code>
-                <code class="attr">else</code>
-                <code pow ifnot="version(3.0)" class="attr">else-if</code>
-                <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></template>
-        </template>
+            <code class="attr">if</code>
+            <code class="attr">ifnot</code>
+            <code class="attr">else</code>
+            <code pow ifnot="version(3.0)" class="attr">else-if</code>
+            <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></template>
         Conditional elements.
     </li>
     <li><a href="#data"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> Change the data context of
         the current element.</li>
     <li>
-        <pow:nav template="nav" data="{ id: 'bindings-loops' }"><template><code class="attr">array</code></template>
-        </pow:nav>
+        <pow:nav template="nav" data="{ id: 'bindings-loops' }"><code class="attr">array</code></pow:nav>
         Repeat this element
         for each item in the array.
     </li>
     <li pow if="version(1.2)">
-        <pow:nav template="nav" data="{ id: 'bindings-templates' }"><template><code
-                    class="attr">template</code></template>
-        </pow:nav>
+        <pow:nav template="nav" data="{ id: 'bindings-templates' }"><code class="attr">template</code></pow:nav>
         Insert a named template.
         <ul pow if="version(2.2)">
             <li>

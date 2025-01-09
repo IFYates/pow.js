@@ -38,13 +38,13 @@ test('Can include subcontent', () => {
 })
 
 test('Can include default subcontent', () => {
-  document.body.innerHTML = '<div id="main"><pow:test-element>Hello, world!</pow:test-element></div>'
+  document.body.innerHTML = '<div id="main"><pow:test-element>Hello, <em>world</em>!</pow:test-element></div>'
     + '<template id="test-element"><div><param /></div></template>'
 
   const target = document.getElementById('main')
   pow.apply(target)
 
-  expect(target.innerHTML).toBe('<div>Hello, world!</div>')
+  expect(target.innerHTML).toBe('<div>Hello, <em>world</em>!</div>')
 })
 
 test('Custom elements work from templates', () => {
