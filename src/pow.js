@@ -48,8 +48,8 @@ const processElement = (element, state, isRoot, val) => {
         [P_PARENT]: state[P_PARENT] && getContext(state[P_PARENT]) })
 
     // Prepare custom elements
-    for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:')))
-        _replace(el, el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`))
+    for (const el of [..._selectChild(element, '*')].filter($ => $.localName == ATTR_POW | $.tagName.startsWith('POW:')))
+        _replace(el, el[OUT_HTML][REPLACE](/^<pow(:[\w-]+)?/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`))
 
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]'))
@@ -63,7 +63,7 @@ const processElement = (element, state, isRoot, val) => {
         _attr.rem(element, name)
 
         // Apply template
-        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value))) {
+        if (name == B_TEMPLATE && value && !processCondition(val = document.getElementById(value))) {
             // Gather content data
             let content = { }, defaultContent = null
             for (const child of _selectChild(element, B_TEMPLATE)) {

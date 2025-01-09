@@ -209,7 +209,7 @@
 &lt;/template></pre>
     </div>
 
-    <template pow if="version(3.0)">
+    <pow if="version(3.0)">
         <p>
             If no child <code class="html">&lt;template&gt;</code> elements are defined, the entire contents of the
             bound element will match against <code class="html">&lt;param /&gt;</code>.
@@ -223,7 +223,7 @@
     &lt;span <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">child</span>">&lt;param />&lt;/span>
 &lt;/template></pre>
         </div>
-    </template>
+    </pow>
     <template pow else>
         <p>
             If the binding <span class="value">id</span> cannot be found, the subcontent can still be used in the
