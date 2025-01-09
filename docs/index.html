@@ -90,10 +90,10 @@
     <!-- Display templates -->
     <template id="example">
         <div class="example">
-            <pre class="example-data"><code class="js"><param id="data" /></code></pre>
-            <pre class="live-example" pow stop><param id="code" /></pre>
+            <pre pow if="$content.data" class="example-data"><code class="js"><param id="data" /></code></pre>
+            <pre class="live-example">{{ $content.code }}</pre>
             <pre></pre>
-            <pre class="example-code" pow transform="(el) => el.innerHTML.length &lt; 31 ? el.remove() : 0"><span pow stop><param id="extra" /></span></pre>
+            <pre pow if="$content.extra" class="example-code">{{ $content.extra }}</pre>
         </div>
     </template>
     <template id="navitem">
@@ -107,7 +107,7 @@
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="nav"><a href="?/{{ this.id || $data }}/{{ this.hash ? '#' + this.hash : '' }}"
-            onclick="{{ function () { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
+            onclick="{{ function _() { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
 </body>
 
 </html>

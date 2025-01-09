@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.1.0
+ * @version 3.2.0
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
@@ -13,6 +13,7 @@ const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML', OUT_HT
 const _attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el, name) => el.removeAttribute(name) }
 const _escape = (text, asRoot) => asRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 const _rand = Math.random
+const _replace = (el, html) => el.replaceWith(document.createRange().createContextualFragment(html)) // TODO: better solution
 const _selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
 
 const processElement = (element, state, isRoot, val) => {
@@ -43,17 +44,16 @@ const processElement = (element, state, isRoot, val) => {
             console.warn('Interpolation failed', { [P_PATH]: state[P_PATH], expr }, e)
         }
     }
-    const getContext = (state) => (state[P_PARENT]
-        ? { ...state[P_DATA], ...state, [P_PARENT]: getContext(state[P_PARENT]) }
-        : { ...state[P_DATA], ...state })
+    const getContext = (state) => ({ ...state[P_DATA], ...state,
+        [P_PARENT]: state[P_PARENT] && getContext(state[P_PARENT]) })
 
     // Prepare custom elements
     for (const el of [..._selectChild(element, '*')].filter($ => $.tagName.startsWith('POW:')))
-        el[OUT_HTML] = el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`)
+        _replace(el, el[OUT_HTML][REPLACE](/^<pow:([\w-]+)/i, `<${B_TEMPLATE} ${ATTR_POW} ${B_TEMPLATE}="$1"`))
 
     // Disable child HTML for stopped bindings
     for (const child of _selectChild(element, '*[pow][stop]'))
-        child.replaceWith(document.createRange().createContextualFragment(_escape(child[OUT_HTML])))
+        _replace(child, _escape(child[OUT_HTML]))
 
     _attr.rem(element, ATTR_POW)
 
@@ -63,25 +63,41 @@ const processElement = (element, state, isRoot, val) => {
         _attr.rem(element, name)
 
         // Apply template
-        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value)?.cloneNode(1))) {
+        if (name == B_TEMPLATE && !processCondition(val = document.getElementById(value))) {
+            // Gather content data
+            let content = { }, defaultContent = null
+            for (const child of _selectChild(element, B_TEMPLATE)) {
+                defaultContent ??= child[INN_HTML] // Remember first template
+                content[child.id] = child[INN_HTML]
+            }
+            defaultContent ??= element[INN_HTML] // No templates, use whole content
+
+            // Build content with replaced params
+            // Has to be a regex on full HTML due to template contents not being in DOM
             element[INN_HTML] = val[INN_HTML][REPLACE](/<param(?:\s+id=["']([^"']+)["'])?\s*\/?>/g,
-                // Find first child template or by id
-                (_, id) => _selectChild(element, B_TEMPLATE + (id ? '#' + id : ''))[0]?.[INN_HTML]
-                    // No child template for default param, take whole content
-                    ?? (id ? '' : element[INN_HTML]))
-            return processElement(element, state)
+                // Find templates by id or default first
+                // Default param (no id), takes whole content if there were no templates
+                (_, id) => id ? (content[id] || '') : defaultContent)
+
+            return processElement(element, { ...state, $content: content })
         }
 
         // Some logic requires resolved expressions
         val = () => val = (value ? parseExpr(value) : state[P_DATA])
 
-        if (name[0] == ':') { // Interpolated attribute
-            if (val())
-                _attr.set(element, name.slice(1), val)
-            return processElement(element, state)
-        } else if (name.at(-1) == ':') { // Data attribute
-            state = { ...state, [P_DATA]: { ...state[P_DATA], [name.slice(0, -1)]: val() } }
-        } else if (name == B_DATA && value) { // Data binding
+        if (name == B_ARRAY) { // Element loop
+            val = !val() | Array.isArray(val) ? val
+                : Object.entries(val).map(([key, value]) => ({ key, value }))
+            for (let i = 0; i < val?.length; ++i) {
+                const child = element.cloneNode(1)
+                element.parentNode.insertBefore(child, element)
+                processElement(child, {
+                    ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, $index: i,
+                    $first: !i, $last: i > val.length - 2, [P_DATA]: val[i], $array: val, [P_PARENT]: state
+                })
+            }
+            return processCondition(val?.length, 1)
+        } else if (name == B_DATA) { // Data binding
             return processCondition(val() != null)
                 ? 0 // Removed as inactive
                 : processElement(element, {
@@ -91,20 +107,14 @@ const processElement = (element, state, isRoot, val) => {
         } else if (name == B_IF | name == B_IFNOT) { // Conditional element
             if (processCondition((name == B_IF) != !val()))
                 return // Removed as inactive
+        } else if (name[0] == ':') { // Interpolated attribute
+            if (val())
+                _attr.set(element, name.slice(1), val)
+            return processElement(element, state)
+        } else if (name.at(-1) == ':') { // Data attribute
+            state = { ...state, [P_DATA]: { ...state[P_DATA], [name.slice(0, -1)]: val() } }
         } else if (name == B_ELSE) { // If 'else' survives to here, the element isn't wanted
             return element.remove()
-        } else if (name == B_ARRAY) { // Element loop
-            val = !val() | Array.isArray(val) ? val
-                : Object.entries(val).map(([key, value]) => ({ key, value }))
-            for (let i = 0; i < val?.length; ++i) {
-                const child = element.cloneNode(1)
-                element.parentNode.insertBefore(child, element)
-                processElement(child, {
-                    ...state, [P_PATH]: state[P_PATH] + (value ? '.' + value : '') + '[' + i + ']', $index: i,
-                    $first: !i, $last: i > val.length - 2, [P_DATA]: val[i], $array: val, [P_PARENT]: state
-                })
-            }
-            return processCondition(val?.length, 1)
         } else if (name == B_TRANSFORM) { // Transformation function
             transformFunction = parseExpr(value, 1)
         } else if (val = parseText(value)) { // Standard attribute
@@ -113,7 +123,7 @@ const processElement = (element, state, isRoot, val) => {
     }
 
     // Process every child 'pow' template
-    while (val = _selectChild(element, '*[pow]:not([pow] [pow])')[0])
+    while (val = _selectChild(element, '[pow]:not([pow] [pow])')[0])
         processElement(val, state)
 
     // Transform complete element
@@ -123,7 +133,7 @@ const processElement = (element, state, isRoot, val) => {
     // Parse inner HTML
     element[INN_HTML] = parseText(element[INN_HTML])
     if (element.localName == B_TEMPLATE)
-        element.replaceWith(...element[CONTENT].childNodes)
+        _replace(element, element[INN_HTML])
 }
 
 const bind = (element) => {

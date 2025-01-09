@@ -22,27 +22,39 @@
     </p>
     <pow:example>
         <template id="data">{ text: 'Hello, world!' }</template>
-        <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></template>
+        <template id="code">&lt;<span class="pow">pow</span>:<span
+                class="value">my-component</span>>&lt;/pow:my-component></template>
         <template id="extra">&lt;template id="my-component">
     <span class="expr">{{ text }}</span>
 &lt;/template></template>
     </pow:example>
 
-    <p>
-        Because custom elements work in the same way as templates, the element content is parsed if there is no
-        matching template.
-    </p>
-    <div class="example">
-        <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
+    <template pow ifnot="version(3.0)">
+        <p>
+            Because custom elements work in the same way as templates, the element content is parsed if there is no
+            matching template.
+        </p>
+        <div class="example">
+            <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
     Default content
 &lt;/pow:my-component></pre>
-        <pre></pre>
-    </div>
+            <pre></pre>
+        </div>
+    </template>
 
     <p>
-        Subcontent also works the same way as templates.
+        <pow:nav id:="'bindings-templates'" hash:="'subcontent'">Subcontent</pow:nav> also works the same way as
+        templates.
     </p>
-    <div class="example">
+    <pow:example pow if="version(3.0)">
+        <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
+    Title
+&lt;/pow:my-component></template>
+        <template id="extra">&lt;template id="my-component">
+    &lt;div>&lt;param />&lt;/div>
+&lt;/template></template>
+    </pow:example>
+    <div pow else class="example">
         <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
     &lt;template>Title&lt;/template>
 &lt;/pow:my-component></pre>
@@ -51,21 +63,30 @@
     &lt;div>&lt;param />&lt;/div>
 &lt;/template></code></pre>
     </div>
-    </template>
 
     <p>
         Because a custom element is a <code class="html">&lt;template&gt;</code> element with a <code
             class="pow">pow</code> binding, other <pow:pow></pow:pow> binding attributes are directly supported.
     </p>
-    <div class="example">
-        <pre
-            class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
+    <pow:example pow if="version(3.0)">
+        <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
+        <span class="attr">text:</span>="<span class="expr">'Hello, world!'</span>">
+&lt;/pow:my-component></template>
+        <template id="extra">&lt;template id="my-component">
+    &lt;div><span class="expr">{{ text }}</span>&lt;/div>
+&lt;/template></template>
+    </pow:example>
+    <pow:example pow else>
+        <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
         <span class="attr">data</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
-&lt;/pow:my-component></pre>
-        <pre style="grid-row: span 2"></pre>
-        <pre class="example-code"><code pow stop>&lt;template id="my-component">
-    &lt;div>{{ text }}&lt;/div>
-&lt;/template></code></pre>
-    </div>
-    </template>
+&lt;/pow:my-component></template>
+        <template id="extra">&lt;template id="my-component">
+    &lt;div><span class="expr">{{ text }}</span>&lt;/div>
+&lt;/template></template>
+    </pow:example>
+</block>
+<block pow else>
+    <p>
+        Not available before v2.2
+    </p>
 </block>
