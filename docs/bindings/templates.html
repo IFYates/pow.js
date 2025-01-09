@@ -246,13 +246,13 @@
             This is also useful for performing conditional logic based on the content.
         </p>
         <pow:example>
-            <template pow id="code">&lt;div pow template="my-component" value:="'Hello'">
-    &lt;template id="two">{{ value }}&lt;/template>
+            <template pow id="code">&lt;div <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>" <span class="attr">value:</span>="<span class="expr">'Hello'</span>">
+    &lt;template id="two"><span class="expr">{{ value }}</span>&lt;/template>
 &lt;/div></template>
             <template id="extra">&lt;template id="my-component">
-    &lt;template pow if="$content.one">Not set: {{ $content.one }}&lt;/template>
-    &lt;template pow if="$content.two">Literal: {{ $content.two }}&lt;/template>
-    &lt;template pow if="$content.two">Parsed: &lt;param id="two" />&lt;/template>
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.one</span>">Not set: <span class="expr">{{ $content.one }}</span>&lt;/template>
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.two</span>">Literal: <span class="expr">{{ $content.two }}</span>&lt;/template>
+    &lt;template <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">$content.two</span>">Parsed: &lt;param id="two" />&lt;/template>
 &lt;/template></template>
         </pow:example>
     </template>
