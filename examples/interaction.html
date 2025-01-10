@@ -7,14 +7,14 @@
 
         const data = {
             count: 0,
-            handler: function (arg, root) {
+            handler: function ({ $data, $root }) {
                 console.log('Clicked!',
                     this, // The HTML element that raised the event
-                    arg, // The current binding context
-                    root // The data used in `apply`
+                    $data, // The current binding context
+                    $root // The data used in `apply`
                 )
-                this.innerText = 'You clicked me ' + (++arg.count) + ' time'
-                    + (root.count > 1 ? 's' : '')
+                this.innerText = 'You clicked me ' + (++$data.count) + ' time'
+                    + ($root.count > 1 ? 's' : '')
             }
         }
         pow.apply(document.body, data)
