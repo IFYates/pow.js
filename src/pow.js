@@ -8,15 +8,17 @@
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
 const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot'
 const B_TEMPLATE = 'template', B_TRANSFORM = 'transform'
-const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML', OUT_HTML = 'outerHTML', REPLACE = 'replace'
+const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML'
+const OUT_HTML = 'outerHTML', REPLACE = 'replace', REPLACE_WITH = 'replaceWith'
 
 const _attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el, name) => el.removeAttribute(name) }
 const _escape = (text, skip) => skip ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 const _randomId = _ => '_' + Math.random().toString(36).slice(2)
-const _replace = (el, html) => el.replaceWith(document.createRange().createContextualFragment(html)) // TODO: better solution
+const _replace = (el, html) => el[REPLACE_WITH](document.createRange().createContextualFragment(html)) // TODO: better solution
 const _selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
+const _cloneNode = (el) => el.cloneNode(1)
 
-const processElement = (element, state, isRoot, _val) => {
+const processElement = (element, state, sections, isRoot, _val) => {
     // Interpolates text templates
     const parseText = (text) => _escape(text[REPLACE](/{{\s*(.*?)\s*}}/gs, (_, expr) => parseExpr(expr) ?? ''), isRoot)
 
@@ -81,7 +83,7 @@ const processElement = (element, state, isRoot, _val) => {
                 // Default param (no id), takes whole content if there were no templates
                 (_, id) => id ? (content[id] || '') : defaultContent)
 
-            return processElement(element, { ...state, $content: content })
+            return processElement(element, { ...state, $content: content }, sections)
         }
 
         // Some logic requires resolved expressions
@@ -91,12 +93,12 @@ const processElement = (element, state, isRoot, _val) => {
             _val = !_val() | Array.isArray(_val) ? _val
                 : Object.entries(_val).map(([key, value]) => ({ key, value }))
             for (let i = 0; i < _val?.length; ++i) {
-                const child = element.cloneNode(1)
+                const child = _cloneNode(element)
                 element.parentNode.insertBefore(child, element)
                 processElement(child, {
                     ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, $index: i,
                     $first: !i, $last: i > _val.length - 2, [P_DATA]: _val[i], $array: _val, [P_PARENT]: state
-                })
+                }, sections)
             }
             return processCondition(_val?.length, 1)
         } else if (name == B_DATA) { // Data binding
@@ -105,20 +107,23 @@ const processElement = (element, state, isRoot, _val) => {
                 : processElement(element, {
                     ...state, [P_PATH]: state[P_PATH] + '.' + value,
                     [P_DATA]: _val, [P_PARENT]: state
-                }, isRoot)
+                }, sections, isRoot)
         } else if (name == B_IF | name == B_IFNOT) { // Conditional element
             if (processCondition((name == B_IF) != !_val()))
                 return // Removed as inactive
         } else if (name[0] == ':') { // Interpolated attribute
             if (_val())
                 _attr.set(element, name.slice(1), _val)
-            return processElement(element, state, isRoot)
+            return processElement(element, state, sections, isRoot)
         } else if (name.at(-1) == ':') { // Data attribute
             state = { ...state, [P_DATA]: { ...state[P_DATA], [name.slice(0, -1)]: _val() } }
         } else if (name == B_ELSE) { // If 'else' survives to here, the element isn't wanted
             return element.remove()
         } else if (name == B_TRANSFORM) { // Transformation function
             transformFunction = parseExpr(value, 1)
+        } else if (name == "section") {
+            element.id = _randomId()
+            sections[value] = [_cloneNode(element), { ...state }]
         } else if (_val = parseText(value)) { // Standard attribute
             _attr.set(element, name, _val)
         }
@@ -126,7 +131,7 @@ const processElement = (element, state, isRoot, _val) => {
 
     // Process every child 'pow' template
     while (_val = _selectChild(element, '[pow]:not([pow] [pow])')[0])
-        processElement(_val, state)
+        processElement(_val, state, sections)
 
     // Transform complete element
     if (typeof transformFunction == FUNCTION)
@@ -142,29 +147,44 @@ const bind = (element) => {
     const originalHTML = element[INN_HTML]
     const attributes = [...element.attributes]
     const $id = '$pow' + _randomId()
+    const sections = {}
+
+    const _execute = (target, logic) => {
+        if (binding.$)
+            return console.warn('Binding already in progress')
+        binding.$ = 1
+        try {
+            logic()
+        } finally {
+            target[INN_HTML] = target[INN_HTML][REPLACE](/​/g, '')
+            delete binding.$
+        }
+        return binding
+    }
+
     const binding = {
-        apply: (data) => {
-            if (binding.$)
-                return console.warn('Binding already in progress')
-            binding.$ = 1
+        apply: (data) => _execute(element, _ => {
+            // Reset global state
+            element[INN_HTML] = originalHTML
+            for (const attr of attributes)
+                _attr.set(element, attr.name, attr.value)
+            window[$id] = {}
 
-        // Reset global state
-        element[INN_HTML] = originalHTML
-        for (const attr of attributes)
-            _attr.set(element, attr.name, attr.value)
-        window[$id] = {}
+            processElement(element, { $id, [P_PATH]: P_ROOT, [P_DATA]: data, [P_ROOT]: data }, sections, 1)
 
-            try {
-                processElement(element, { $id, [P_PATH]: P_ROOT, [P_DATA]: data, [P_ROOT]: data }, 1)
-            } finally {
-                element[INN_HTML] = element[INN_HTML][REPLACE](/​/g, '')
-                delete binding.$
+            binding.refresh = _ => binding.apply(data)
+            binding.rebind = (section, data) => {
+                if (section = sections[section]) {
+                    const clone = _cloneNode(section[0])
+                    _execute(clone, _ => {
+                        _selectChild(element, '#' + section[0].id)[0][REPLACE_WITH](clone)
+                        processElement(clone, { ...section[1], [P_DATA]: data ?? section[1][P_DATA] }, sections, 1)
+                    })
+                }
             }
-
-            binding.refresh = () => binding.apply(data)
-            return binding
-        },
-        refresh: () => { }
+        }),
+        refresh: _ => { },
+        rebind: _ => { }
     }
     return binding
 }
