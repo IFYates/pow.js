@@ -91,9 +91,10 @@
     <template id="example">
         <div class="example">
             <pre pow if="$content.data" class="example-data"><code class="js"><param id="data" /></code></pre>
-            <pre class="live-example">{{ $content.code }}</pre>
+            <pre pow class="live-example" :style="this.live ? 'grid-row: span 2' : ''">{{ $content.code }}</pre>
             <pre></pre>
             <pre pow if="$content.extra" class="example-code">{{ $content.extra }}</pre>
+            <pre pow if="this.live" class="example-live"></pre>
         </div>
     </template>
     <template id="navitem">

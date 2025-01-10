@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.2.0
+ * @version 3.3.0
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
@@ -12,11 +12,11 @@ const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML'
 const OUT_HTML = 'outerHTML', REPLACE = 'replace', REPLACE_WITH = 'replaceWith'
 
 const _attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el, name) => el.removeAttribute(name) }
+const _cloneNode = (el) => el.cloneNode(1)
 const _escape = (text, skip) => skip ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
 const _randomId = _ => '_' + Math.random().toString(36).slice(2)
 const _replace = (el, html) => el[REPLACE_WITH](document.createRange().createContextualFragment(html)) // TODO: better solution
 const _selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
-const _cloneNode = (el) => el.cloneNode(1)
 
 const processElement = (element, state, sections, isRoot, _val) => {
     // Interpolates text templates
@@ -47,8 +47,7 @@ const processElement = (element, state, sections, isRoot, _val) => {
         }
     }
     const getContext = (state) => ({
-        ...state[P_DATA], ...state,
-        [P_PARENT]: state[P_PARENT] && getContext(state[P_PARENT])
+        ...state[P_DATA], ...state, [P_PARENT]: state[P_PARENT] && getContext(state[P_PARENT])
     })
 
     // Prepare custom elements
@@ -96,8 +95,8 @@ const processElement = (element, state, sections, isRoot, _val) => {
                 const child = _cloneNode(element)
                 element.parentNode.insertBefore(child, element)
                 processElement(child, {
-                    ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, $index: i,
-                    $first: !i, $last: i > _val.length - 2, [P_DATA]: _val[i], $array: _val, [P_PARENT]: state
+                    ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, [P_DATA]: _val[i],
+                    [P_PARENT]: state, $index: i, $first: !i, $last: i > _val.length - 2, $array: _val
                 }, sections)
             }
             return processCondition(_val?.length, 1)

@@ -27,8 +27,10 @@
     The possible binding attributes are:
 </p>
 <ul>
-    <li pow if="version(1.4)"><a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this
-        element hierarchy.</li>
+    <li pow if="version(1.4)">
+        <a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this
+        element hierarchy.
+    </li>
     <li>
         <template pow template="nav" data="'bindings-conditions'">
             <code class="attr">if</code>
@@ -38,8 +40,10 @@
             <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></template>
         Conditional elements.
     </li>
-    <li><a href="#data"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> Change the data context of
-        the current element.</li>
+    <li>
+        <a href="#data"><code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></a> Change the data context of
+        the current element.
+    </li>
     <li>
         <pow:nav template="nav" data="{ id: 'bindings-loops' }"><code class="attr">array</code></pow:nav>
         Repeat this element
@@ -55,8 +59,14 @@
             </li>
         </ul>
     </li>
-    <li pow if="version(3.1)"><a href="#transform"><code class="attr">transform</code></a> Tranform a bound element
-        after all <pow:pow></pow:pow> processing has completed.</li>
+    <li pow if="version(3.1)">
+        <a href="#transform"><code class="attr">transform</code></a> Tranform a bound element
+        after all <pow:pow></pow:pow> processing has completed.
+    </li>
+    <li pow if="version(3.3)">
+        <pow:nav id:="'features-sections'"><code class="attr">section</code></pow:nav> Specify a section of the bound
+        hierarchy that can be modified separately.
+    </li>
 </ul>
 
 <p pow if="version(1.0, 1.2)">
