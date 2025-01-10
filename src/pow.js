@@ -12,7 +12,7 @@ const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML', OUT_HT
 
 const _attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el, name) => el.removeAttribute(name) }
 const _escape = (text, asRoot) => asRoot ? text : text[REPLACE](/({|p)({|ow)/g, '$1​$2​')
-const _rand = Math.random
+const _randomId = () => '_' + Math.random().toString(36).slice(2)
 const _replace = (el, html) => el.replaceWith(document.createRange().createContextualFragment(html)) // TODO: better solution
 const _selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
 
@@ -35,9 +35,9 @@ const processElement = (element, state, isRoot, val) => {
 
             // If the result is a function, bind it for later
             if (!raw & typeof value == FUNCTION) {
-                const id = _rand()
-                window[state.$id][id] = (el) => value.call(el, context)
-                return state.$id + '[' + id + '](this)'
+                raw = _randomId()
+                window[state.$id][raw] = (el) => value.call(el, context)
+                return `${state.$id}.${raw}(this)`
             }
             return value
         } catch (e) {
@@ -139,7 +139,7 @@ const processElement = (element, state, isRoot, val) => {
 const bind = (element) => {
     const originalHTML = element[INN_HTML]
     const attributes = [...element.attributes]
-    const $id = '$pow_' + _rand().toString(36).slice(2)
+    const $id = '$pow' + _randomId()
     const binding = {
         apply: (data) => {
             if (binding.$)
