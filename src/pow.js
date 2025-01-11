@@ -120,8 +120,8 @@ const processElement = (element, state, sections, isRoot, _val) => {
             return element.remove()
         } else if (name == B_TRANSFORM) { // Transformation function
             transformFunction = parseExpr(value, 1)
-        } else if (name == "section") {
-            element.id = _randomId()
+        } else if (name == "section" && value) {
+            element.id = element.id || _randomId()
             sections[value] = [_cloneNode(element), { ...state }]
         } else if (_val = parseText(value)) { // Standard attribute
             _attr.set(element, name, _val)
@@ -148,7 +148,7 @@ const bind = (element) => {
     const $id = '$pow' + _randomId()
     const sections = {}
 
-    const _execute = (target, logic) => {
+    const _execute = (target, logic, rebinders = {}) => {
         if (binding.$)
             return console.warn('Binding already in progress')
         binding.$ = 1
@@ -158,6 +158,19 @@ const bind = (element) => {
             target[INN_HTML] = target[INN_HTML][REPLACE](/​/g, '')
             delete binding.$
         }
+
+        for (const [name, [original, state]] of Object.entries(sections)) {
+            rebinders[name] = (data) => {
+                state[P_DATA] = data ?? state[P_DATA]
+                const clone = _cloneNode(original)
+                return _execute(clone, _ => {
+                    _selectChild(element, '#' + original.id)[0][REPLACE_WITH](clone)
+                    processElement(clone, state, sections, 1)
+                })
+            }
+        }
+        binding.sections = rebinders
+
         return binding
     }
 
@@ -172,18 +185,8 @@ const bind = (element) => {
             processElement(element, { $id, [P_PATH]: P_ROOT, [P_DATA]: data, [P_ROOT]: data }, sections, 1)
 
             binding.refresh = _ => binding.apply(data)
-            binding.rebind = (section, data) => {
-                if (section = sections[section]) {
-                    const clone = _cloneNode(section[0])
-                    _execute(clone, _ => {
-                        _selectChild(element, '#' + section[0].id)[0][REPLACE_WITH](clone)
-                        processElement(clone, { ...section[1], [P_DATA]: data ?? section[1][P_DATA] }, sections, 1)
-                    })
-                }
-            }
         }),
-        refresh: _ => { },
-        rebind: _ => { }
+        refresh: _ => { }
     }
     return binding
 }
