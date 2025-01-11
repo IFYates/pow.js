@@ -71,7 +71,7 @@ test('Function interpolation', () => {
   expect(bindingKeys.length).toBe(1)
   const fn = Object.keys(window[bindingKeys[0]])[0]
   expect(typeof window[bindingKeys[0]][fn]).toBe('function')
-  expect(document.body.innerHTML).toBe(`<div>${bindingKeys[0]}[${fn}](this)</div>`)
+  expect(document.body.innerHTML).toBe(`<div>${bindingKeys[0]}.${fn}(this)</div>`)
 })
 
 test('Functions are not removed from unrelated binding', () => {

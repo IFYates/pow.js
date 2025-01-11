@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736413277851" clover="3.2.0">
-  <project timestamp="1736413277851" name="All files">
-    <metrics statements="2" coveredstatements="2" conditionals="76" coveredconditionals="76" methods="34" coveredmethods="34" elements="112" coveredelements="112" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
-    <file name="pow.min.js" path="F:\Dev\pow.js\dist\pow.min.js">
-      <metrics statements="1" coveredstatements="1" conditionals="60" coveredconditionals="60" methods="26" coveredmethods="26"/>
-      <line num="7" count="1516" type="cond" truecount="60" falsecount="0"/>
+<coverage generated="1736592722996" clover="3.2.0">
+  <project timestamp="1736592722996" name="All files">
+    <metrics statements="2" coveredstatements="2" conditionals="85" coveredconditionals="85" methods="39" coveredmethods="39" elements="126" coveredelements="126" complexity="0" loc="2" ncloc="2" packages="1" files="2" classes="2"/>
+    <file name="pow.min.js" path="F:\dev\pow.js\dist\pow.min.js">
+      <metrics statements="1" coveredstatements="1" conditionals="69" coveredconditionals="69" methods="31" coveredmethods="31"/>
+      <line num="7" count="1714" type="cond" truecount="69" falsecount="0"/>
     </file>
-    <file name="pow.safe.min.js" path="F:\Dev\pow.js\dist\pow.safe.min.js">
+    <file name="pow.safe.min.js" path="F:\dev\pow.js\dist\pow.safe.min.js">
       <metrics statements="1" coveredstatements="1" conditionals="16" coveredconditionals="16" methods="8" coveredmethods="8"/>
       <line num="7" count="21" type="cond" truecount="16" falsecount="0"/>
     </file>
