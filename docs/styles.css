@@ -173,6 +173,15 @@ pre.example-data {
     grid-column: span 2;
 }
 
+div.example pre.example-live {
+    overflow-y: hidden;
+    background-color: white;
+}
+div.example pre.example-live iframe {
+    height: 100%;
+    width: 100%;
+}
+
 .element {
     position: relative;
 }

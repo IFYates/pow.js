@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script setup type="module">
+        import pow from '../src/pow.js'
+
+        const data = {
+            rootCount: 0,
+            oneCount: 0,
+            twoCount: 0,
+            refresh: (section) => {
+                binding.sections[section]()
+            }
+        }
+
+        const binding = pow.apply(document.body, data)
+        window.binding = binding
+    </script>
+
+</head>
+
+<body>
+
+    <ul>
+        <li>
+            <p>
+                Root<br />
+                Render count: {{ ++$data.rootCount }}<br />
+                Last rendered: {{ Date() }}<br />
+            </p>
+
+            <ul pow section="one">
+                <li>
+                    <p>
+                        Section one<br />
+                        Render count: {{ ++$data.oneCount }}<br />
+                        Last rendered: {{ Date() }}<br />
+                    </p>
+
+                    <ul pow :section="'tw' + 'o'">
+                        <li>
+                            <p>
+                                Section two<br />
+                                Render count: {{ ++$data.twoCount }}<br />
+                                Last rendered: {{ Date() }}<br />
+                            </p>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <button onclick="{{ refresh.bind(this, 'one') }}">Refresh section one</button>
+    <button onclick="{{ refresh.bind(this, 'two') }}">Refresh section two</button>
+</body>
+
+</html>

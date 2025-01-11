@@ -1,0 +1,71 @@
+<h1>Features / Sections</h1>
+
+<block pow if="version(3.3)" class="full">
+    <p>
+        <strong>Syntax:</strong>
+        <code class="html">:<span class="attr">section</span>="<span class="value">name</span>"</code>
+    </p>
+
+    <p>
+        Sections are a way to expose a part of the bound hierarchy and modify it without having to refresh the entire
+        hierarchy again.
+    </p>
+
+    <p>
+        The <pow:nav id:="'syntax-binding'">binding object</pow:nav> exposes a <span class="js">sections</span> array
+        containing a function for each of the registered sections, enabling you to refresh a section with the same
+        context or providing a new one for the section.
+    </p>
+
+    <blockquote>
+        <i class="fas fa-fw fa-triangle-exclamation"></i> If two sections have the same name, the last one to be
+        processed will override the first.
+    </blockquote>
+
+    <blockquote>
+        <i class="fas fa-fw fa-circle-info"></i> If the parent section is refreshed, all child sections will also be
+        refreshed and lose any subsequent context.
+    </blockquote>
+
+    <blockquote>
+        <i class="fas fa-fw fa-lightbulb"></i> The <span class="value">name</span> value is not parsed, though using an
+        <pow:nav id:="'syntax-attributes'" href:="'interpolated'">interpolated attribute</pow:nav> will have the same
+        effect.
+    </blockquote>
+
+    <pow:example live:="1">
+        <template id="code">
+&lt;head>
+    &lt;script setup type="module">
+    import pow from '../src/pow.js'
+
+    const data = {
+        count: 0, subCount: 0,
+        refreshBody: () => binding.refresh(),
+        refreshSection: (name) => binding.sections[name]()
+    }
+
+    const binding = pow.apply(document.body, data)
+    &lt;/script>
+&lt;/head>
+&lt;body>
+    &lt;p>
+        Root rendered {{ $data.count += 1 }} times.&lt;br />
+        Last at {{ Date() }}
+    &lt;/p>
+    &lt;p pow section="sub">
+        Section rendered {{ $data.subCount += 1 }} times.&lt;br />
+        Last at {{ Date() }}
+    &lt;/p>
+    
+    &lt;button onclick="{{ refreshBody }}">Refresh body&lt;/button>
+    &lt;button onclick="{{ refreshSection.bind(this, 'sub') }}">Refresh section&lt;/button>
+&lt;/body></template>
+        <pre class="example-live" style="background-color:white"></pre>
+    </pow:example>
+</block>
+<block pow else>
+    <p>
+        Not available before v3.3
+    </p>
+</block>

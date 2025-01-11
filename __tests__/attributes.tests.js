@@ -14,6 +14,15 @@ test('Attribute templates on bound elements are resolved', () => {
   expect(document.body.innerHTML).toBe('<div class="attribute"></div>')
 })
 
+test('Attribute templates on root element are resolved correctly', () => {
+  document.body.innerHTML = '<div class="{{ value }}"></div>'
+
+  const target = document.body.querySelector('div')
+  pow.apply(target, { value: '{{ pow }}' })
+
+  expect(document.body.innerHTML).toBe('<div class="{{ pow }}"></div>')
+})
+
 test.each([[false, 'false'], [0, '0'], [null, ''], [undefined, ''], ['', '']])('Attribute falsy templates on unbound elements are resolved', (value, expected) => {
   document.body.innerHTML = '<div class="{{ value }}"></div>'
 
