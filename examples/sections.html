@@ -10,11 +10,12 @@
             oneCount: 0,
             twoCount: 0,
             refresh: (section) => {
-                binding.rebind(section)
+                binding.sections[section]()
             }
         }
 
         const binding = pow.apply(document.body, data)
+        window.binding = binding
     </script>
 
 </head>
@@ -37,7 +38,7 @@
                         Last rendered: {{ Date() }}<br />
                     </p>
 
-                    <ul pow section="two">
+                    <ul pow :section="'tw' + 'o'">
                         <li>
                             <p>
                                 Section two<br />

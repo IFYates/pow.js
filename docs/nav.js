@@ -75,7 +75,7 @@ const nav = {
                 { id: 'features-interaction', name: 'Interactivity' },
                 { id: 'features-reactivity', name: 'Reactivity' },
                 { id: 'features-custom', name: 'Custom elements', visible: () => activeVersion >= 2.2 },
-                { id: 'features-sections', name: 'Sections', visible: () => activeVersion >= 1.1 },
+                { id: 'features-sections', name: 'Sections', visible: () => activeVersion >= 3.3 },
                 { id: 'features-pow-safe', name: 'pow.safe', visible: () => activeVersion >= 1.1 },
             ]
         },
