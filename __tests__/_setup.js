@@ -4,9 +4,7 @@ beforeEach(() => {
     }
 })
 
-//import pow from '../src/pow.js'
-import pow from '../dist/pow.min.js'
-global.pow = pow
+global.pow = (await import(global.module)).default
 
 import { jest } from '@jest/globals'
 global.jest = jest
