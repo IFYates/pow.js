@@ -1,10 +1,11 @@
-<h1>Bindings / Loops</h1>
+<h1>Loops</h1>
 
 <block>
-    <h2>
+    <p class="full">
+        <strong>Syntax:</strong>
         <code class="html"><span class="attr">array</span>="<span class="expr">expression</span>"</code>
         / <code class="attr">array</code>
-    </h2>
+    </p>
 
     <p>
         This binding will repeat the element hierarchy for each item in the array.
@@ -94,6 +95,7 @@
 
 <block id="objects">
     <h2>Objects</h2>
+
     <p>
         If an object is provided, it will iterate over the keys and values.
     </p>
@@ -106,12 +108,14 @@
 </block>
 
 <block pow if="version(1.2)" id="post-loop">
-    <h2>
-        Post-loop conditions:
+    <h2>Post-loop conditions</h2>
+    <p class="full">
+        <strong>Syntax:</strong>
         <code class="attr">else</code>
-        / <code class="html"><span class="attr">else-if</span>="<span class="expr">condition</span>"</code>
-        / <code class="html"><span class="attr">else-ifnot</span>="<span class="expr">condition</span>"</code>
-    </h2>
+        / <code class="html"><span class="attr">{{ version(3.0) ? 'else if' : 'else-if' }}</span>="<span class="expr">condition</span>"</code>
+        / <code class="html"><span class="attr">{{ version(3.0) ? 'else ifnot' : 'else-ifnot' }}</span>="<span class="expr">condition</span>"</code>
+    </p>
+    
     <p>
         If there are no elements in the array, the following sibling elements can make use of the
         <code class="attr">else*</code> attributes to further conditionally render an element.

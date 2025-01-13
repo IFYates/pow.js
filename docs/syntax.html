@@ -1,9 +1,8 @@
-<h1>Syntax / Expressions</h1>
+<h1>Syntax</h1>
 
-<hr />
-<h2>Overview</h2>
 <blockquote pow if="version(1.1)">
-    <strong>Note:</strong> This page only covers core <span pow template="pow"></span> functionality. If you are using
+    <i class="fas fa-fw fa-triangle-exclamation"></i> This page only covers core <span pow template="pow"></span>
+    functionality. If you are using
     <span pow template="nav" data="'features-pow-safe'"><template><span pow
                 template="pow.safe"></span></template></span> refer to
     that page instead, as it has a different support for expressions.
@@ -35,7 +34,6 @@
                 class="attr">{{ version(2.0) ? 'data' : 'item' }}</code></template></pow:nav> binding.
 </p>
 
-<hr />
 <h2 id="functions">Functions</h2>
 <p>
     Functions can be invoked from context data properties or the global scope.
@@ -75,7 +73,6 @@
 }</code></pre>
 </template>
 
-<hr />
 <h2 id="internal-values">Internal values</h2>
 <template pow if="version(1.0, 1.9)">
     <blockquote>
@@ -173,23 +170,18 @@
 
     <blockquote>
         <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
-        the internal value will need to be accessed through <code class="expr">$data</code> or <code
-            class="js">this</code>.
+        the data value will need to be accessed through <code class="expr">$data</code> or <code class="js">this</code>.
     </blockquote>
 </template>
 
 <block id="context">
-    <h2>Context</h2>
     <p>
         The context object is built as each <code class="attr">{{ version(2.0) ? 'data' : 'item' }}</code>/<code
-            class="attr">array</code> binding is
-        processed.<br />
+            class="attr">array</code> binding is processed.<br />
         The <code class="js">{{ version(2.0) ? '$' : '*' }}parent</code> property points to the previous binding
         context,
-        <span pow if="version(2.0)">and
-            can be chained until the root is reached,</span> while the <code
-            class="js">{{ version(2.0) ? '$' : '*' }}path</code> property contains the
-        path to the current context.
+        <span pow if="version(2.0)">and can be chained until the root is reached,</span> while the <code
+            class="js">{{ version(2.0) ? '$' : '*' }}path</code> property contains the path to the current context.
     </p>
     <div pow if="version(1.0, 2.0)" class="example">
         <code class="example-data" style="display: none;">{ child: { grandchild: { value: 1 } } }</code>

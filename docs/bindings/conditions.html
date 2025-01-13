@@ -1,7 +1,8 @@
-<h1>Bindings / Conditions</h1>
-
 <block>
-    <h2>
+    <h2>Conditionals</h2>
+
+    <p class="full">
+        <strong>Syntax:</strong>
         <code class="html"><span class="attr">if</span>="<span class="expr">condition</span>"</code>
         / <code class="html"><span class="attr">ifnot</span>="<span class="expr">condition</span>"</code>
     </h2>
@@ -15,15 +16,15 @@
             If the condition evaluates to a truthy value, the element is rendered, otherwise it is removed.
         </p>
     </div>
-    <div class="example">
-        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
+    <pow:example>
+        <template id="code">&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">true</span>">
     First block
 &lt;/div>
+
 &lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">false</span>">
     Second block
-&lt;/div></pre>
-        <pre></pre>
-    </div>
+&lt;/div></template>
+    </pow:example>
 </block>
 
 <block id="else">
@@ -100,7 +101,7 @@
         <h3>Other bindings</h3>
         <p class="full">
             The <code class="attr">else</code> attribute can also be used to conditionally render elements following a
-            <pow:nav id:="'syntax-binding'" hash:="'data'"><template>data</template></pow:nav>,
+            <pow:nav id:="'bindings-data'"><template>data</template></pow:nav>,
             <pow:nav id:="'bindings-loops'" hash:="'post-loop'"><template>loop</template></pow:nav>, or
             <pow:nav id:="'bindings-templates'" hash:="'else'"><template>template</template></pow:nav> binding.
         </p>

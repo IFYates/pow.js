@@ -15,7 +15,7 @@
     <template pow if="version(2.0)">
         <p>
             The <code class="attr">template</code> binding will replace the contents of the bound element with the
-            contents of the specified template, allowing you to reuse structures.
+            processed contents of the specified element, allowing you to reuse complex structures.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>
@@ -29,8 +29,8 @@
     </template>
     <template pow else>
         <p>
-            The <code class="attr">template</code> binding will <em>replace</em> the element with the contents of the
-            specified template, allowing you to reuse structures.
+            The <code class="attr">template</code> binding will <em>replace</em> a bound element with the processed
+            contents of a specified element, allowing you to reuse complex structures.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Hello, world!' }</code></pre>

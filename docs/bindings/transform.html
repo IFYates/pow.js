@@ -1,0 +1,43 @@
+<block pow if="version(3.1)">
+    <h2>Transformation</h2>
+
+    <p class="full">
+        <strong>Syntax:</strong>
+        <code class="html"><span class="attr">transform</span>="<span class="expr">function</span>"</code>
+    </p>
+
+    <p>
+        The <code class="expr">function</code> is invoked after all <pow:pow></pow:pow> processing has completed for
+        the
+        element, and receives the current element as an argument and the current context as arguments.
+    </p>
+    <div class="example">
+        <pre
+            class="example-data"><code class="js">{ upperCase: (el, context) => el.innerHTML = context.$path + ' :: ' + el.innerHTML.toUpperCase() }</code></pre>
+        <pre class="live-example"><code>&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span class="expr">upperCase</span>">
+        Hello, world!
+    &lt;/template>
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+
+    <p>
+        The value of <code class="expr">function</code> must return a <code class="js">function</code>. Any other
+        result
+        will be ignored, including expressions.
+    </p>
+    <div class="example">
+        <pre class="live-example"><code>&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">'Removed'</span>">
+        Non-function expression
+    &lt;/template>
+&lt;/div>
+&lt;div>
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">{{ '() => el.innerHTML = `Removed`' }}</span>">
+        Expression function
+    &lt;/template>
+&lt;/div></code></pre>
+        <pre></pre>
+    </div>
+</block>

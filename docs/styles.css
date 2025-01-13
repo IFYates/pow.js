@@ -1,6 +1,14 @@
-.main-content {
+body {
     color: #eff3f8;
+    background-color: #22232a;
+}
+
+body>div:first-child {
     background-color: #30313b;
+    margin: 0 auto;
+    max-width: 1500px;
+    border: 0 solid #60626a;
+    border-width: 0 1px;
 }
 
 a {
@@ -31,15 +39,19 @@ block {
     column-gap: 20px;
 }
 
-block::before {
-    content: "";
-    border-top: 1px solid #60626a;
-    margin-bottom: 1em;
+.hr {
+    display: flex;
+    align-items: center;
+}
+.hr>span {
+    height: 1px;
+    background: #60626a;
+    flex-grow: 1;
 }
 
 @media (min-width: 1400px) {
     block:not(.full) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr 3fr;
     }
 
     block:not(.full) p.full,
@@ -62,7 +74,9 @@ block::before {
     border-radius: 5px;
     background-color: hsl(272, 100%, 90%);
 }
-.js, .js a {
+
+.js,
+.js a {
     color: hsl(272, 100%, 20%);
 }
 
@@ -94,7 +108,9 @@ block::before {
     background-color: hsl(39, 100%, 90%);
     font-style: italic;
 }
-.expr, .expr a {
+
+.expr,
+.expr a {
     color: hsl(39, 100%, 10%);
 }
 
@@ -122,26 +138,33 @@ div.example pre {
     padding: 10px;
     margin: 0;
 }
+
 div.example pre:not([class]) {
     background-color: #1b1c22;
 }
+
 div.example pre.example-data {
     border-radius: 15px 15px 0 0;
 }
+
 div.example:not(:has(pre.example-data)) pre.live-example {
     border-top-left-radius: 15px;
 }
+
 div.example:not(:has(pre.example-data)) pre:not([class]) {
     border-top-right-radius: 15px;
 }
+
 div.example pre.example-code,
 div.example:not(:has(pre.example-code)) pre.live-example:nth-last-child(2) {
     border-bottom-left-radius: 15px;
 }
+
 div.example:has(pre.example-code) pre:not([class]),
 div.example:not(:has(pre.example-code)) pre:last-of-type {
     border-bottom-right-radius: 15px;
 }
+
 div.example pre:has(+ pre.example-code) {
     grid-row: span 2;
 }
@@ -177,6 +200,7 @@ div.example pre.example-live {
     overflow-y: hidden;
     background-color: white;
 }
+
 div.example pre.example-live iframe {
     height: 100%;
     width: 100%;
@@ -204,6 +228,7 @@ pre.example-data::before {
 div.overview {
     background-color: #22232a;
 }
+
 div.overview pre {
     background-color: #1b1c22;
     margin: 0;
@@ -212,28 +237,36 @@ div.overview pre {
     text-align: left;
     overflow: hidden;
 }
+
 div.overview>div {
     display: grid;
     grid-template-columns: 1fr 1fr 4fr;
     text-align: right;
 }
+
 div.overview div:not(:has(div)) {
     padding: 0 10px;
 }
+
 div.overview>div>div {
     margin: 0;
     align-self: center;
     text-align: right;
 }
+
 div.overview>div>span {
     display: grid;
     grid-template-columns: 1fr 4fr;
 }
-div.overview .bound, div.overview .bound pre {
+
+div.overview .bound,
+div.overview .bound pre {
     background-color: hsl(200, 100%, 20%);
     color: hsl(195, 100%, 90%);
 }
-div.overview .bound-element, div.overview .bound-element pre {
+
+div.overview .bound-element,
+div.overview .bound-element pre {
     background-color: hsl(30, 100%, 30%) !important;
     color: hsl(30, 100%, 90%) !important;
 }
