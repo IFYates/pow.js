@@ -1,5 +1,5 @@
 :root {
-    --sidebar-width: 280px;
+    --sidebar-width: 240px;
     --sidebar-width-collapsed: 80px;
 }
 
@@ -59,7 +59,6 @@ body {
 
 .main-content {
     margin-left: var(--sidebar-width);
-    background-color: #dee0ed;
     min-height: 100vh;
     padding: 20px;
     transition: all 0.3s ease;

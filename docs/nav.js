@@ -14,11 +14,7 @@ const nav = {
         nav.current = item.id ?? item
         history.pushState(null, null, `?/${nav.current}/`)
         refreshMain()
-        if (item.hash) {
-            location.hash = item.hash
-        } else {
-            window.scrollTo(0, 0)
-        }
+        location.hash = item.hash || nav.current
         return false
     },
     isCurrent: (a, b, c) => {
@@ -43,39 +39,31 @@ const nav = {
     ],
 
     pages: [
-        { id: 'home', name: 'Home', icon: 'fas fa-home' },
+        { id: 'home', name: 'Introduction', icon: 'fas fa-home' },
         { id: 'get-started', name: 'Getting started', icon: 'fas fa-graduation-cap' },
-        {
-            id: 'syntax',
-            name: 'Syntax',
-            icon: 'fas fa-code',
-            children: [
-                { id: 'syntax-binding', name: 'Bindings' },
-                { id: 'syntax-expressions', name: 'Expressions' },
-                { id: 'syntax-attributes', name: 'Attributes' },
-            ]
-        },
+        { id: 'syntax', name: 'Syntax', icon: 'fas fa-code' },
         {
             id: 'bindings',
             name: 'Bindings',
             icon: 'fas fa-link',
             children: [
-                { id: 'bindings-loops', name: 'array' },
-                { id: 'syntax-binding', hash: 'data', name: () => activeVersion >= 2.0 ? 'data' : 'item' },
+                { id: 'bindings-data', name: () => activeVersion >= 2.0 ? 'data' : 'item' },
                 { id: 'bindings-conditions', name: 'if / ifnot / else' },
+                { id: 'bindings-loops', name: 'array' },
+                { id: 'bindings-section', name: 'section', visible: () => activeVersion >= 3.3 },
+                { id: 'bindings-stop', hash: 'stop', name: 'stop', visible: () => activeVersion >= 1.4 },
                 { id: 'bindings-templates', name: 'template', visible: () => activeVersion >= 1.2 },
-                { id: 'syntax-binding', hash: 'stop', name: 'stop', visible: () => activeVersion >= 1.4 },
+                { id: 'bindings-transform', name: 'transform', visible: () => activeVersion >= 1.2 },
             ]
         },
+        { id: 'attributes', name: 'Attributes', icon: 'fas fa-at' },
         {
-            id: 'features',
             name: 'Features',
             icon: 'fas fa-cogs',
             children: [
                 { id: 'features-interaction', name: 'Interactivity' },
                 { id: 'features-reactivity', name: 'Reactivity' },
                 { id: 'features-custom', name: 'Custom elements', visible: () => activeVersion >= 2.2 },
-                { id: 'features-sections', name: 'Sections', visible: () => activeVersion >= 3.3 },
                 { id: 'features-pow-safe', name: 'pow.safe', visible: () => activeVersion >= 1.1 },
             ]
         },
@@ -98,11 +86,9 @@ const navBinding = pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)
 HTMLImportElement.whenInitialised(() => {
     mainBinding.apply(nav)
-    if (location.hash)  {
-        const value = location.hash
-        location.hash = ''
-        location.hash = value
-    }
+    const value = location.hash || nav.current
+    location.hash = ''
+    location.hash = value
 })
 
 window.setActiveVersion = function (context) {
