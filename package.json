@@ -33,6 +33,10 @@
     "pub": "pwsh publish.ps1"
   },
   "jest": {
+    "projects": [
+      "__tests__/_config.src.js",
+      "__tests__/_config.min.js"
+    ],
     "setupFilesAfterEnv": ["./__tests__/_setup.js"],
     "testEnvironment": "jsdom",
     "testMatch": ["**/__tests__/*.tests.js"],

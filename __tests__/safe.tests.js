@@ -1,5 +1,4 @@
-//import pow from '../src/pow.safe.js'
-import pow from '../dist/pow.safe.min.js'
+global.pow = (await import(global.module.replace('/pow.', '/pow.safe.'))).default
 
 test('Safe interpolation supports properties', () => {
   document.body.innerHTML = '<div>{{ text }}</div>'
