@@ -1,11 +1,11 @@
-<h1>Syntax / Attributes</h1>
+<h1>Attributes</h1>
 
 <block>
     <h2>Basic values</h2>
 
     <p>
         As with any part of the bound document, <span pow template="nav"
-            data="{ id: 'syntax-expressions', text: 'expressions' }"></span> will be parsed and can be used to set
+            data="{ id: 'syntax', text: 'expressions' }"></span> will be parsed and can be used to set
         attribute values.
     </p>
     <pow:example>
@@ -34,8 +34,8 @@
 
     <template pow if="version(2.0)">
         <p>
-            Attributes are processed in the order they appear, irregardless of whether they are <span pow template="nav"
-                data="'syntax-binding'"><template>bindings</template></span>, <a href="#interpolated">interpolated</a>,
+            Attributes are processed in the order they appear, irregardless of whether they are <pow:nav
+                id:="'bindings'">bindings</span>, <a href="#interpolated">interpolated</a>,
             or literal.<br />
             This means that the effect of one attribute is able to modify the behaviour of a later one.
         </p>
@@ -51,9 +51,8 @@
     </template>
     <template pow else if="version(1.4)">
         <p>
-            After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been
-            evaluated, <a href="#interpolated">interpolated attributes</a> will be evaluated and then all attributes
-            will be
+            After <pow:nav id:="'bindings'">bindings</span> have been evaluated,
+            <a href="#interpolated">interpolated attributes</a> will be evaluated and then all attributes will be
             processed.
         </p>
         <div class="example">
@@ -68,8 +67,7 @@
     </template>
     <template pow else if="version(1.0)">
         <p>
-            After <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> have been
-            evaluated, all attributes will be processed.
+            After <pow:nav id:="'bindings'">bindings</span> have been evaluated, all attributes will be processed.
         </p>
         <div class="example">
             <pre class="example-data"><code class="js">{ text: 'Parent', child: { text: 'Child' } }</code></pre>
@@ -91,8 +89,8 @@
 
     <div>
         <p>
-            On a <pow:nav id:="'syntax-binding'" text:="'bound element'"></pow:nav>, attributes with a name starting <code
-                    class="attr">:</code> will be <pow:nav id:="'syntax-expressions'" text:="'parsed'"></pow:nav>.
+            On a <pow:nav id:="'bindings'" text:="'bound element'"></pow:nav>, attributes with a name starting <code
+                    class="html">:</code> will be <pow:nav id:="'syntax'" text:="'parsed'"></pow:nav>.
         </p>
         <p>
             If the result is empty, the attribute will not be set; otherwise, the attribute will be set to the result,
@@ -145,8 +143,8 @@
     </p>
 
     <p>
-        On a <pow:nav id:="'syntax-binding'" text:="'bound element'"></pow:nav>, attributes with a
-            name ending <code class="attr">:</code> will set the same property on the current <pow:nav id:="'syntax-binding'"
+        On a <pow:nav id:="'bindings'" text:="'bound element'"></pow:nav>, attributes with a
+            name ending <code class="html">:</code> will set the same property on the current <pow:nav id:="'bindings'"
                 hash:="'context'" text:="'data context'"></pow:nav>.
     </p>
     <div class="example">

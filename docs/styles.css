@@ -3,12 +3,21 @@ body {
     background-color: #22232a;
 }
 
+h1:not(.fixed) {
+    position: sticky;
+    top: 0px;
+    background-color: #30313b;
+    padding: 5px 0;
+    z-index: 1;
+}
+
 body>div:first-child {
     background-color: #30313b;
     margin: 0 auto;
     max-width: 1500px;
     border: 0 solid #60626a;
     border-width: 0 1px;
+    padding-bottom: 75vh;
 }
 
 a {
@@ -54,7 +63,7 @@ block {
         grid-template-columns: 2fr 3fr;
     }
 
-    block:not(.full) p.full,
+    block:not(.full) .full,
     block:not(.full)>h2,
     block:not(.full)>h3,
     block:not(.full)>blockquote,

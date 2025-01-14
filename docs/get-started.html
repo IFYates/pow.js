@@ -14,12 +14,12 @@
     &lt;script type="module">
     <span class="js">import pow from 'https://ifyates.github.io/pow.js/latest/pow.min.js'</span>
     <span class="js">const data = { text: 'Hello, world!' }</span>
-    <span class="js"><pow:nav id:="'syntax-binding'"  text:="'pow.apply(document.body, data)'"></pow:nav></span>
+    <span class="js"><pow:nav id:="'bindings'"  text:="'pow.apply(document.body, data)'"></pow:nav></span>
     &lt;/script>
 &lt;/head>
 &lt;body>
     &lt;div>
-        <span class="expr"><pow:nav data="{ id: 'syntax-expressions', text: '{{ text }}' }"></pow:nav></span>
+        <span class="expr"><pow:nav data="{ id: 'syntax', text: '{{ text }}' }"></pow:nav></span>
     &lt;/div>
 &lt;/body></pre>
         <pre></pre>
@@ -35,7 +35,7 @@
     <h2>Principles</h2>
     <p>
         <pow:pow></pow:pow> binds the hierarchy of the element provided to the <span class="js">apply()</span> function,
-        and applies "<pow:nav id:="'syntax-binding'" text:="'binding'"></pow:nav>" logic to that element and any child
+        and applies "<pow:nav id:="'bindings'" text:="'binding'"></pow:nav>" logic to that element and any child
         elements with the <code class="pow">pow</code> attribute.
     </p>
     <div class="overview" style="width: fit-content">
@@ -84,7 +84,6 @@
     <h2>Next steps</h2>
     <p>
         Now you have a working example, have a read over the important concepts of
-        <span pow template="nav" data="{ id: 'syntax-binding', text: 'bindings' }"></span> and
-        <span pow template="nav" data="{ id: 'syntax-expressions', text: 'expressions' }"></span>.
+        <pow:nav id:="'bindings'">bindings</span> and <pow:nav id:="'syntax'">expressions</span>.
     </p>
 </block>

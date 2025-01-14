@@ -55,28 +55,27 @@
 
         <main class="main-content">
             <div class="container-fluid">
-                <template pow template="preloader"></template>
+                <template pow array="pages" if="this.children || !this.url">
+                    <template pow if="this.id && fn(this.visible ?? true)">
+                        <div pow ifnot="$first" class="hr"><span></span> 💥 <span></span></div>
+                        <div pow :template="'pre-' + id" class="page" id="{{ id }}"></div>
+                    </template>
+                    <template pow array="this.children" if="!this.url && fn(this.visible ?? true)">
+                        <div class="hr"><span></span> 💥 <span></span></div>
+                        <div pow :template="'pre-' + id" class="page" id="{{ id }}"></div>
+                    </template>
+                </template>
             </div>
         </main>
     </div>
 
     <!-- Page preload -->
     <div id="preloader" style="display:none">
-        <template pow array="pages" if="this.children || !this.url">
-            <template pow if="id">
-                <div id="{{ id }}">
-                    <html-import src="{{ id }}.html" replace></html-import>
-                </div>
-            </template>
-            <template pow array="this.children" ifnot="this.url">
-                <div pow if="$parent.id" class="hr"><span></span> 💥 <span></span></div>
-                <div id="{{ id }}">
-                    <html-import src="{{ id.replace('-', '/').replaceAll('​', '') }}.html" replace></html-import>
-                </div>
-            </template>
-            <template pow ifnot="$last">
-                <div class="hr"><span></span> 💥 <span></span></div>
-            </template>
+        <template pow array="pages">
+            <div pow if="this.id && !this.url" id="pre-{{ id }}">
+                <html-import src="{{ id }}.html" replace></html-import></div>
+            <div pow array="this.children" ifnot="this.url" id="pre-{{ id }}">
+                <html-import src="{{ id.replace('-', '/').replaceAll('​', '') }}.html" replace></html-import></div>
         </template>
     </div>
 
@@ -92,7 +91,7 @@
     </template>
     <template id="navitem">
         <a pow href="?/{{ id }}/{{ this.hash ? '#' + this.hash : '' }}" if="fn(this.visible ?? true)" :href="this.url"
-            onclick="{{ this.url ? '' : $root.navigate }}"
+            onclick="{{ this.url ? '' : $root.navigate }}" :id="'nav-' + id"
             class="sidebar-link text-decoration-none p-2 {{ this.classes }}">
             <i pow if="this.icon" class="fa-fw {{ icon }} me-3"></i>
             <span class="hide-on-collapse">{{ fn(name) }}</span>
@@ -101,9 +100,7 @@
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
     <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="nav"><a href="?/{{ this.id || $data }}/{{ this.hash ? '#' + this.hash : '' }}"
-            onclick="{{ function _() { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}
-            <param>
-        </a></template>
+            onclick="{{ function _() { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
 </body>
 
 </html>

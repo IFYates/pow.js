@@ -1,21 +1,19 @@
-<h1>Features / Custom elements</h1>
+<h1 pow if="version(2.2)">Custom elements</h1>
 
 <block pow if="version(2.2)">
+    <p class="full">
+        Custom elements are a way to use <pow:nav data="'bindings-templates'"><template>templates</template>
+        </pow:nav> more succinctly, by using the template <code class="attr">id</code> as the element name.
+    </p>
+
+    <p>
+        The following lines of code are identical ways of using the <code class="value">my-component</code>
+        template:
+    </p>
     <div>
-        <p>
-            Custom elements are a way to use <pow:nav data="'bindings-templates'"><template>templates</template>
-            </pow:nav> more succinctly, by using the template <code class="attr">id</code> as the element name.
-        </p>
-        <p>
-            The following lines of code are identical ways of using the <code class="value">my-component</code>
-            template:
-        </p>
-        <pre
-            class="block"><code class="html">&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template></code></pre>
-        <pre
-            class="block"><code class="html">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></code></pre>
+        <code class="html">&lt;template <span class="pow">pow</span> <span class="attr">template</span>="<span class="value">my-component</span>">&lt;/template></code><br />
+        <code class="html">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>&lt;/pow:my-component></code>
     </div>
-    <div></div>
 
     <p>
         Custom elements are replaced with the parsed contents of the same template.
@@ -70,7 +68,7 @@
     </p>
     <pow:example pow if="version(3.0)">
         <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
-        <span class="attr">text:</span>="<span class="expr">'Hello, world!'</span>">
+    <span class="attr">text:</span>="<span class="expr">'Hello, world!'</span>">
 &lt;/pow:my-component></template>
         <template id="extra">&lt;template id="my-component">
     &lt;div><span class="expr">{{ text }}</span>&lt;/div>
@@ -78,15 +76,10 @@
     </pow:example>
     <pow:example pow else>
         <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>
-        <span class="attr">data</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
+    <span class="attr">data</span>="<span class="expr">{ text: 'Hello, world!' }</span>">
 &lt;/pow:my-component></template>
         <template id="extra">&lt;template id="my-component">
     &lt;div><span class="expr">{{ text }}</span>&lt;/div>
 &lt;/template></template>
     </pow:example>
-</block>
-<block pow else>
-    <p>
-        Not available before v2.2
-    </p>
 </block>
