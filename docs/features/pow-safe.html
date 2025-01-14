@@ -1,10 +1,10 @@
-<h1>Features / pow.safe</h1>
+<h1>pow.safe</h1>
 
 <template pow if="version(1.1)">
     <blockquote>
-        <span pow template="nav" data="{ id: 'syntax-expressions', text: 'Full expression support' }"></span> requires a
-        fully trusted browser environment. In situations where this isn't possible, <template pow
-            template="pow.safe"></template> can be used to replace dynamic expression parsing with some simpler logic.
+        <pow:nav id:="'syntax'">Full expression support</pow:nav> requires a fully trusted browser environment. In
+        situations where this isn't possible, <template pow template="pow.safe"></template> can be used to replace
+        dynamic expression parsing with some simpler logic.
     </blockquote>
 
     <p>
@@ -65,10 +65,4 @@
                 data="{ id: 'features-interaction', text: 'as documented' }"></span>.
         </p>
     </template>
-
-</template>
-<template pow else>
-    <p>
-        Not available before v1.1
-    </p>
 </template>

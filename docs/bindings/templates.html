@@ -1,4 +1,4 @@
-<h1>Bindings / Template</h1>
+<h1 pow if="version(1.2)">Template binding</h1>
 
 <block pow if="version(1.2)">
     <p class="full">
@@ -58,8 +58,7 @@
     </template>
 
     <p>
-        As with any other <span pow template="nav"
-            data="{ id: 'syntax-binding', hash: 'templates', text: 'bound element' }"></span>, if it is a <code
+        As with any other <pow:nav id:="'bindings'" hash:="'templates'">bound element</span>, if it is a <code
             class="html">&lt;template&gt;</code>, the entire element is replaced.
     </p>
     <div class="example">
@@ -74,7 +73,7 @@
 
     <p>
         The <code class="value">id</code> will be used before <span pow template="nav"
-            data="{ id: 'syntax-expressions', text: 'expressions' }"></span> are interpolated, so it is not possible
+            data="{ id: 'syntax', text: 'expressions' }"></span> are interpolated, so it is not possible
         to use an expression to dynamically select a template.
     </p>
     <div class="example">
@@ -85,11 +84,6 @@
     Hello, world!
 &lt;/template></code></pre>
     </div>
-</block>
-<block pow else>
-    <p>
-        Not available before v1.2
-    </p>
 </block>
 
 <block pow if="version(3.0)" id="else">
@@ -140,7 +134,7 @@
 
     <template pow if="version(2.3)">
         <p>
-            The <pow:nav id:="'syntax-attributes'" hash:="'data'">data attributes</pow:nav> feature can be
+            The <pow:nav id:="'attributes'" hash:="'data'">data attributes</pow:nav> feature can be
             used for a cleaner solution.
         </p>
         <div class="example">
@@ -269,7 +263,7 @@
     <template pow if="version(2.0)">
         <p>
             Originally, <span pow template="nav"
-                data="{ id: 'syntax-attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span>
+                data="{ id: 'attributes', hash: 'interpolated', text: 'interpolated attributes' }"></span>
             were evaluated after the bindings values and so could not be used to modify bindings behaviour.<br />
             With the change to processing order in v2.0, an interpolated <code class="attr">:template</code>
             attribute can be used to dynamically select the target template, which gives a convenient structure for
@@ -297,7 +291,7 @@
     </template>
     <template pow else>
         <p>
-            Since <pow:nav id:="'syntax-attributes'" hash:="'interpolated'">interpolated attributes</pow:nav>
+            Since <pow:nav id:="'attributes'" hash:="'interpolated'">interpolated attributes</pow:nav>
             are evaluated <em>after</em> the element bindings, they <em>can not</em> be used to modify the binding
             value.
         </p>

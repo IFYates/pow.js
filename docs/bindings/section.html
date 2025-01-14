@@ -1,4 +1,4 @@
-<h1>Features / Sections</h1>
+<h1 pow if="version(3.3)">Sections</h1>
 
 <block pow if="version(3.3)" class="full">
     <p>
@@ -12,7 +12,7 @@
     </p>
 
     <p>
-        The <pow:nav id:="'syntax-binding'">binding object</pow:nav> exposes a <span class="js">sections</span> array
+        The <pow:nav id:="'bindings'">binding object</pow:nav> exposes a <span class="js">sections</span> array
         containing a function for each of the registered sections, enabling you to refresh a section with the same
         context or providing a new one for the section.
     </p>
@@ -29,7 +29,7 @@
 
     <blockquote>
         <i class="fas fa-fw fa-lightbulb"></i> The <span class="value">name</span> value is not parsed, though using an
-        <pow:nav id:="'syntax-attributes'" href:="'interpolated'">interpolated attribute</pow:nav> will have the same
+        <pow:nav id:="'attributes'" hash:="'interpolated'">interpolated attribute</pow:nav> will have the same
         effect.
     </blockquote>
 
@@ -63,9 +63,4 @@
 &lt;/body></template>
         <pre class="example-live" style="background-color:white"></pre>
     </pow:example>
-</block>
-<block pow else>
-    <p>
-        Not available before v3.3
-    </p>
 </block>

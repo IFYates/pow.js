@@ -1,10 +1,5 @@
 import pow from '../src/pow.js'
 
-const mainBinding = pow.bind(document.getElementsByTagName('main')[0])
-window.refreshMain = () => {
-    mainBinding.refresh()
-}
-
 window.fn = (value) => typeof value == 'function' ? value() : value
 
 const nav = {
@@ -13,7 +8,6 @@ const nav = {
         this.href = 'javascript:void(0)'
         nav.current = item.id ?? item
         history.pushState(null, null, `?/${nav.current}/`)
-        refreshMain()
         location.hash = item.hash || nav.current
         return false
     },
@@ -76,12 +70,13 @@ const nav = {
         // },
         { id: 'breaking-changes', name: 'Breaking changes', icon: 'fas fa-exclamation-triangle' },
         { id: 'troubleshooting', name: 'Troubleshooting', icon: 'fas fa-bug' },
-        { id: 'repo', name: 'Repository', url: 'https://github.com/IFYates/pow.js', icon: 'fab fa-github' },
+        { name: 'Repository', url: 'https://github.com/IFYates/pow.js', icon: 'fab fa-github' },
     ]
 }
 
 window.activeVersion = nav.versions[0]
 
+const mainBinding = pow.bind(document.getElementsByTagName('main')[0])
 const navBinding = pow.apply(document.getElementsByTagName('nav')[0], nav)
 pow.apply(document.getElementById('preloader'), nav)
 HTMLImportElement.whenInitialised(() => {
@@ -93,7 +88,22 @@ HTMLImportElement.whenInitialised(() => {
 
 window.setActiveVersion = function (context) {
     window.activeVersion = context.$data
-    window.refreshMain()
+    mainBinding.refresh()
     navBinding.refresh()
 }
 window.version = (firstVersion, lastVersion) => activeVersion >= firstVersion && (!lastVersion || activeVersion < lastVersion)
+
+// React to user scrolling
+let lastPage = null
+window.addEventListener('scroll', () => {
+    const pages = [...document.querySelectorAll('main div.page')]
+    const topPage = pages.map($ => ({ id: $.id, pos: Math.min(Math.abs($.offsetTop - window.scrollY), Math.abs($.offsetTop + ($.offsetHeight * 0.5) - window.scrollY)) }))
+        .reduce((a, b) => a.pos < b.pos ? a : b)
+
+    if (lastPage != topPage?.id) {
+        lastPage = topPage?.id
+        for (const nav of document.querySelectorAll('.sidebar-link')) {
+            nav.classList.toggle('active', nav.id.slice(4) == lastPage)
+        }
+    }
+})

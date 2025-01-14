@@ -1,6 +1,6 @@
-<block pow if="version(3.1)">
-    <h2>Transformation</h2>
+<h1 pow if="version(3.1)">Transformation</h1>
 
+<block pow if="version(3.1)">
     <p class="full">
         <strong>Syntax:</strong>
         <code class="html"><span class="attr">transform</span>="<span class="expr">function</span>"</code>
@@ -34,7 +34,7 @@
     &lt;/template>
 &lt;/div>
 &lt;div>
-    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">{{ '() => el.innerHTML = `Removed`' }}</span>">
+    &lt;template <span class="pow">pow</span> <span class="attr">transform</span>="<span pow stop class="expr">{{ '(el) => el.innerHTML = `Removed`' }}</span>">
         Expression function
     &lt;/template>
 &lt;/div></code></pre>
