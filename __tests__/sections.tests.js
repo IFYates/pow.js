@@ -84,3 +84,5 @@ test('Can dynamically name sections', () => {
 
   expect(document.body.innerHTML).toMatch(/^<div id="\w+">One<\/div><div id="\w+">Three<\/div>$/)
 })
+
+// TODO: $section tests + multiple sections

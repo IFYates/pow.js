@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.4.0
+ * @version 3.4.1
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
@@ -126,8 +126,7 @@ const bind = (root) => {
                 transformFunction = parseExpr(value, 1)
             } else if (name == 'section' && value) { // Render section
                 element.id = element.id || $randomId()
-                const copy = { element: $cloneNode(element), state }
-                _sections[value] = state.$section = (data) => {
+                _sections[value] = (data) => {
                     copy.state[P_DATA] = data ?? copy.state[P_DATA]
                     val = $cloneNode(copy.element)
                     return _exec(val, _ => {
@@ -135,6 +134,8 @@ const bind = (root) => {
                         processElement(val, copy.state, 1)
                     })
                 }
+                state = { ...state, $section: _sections[value] }
+                const copy = { element: $cloneNode(element), state }
             } else if (val = parseText(value)) { // Standard attribute
                 $attr.set(element, name, val)
             }
