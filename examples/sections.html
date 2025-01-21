@@ -6,9 +6,13 @@
         import pow from '../src/pow.js'
 
         const data = {
-            rootCount: 0,
-            oneCount: 0,
-            twoCount: 0,
+            count: 0,
+            child: {
+                count: 0,
+                child: {
+                    count: 0
+                }
+            },
             refresh: (section) => {
                 binding.sections[section]()
             }
@@ -26,24 +30,31 @@
         <li>
             <p>
                 Root<br />
-                Render count: {{ ++$data.rootCount }}<br />
+                {{ $path }}<br />
+                Render count: {{ ++$data.count }}<br />
                 Last rendered: {{ Date() }}<br />
             </p>
 
-            <ul pow section="one">
+            <ul pow data="child" section="one">
                 <li>
                     <p>
                         Section one<br />
-                        Render count: {{ ++$data.oneCount }}<br />
+                        {{ $path }}<br />
+                        Render count: {{ ++$data.count }}<br />
+                        Parent count: {{ $parent.count }}<br />
                         Last rendered: {{ Date() }}<br />
                     </p>
 
-                    <ul pow :section="'tw' + 'o'">
+                    <ul pow data="child" :section="'tw' + 'o'">
                         <li>
                             <p>
                                 Section two<br />
-                                Render count: {{ ++$data.twoCount }}<br />
+                                {{ $path }}<br />
+                                My count: {{ ++$data.count }}<br />
+                                Parent count: {{ $parent.count }}<br />
                                 Last rendered: {{ Date() }}<br />
+                                [{{ $section }}]
+                                <button onclick="{{ $section.bind(null, null) }}">Refresh self</button>
                             </p>
                         </li>
                     </ul>

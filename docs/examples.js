@@ -22,7 +22,7 @@ window.renderExample = function (el, elData, elExtraCode) {
 
     const id = '$' + Math.random().toString(36).substring(2)
     if (!html.includes('import pow ')) {
-        const src = window.activeVersion == 3.3 ? '../src/pow.js' : `https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js`
+        const src = window.activeVersion == 3.4 ? '../src/pow.js' : `https://ifyates.github.io/pow.js/v${window.activeVersion}/pow.min.js`
 
         html = `<head>
     <script type="module">
