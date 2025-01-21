@@ -58,9 +58,29 @@
         Last at {{ Date() }}
     &lt;/p>
     
-    &lt;button onclick="{{ refreshBody }}">Refresh body&lt;/button>
+    &lt;button onclick="{{ refreshBody }}">Full refresh&lt;/button>
     &lt;button onclick="{{ refreshSection.bind(this, 'sub') }}">Refresh section&lt;/button>
 &lt;/body></template>
         <pre class="example-live" style="background-color:white"></pre>
+    </pow:example>
+</block>
+
+<block pow if="version(3.4)">
+    <p>
+        The <code class="js">$section</code> <pow:nav id:="'syntax'" hash:="'internal-values'">internal value</pow:nav>
+        references the refresh binding of the current section,
+    </p>
+
+    <pow:example live:="1">
+        <template id="data">{ count: 0, subCount: 0 }</template>
+        <template id="code">&lt;p>
+    Root rendered {{ $data.count += 1 }} times.&lt;br />
+    Last at {{ Date() }}
+&lt;/p>
+&lt;p pow section="sub">
+    Section rendered {{ $data.subCount += 1 }} times.&lt;br />
+    Last at {{ Date() }}&lt;br />
+    &lt;button onclick="{{ $section }}">Refresh self&lt;/button>
+&lt;/p></template>
     </pow:example>
 </block>
