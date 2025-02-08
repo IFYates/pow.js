@@ -47,6 +47,22 @@ test(':attributes on bound elements are resolved', () => {
   expect(document.body.innerHTML).toBe('<div class="attribute"></div>')
 })
 
+test(':attributes on bound elements are resolved (moustache)', () => {
+  document.body.innerHTML = '<div pow :class="{{ value }}"></div>'
+
+  pow.apply(document.body, { value: 'attribute' })
+
+  expect(document.body.innerHTML).toBe('<div class="attribute"></div>')
+})
+
+test(':attributes on bound elements are resolved (multi-part moustache)', () => {
+  document.body.innerHTML = '<div pow :class="[{{ value }}]"></div>'
+
+  pow.apply(document.body, { value: 'attribute' })
+
+  expect(document.body.innerHTML).toBe('<div class="[attribute]"></div>')
+})
+
 test(':attributes on unbound elements are not resolved', () => {
   document.body.innerHTML = '<div :class="value"></div>'
 
@@ -73,6 +89,14 @@ test(':attributes on bound elements replace existing', () => {
 
 test.each([[false], [0], [null], [undefined], ['']])('falsy :attributes on bound elements leave existing', (value) => {
   document.body.innerHTML = '<div pow class="existing" :class="value"></div>'
+
+  pow.apply(document.body, { value })
+
+  expect(document.body.innerHTML).toBe('<div class="existing"></div>')
+})
+
+test.each([[false], [0], [null], [undefined], ['']])('falsy :attributes on bound elements leave existing (moustache)', (value) => {
+  document.body.innerHTML = '<div pow class="existing" :class="{{ value }}"></div>'
 
   pow.apply(document.body, { value })
 
