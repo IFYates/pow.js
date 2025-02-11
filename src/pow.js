@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.5.0
+ * @version 3.6.0
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
@@ -111,7 +111,8 @@ const bind = (root) => {
                     element.parentNode.insertBefore(child, element)
                     processElement(child, {
                         ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, [P_DATA]: val[i],
-                        [P_PARENT]: state, $index: i, $first: !i, $last: i > val.length - 2, $array: val
+                        [P_PARENT]: state, $index: i, $first: !i, $last: i > val.length - 2, $array: val,
+                        $prev: i ? val[i - 1] : '', $next: i < val.length - 1 ? val[i + 1] : ''
                     })
                 }
                 return processCondition(val?.length, 1)

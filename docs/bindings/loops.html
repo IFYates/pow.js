@@ -68,6 +68,12 @@
                 <li>
                     <code class="expr">$last</code>: <code class="js">true</code> if this is the last item in the array.
                 </li>
+                <li pow if="version(3.6)">
+                    <code class="expr">$prev</code>: The previous item in the array.
+                </li>
+                <li pow if="version(3.6)">
+                    <code class="expr">$next</code>: The next item in the array.
+                </li>
             </ul>
         </template>
         <template pow else>
