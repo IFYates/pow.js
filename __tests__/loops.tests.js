@@ -148,10 +148,26 @@ test.each([[null], [[]]])('Post-loop conditions are used if no loop', (arr) => {
   expect(document.body.innerHTML).toBe('<div>None</div>')
 })
 
-test.each([ [true, '1, 2, 3, '], [false, ''] ])('Loop binding processed after conditional', (condition, expected) => {
+test.each([[true, '1, 2, 3, '], [false, '']])('Loop binding processed after conditional', (condition, expected) => {
   document.body.innerHTML = '<template pow if="check" array="list">{{ $data }}, </template>'
 
-  pow.apply(document.body, { check: condition, list: [ 1, 2, 3 ] })
+  pow.apply(document.body, { check: condition, list: [1, 2, 3] })
 
   expect(document.body.innerHTML).toBe(expected)
+})
+
+test('Can access "prev" in loop', () => {
+  document.body.innerHTML = '<div pow array>{{ $data }}: {{ $prev }}</div>'
+
+  pow.apply(document.body, [1, 2, 3])
+
+  expect(document.body.innerHTML).toBe('<div>1: </div><div>2: 1</div><div>3: 2</div>')
+})
+
+test('Can access "next" in loop', () => {
+  document.body.innerHTML = '<div pow array>{{ $data }}: {{ $next }}</div>'
+
+  pow.apply(document.body, [1, 2, 3])
+
+  expect(document.body.innerHTML).toBe('<div>1: 2</div><div>2: 3</div><div>3: </div>')
 })
