@@ -4,7 +4,7 @@ param (
 
 # Copy items to IO
 $dest = "$PSScriptRoot/../ifyates.github.io/pow.js"
-@('coverage', 'examples', 'src') | ForEach-Object {
+@('coverage', 'examples') | ForEach-Object {
     Remove-Item -Path "$dest/$_" -Recurse -Force
     Copy-Item -Path "$PSScriptRoot/$_" -Recurse -Destination "$dest/$_"
 }
@@ -13,9 +13,13 @@ $dest = "$PSScriptRoot/../ifyates.github.io/pow.js"
 $package = (ConvertFrom-Json (Get-Content "$PSScriptRoot/package.json" -Raw))
 $version = $package.version.Split('.')[0..1] -join '.'
 Remove-Item -Path "$dest/v$version" -Recurse -Force -ErrorAction Ignore
-Copy-Item -Path "$PSScriptRoot/dist" -Recurse -Destination "$dest/v$version"
+New-Item -Path "$dest/v$version" -ItemType Directory | Out-Null
+Copy-Item -Path "$PSScriptRoot/src/*" -Recurse -Destination "$dest/v$version"
+Copy-Item -Path "$PSScriptRoot/dist/*" -Recurse -Destination "$dest/v$version"
 Remove-Item -Path "$dest/latest" -Recurse -Force
-Copy-Item -Path "$PSScriptRoot/dist" -Recurse -Destination "$dest/latest"
+New-Item -Path "$dest/latest" -ItemType Directory | Out-Null
+Copy-Item -Path "$PSScriptRoot/src/*" -Recurse -Destination "$dest/latest"
+Copy-Item -Path "$PSScriptRoot/dist/*" -Recurse -Destination "$dest/latest"
 
 # Documentation
 Remove-Item -Path "$dest/docs" -Recurse -Force

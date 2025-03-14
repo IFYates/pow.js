@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.6.0
+ * @version 3.7.0
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
