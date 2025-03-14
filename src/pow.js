@@ -6,7 +6,7 @@
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
-const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot'
+const B_ARRAY = 'array', B_DATA = 'data', B_EACH = 'each', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot'
 const B_TEMPLATE = 'template', B_TRANSFORM = 'transform'
 const CONTENT = 'content', FUNCTION = 'function', INN_HTML = 'innerHTML'
 const OUT_HTML = 'outerHTML', REPLACE = 'replace', REPLACE_WITH = 'replaceWith'
@@ -103,7 +103,7 @@ const bind = (root) => {
             // Some logic requires resolved expressions
             val = _ => val = (value ? forceExpr(value) : state[P_DATA])
 
-            if (name == B_ARRAY) { // Element loop
+            if (name == B_ARRAY || (name == B_EACH && element.localName == B_TEMPLATE)) { // Element loop
                 val = !val() | Array.isArray(val) ? val
                     : Object.entries(val).map(([key, value]) => ({ key, value }))
                 for (let i = 0; i < val?.length; ++i) {
@@ -114,6 +114,26 @@ const bind = (root) => {
                         [P_PARENT]: state, $index: i, $first: !i, $last: i > val.length - 2, $array: val,
                         $prev: i ? val[i - 1] : '', $next: i < val.length - 1 ? val[i + 1] : ''
                     })
+                }
+                return processCondition(val?.length, 1)
+            } else if (name == B_EACH) { // Content loop
+                val = !val() | Array.isArray(val) ? val
+                    : Object.entries(val).map(([key, value]) => ({ key, value }))
+                if (val?.length) {
+                    const dest = $cloneNode(element)
+                    element.parentNode.insertBefore(dest, element)
+                    dest[INN_HTML] = ''
+                    for (let i = 0; i < val?.length; ++i) {
+                        const child = $cloneNode(element)
+                        element.parentNode.insertBefore(child, element)
+                        processElement(child, {
+                            ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, [P_DATA]: val[i],
+                            [P_PARENT]: state, $index: i, $first: !i, $last: i > val.length - 2, $array: val,
+                            $prev: i ? val[i - 1] : '', $next: i < val.length - 1 ? val[i + 1] : ''
+                        })
+                        dest[INN_HTML] += child[INN_HTML]
+                        child.remove()
+                    }
                 }
                 return processCondition(val?.length, 1)
             } else if (name == B_DATA) { // Data binding
