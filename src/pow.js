@@ -139,11 +139,42 @@ const bind = (root) => {
                 continue
             }
 
-            // Some logic requires resolved expressions
-            val = _ => val = (value ? forceExpr(value) : state[P_DATA])
+            // Resolve value to expression or text
+            var isBinding = [B_ARRAY, B_DATA, B_IF, B_IFNOT].includes(name)
+            var isInterpolatedAttribute = name[0] == ':'
+            var isDataAttribute = name.at(-1) == ':'
+            MOUSTACHE_RE.lastIndex = 0
+            var match
+            if (!value) {
+                val = isBinding | isInterpolatedAttribute | isDataAttribute ? state[P_DATA] : value
+            } else if (match = MOUSTACHE_RE.exec(value)) {
+                val = match[0].length + match.index == value.length
+                    // Treat value of a single moustache as an expression    
+                    ? resolveExpr(match[1], 1)
+                    // Parse all value
+                    : parseExprs(value)
+            } else {
+                // Treat value without moustaches as an expression
+                val = isBinding | isInterpolatedAttribute | isDataAttribute ? resolveExpr(value, 1) : value
+            }
+
+            // If Promise:
+            // - put attribute back as $data
+            // - replace element with template to be resolved later
+            // - include siblings in template + resolve 'else' now
+            if (val instanceof Promise) {
+                var id = $randomId()
+                $replace(element, `<template id="${id}">${$escape(element[OUT_HTML])}</template>`)
+                val.then(r => {
+                    var el = $selectChild(root, '#' + id)[0]
+                    $attr.set(el, name, `{{ '${$escape(r, isRoot)}' }}`)
+                    processElement(el, state, 1)
+                })
+                return
+            }
 
             if (name == B_ARRAY) { // Element loop
-                val = !val() | Array.isArray(val) ? val
+                val = !val | Array.isArray(val) ? val
                     : Object.entries(val).map(([key, value]) => ({ key, value }))
                 for (let i = 0; i < val?.length; ++i) {
                     const child = $cloneNode(element)
@@ -157,10 +188,9 @@ const bind = (root) => {
                 return processCondition(val?.length, 1)
             }
             if (name == B_DATA) { // Data binding
-                val = (value ? forceExpr(value, 1) : state[P_DATA])
+                //val = (value ? forceExpr(value, 1) : state[P_DATA])
                 if (val instanceof Promise) {
                     var id = $randomId()
-                    console.log(element[OUT_HTML])
                     $replace(element, `<template id="${id}">${$escape(element[OUT_HTML])}</template>`)
                     val.then(r => processElement($selectChild(root, '#' + id)[0], { ...state, [P_DATA]: r }, 1))
                     return
@@ -172,18 +202,23 @@ const bind = (root) => {
                         [P_DATA]: val, [P_PARENT]: state
                     }, isRoot)
             }
-            if (name[0] == ':') { // Interpolated attribute
-                if (val())
+            if (isInterpolatedAttribute) { // Interpolated attribute
+                if (val)
                     $attr.set(element, name.slice(1), val)
                 return processElement(element, state, isRoot)
             }
             if (name == B_IF | name == B_IFNOT) { // Conditional element
-                if (processCondition((name == B_IF) != !val()))
+                if (processCondition((name == B_IF) != !val))
                     return // Removed as inactive
-            } else if (name.at(-1) == ':') { // Data attribute
-                state = { ...state, [P_DATA]: { ...state[P_DATA], [name.slice(0, -1)]: val() } }
-            } else if (val = $escape(parseExprs(value), isRoot)) { // Standard attribute
-                $attr.set(element, name, val)
+            } else if (isDataAttribute) { // Data attribute
+                state = { ...state, [P_DATA]: { ...state[P_DATA], [name.slice(0, -1)]: val } }
+            } else if (val instanceof Function) {
+                // Bind function for later
+                const fn = val
+                window[_id][val = $randomId()] = (target) => fn.call(target, cloneState(state))
+                $attr.set(element, name, `${_id}.${val}(this)`)
+            } else if (val) { // Standard attribute
+                $attr.set(element, name, $escape('' + val, isRoot))
             }
         }
 
