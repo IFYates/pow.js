@@ -18,6 +18,9 @@ const $escape = (text, skip) => skip ? text : text[REPLACE](/({|p)({|ow)/g, '$1â
 const $randomId = _ => '_' + Math.random().toString(36).slice(2)
 const $replace = (el, html) => el?.[REPLACE_WITH](document.createRange().createContextualFragment(html)) // TODO: better solution
 const $selectChild = (el, selector) => (el[CONTENT] ?? el).querySelectorAll(selector)
+const $cloneState = (state) => ({
+    ...state[P_DATA], ...state, [P_PARENT]: state[P_PARENT] && $cloneState(state[P_PARENT])
+})
 
 const bind = (root) => {
     const _originalHTML = root[INN_HTML], _attributes = [...root.attributes]
@@ -33,7 +36,7 @@ const bind = (root) => {
                 console.warn('Interpolation failed', { [P_PATH]: state[P_PATH], expr }, e)
             }
         }
-        const resolveExpr = (expr, raw, context = cloneState(state)) => {
+        const resolveExpr = (expr, raw, context = $cloneState(state)) => {
             // Execute the expression as JS code, mapping to the state data
             var value = evalExpr(expr, context)
             if (raw | !value)
@@ -51,29 +54,29 @@ const bind = (root) => {
             if (!value.call)
                 return value
 
+            // TODO: drop in v4
             // If the result is a function, bind it for later
             window[_id][raw = $randomId()] = (target) => value.call(target, context)
             return `${_id}.${raw}(this)`
         }
-        const cloneState = (state) => ({
-            ...state[P_DATA], ...state, [P_PARENT]: state[P_PARENT] && cloneState(state[P_PARENT])
-        })
 
         // Interpolates a string as a moustache expression even if it doesn't contain moustaches
-        const forceExpr = (text, raw, match) => {
+        const resolve2 = (text, assumeExpr, context = $cloneState(state), match) => {
             MOUSTACHE_RE.lastIndex = 0
-            return !(match = MOUSTACHE_RE.exec(text))
-                // Treat text without moustaches as an expression
-                ? resolveExpr(text, raw)
-                : match[0].length + match.index == text.length
-                    // Treat text of a single moustache as an expression
-                    ? resolveExpr(match[1], raw)
-                    // Parse all text
-                    : parseExprs(text)
+            if (!text)
+                return assumeExpr ? state[P_DATA] : text
+            if (match = MOUSTACHE_RE.exec(text))
+                return match[0].length + match.index == text.length
+                    // Treat value of a single moustache as an expression    
+                    ? evalExpr(match[1], context)
+                    // Parse all value
+                    : parseExprs(text, context)
+            // Treat value without moustaches as an expression
+            return assumeExpr ? evalExpr(text, context) : text
         }
 
         // Interpolates all moustache expressions in text
-        const parseExprs = (text) => text[REPLACE](MOUSTACHE_RE, (_, expr) => resolveExpr(expr) ?? '')
+        const parseExprs = (text, context) => text[REPLACE](MOUSTACHE_RE, (_, expr) => resolveExpr(expr, context) ?? '')
 
         // Allow sibling 'else' based on condition
         const processCondition = (active, alwaysRemove, sibling = element.nextElementSibling) => {
@@ -121,7 +124,7 @@ const bind = (root) => {
             }
 
             if (name == B_TRANSFORM) { // Transformation function
-                transformFunction = forceExpr(value, 1)
+                transformFunction = resolve2(value, 1)
                 continue
             }
             if (name == 'section' && value) { // Render section
@@ -140,37 +143,42 @@ const bind = (root) => {
             }
 
             // Resolve value to expression or text
-            var isBinding = [B_ARRAY, B_DATA, B_IF, B_IFNOT].includes(name)
+            //var isBinding = [B_ARRAY, B_DATA, B_IF, B_IFNOT].includes(name)
+            var isBinding = name == B_ARRAY | name == B_DATA | name == B_IF | name == B_IFNOT
             var isInterpolatedAttribute = name[0] == ':'
             var isDataAttribute = name.at(-1) == ':'
-            MOUSTACHE_RE.lastIndex = 0
-            var match
-            if (!value) {
-                val = isBinding | isInterpolatedAttribute | isDataAttribute ? state[P_DATA] : value
-            } else if (match = MOUSTACHE_RE.exec(value)) {
-                val = match[0].length + match.index == value.length
-                    // Treat value of a single moustache as an expression    
-                    ? resolveExpr(match[1], 1)
-                    // Parse all value
-                    : parseExprs(value)
-            } else {
-                // Treat value without moustaches as an expression
-                val = isBinding | isInterpolatedAttribute | isDataAttribute ? resolveExpr(value, 1) : value
-            }
+            val = resolve2(value, isBinding | isInterpolatedAttribute | isDataAttribute)
 
-            // If Promise:
-            // - put attribute back as $data
-            // - replace element with template to be resolved later
+            // If Promise, store element until it can be resolved
             // - include siblings in template + resolve 'else' now
             if (val instanceof Promise) {
                 var id = $randomId()
-                $replace(element, `<template id="${id}">${$escape(element[OUT_HTML])}</template>`)
-                val.then(r => {
+                var html = element[OUT_HTML]
+                var sib = element.nextElementSibling
+                var elseEl = null
+                while (sib && sib.attributes.pow && sib.attributes.else) {
+                    html += sib[OUT_HTML]
+
+                    if (!sib.attributes.if && !sib.attributes.ifnot) {
+                        $attr.rem(sib, B_ELSE)
+                        elseEl = $randomId()
+                        sib.id = elseEl
+                        continue
+                    }
+
+                    var next = sib.nextElementSibling
+                    sib.remove()
+                    sib = next
+                }
+
+                $replace(element, `<template id="${id}">${$escape(html)}</template>`)
+                return val.then(r => {
                     var el = $selectChild(root, '#' + id)[0]
                     $attr.set(el, name, `{{ '${$escape(r, isRoot)}' }}`)
                     processElement(el, state, 1)
+                    if (elseEl)
+                        $selectChild(root, '#' + elseEl)[0].remove()
                 })
-                return
             }
 
             if (name == B_ARRAY) { // Element loop
@@ -188,13 +196,6 @@ const bind = (root) => {
                 return processCondition(val?.length, 1)
             }
             if (name == B_DATA) { // Data binding
-                //val = (value ? forceExpr(value, 1) : state[P_DATA])
-                if (val instanceof Promise) {
-                    var id = $randomId()
-                    $replace(element, `<template id="${id}">${$escape(element[OUT_HTML])}</template>`)
-                    val.then(r => processElement($selectChild(root, '#' + id)[0], { ...state, [P_DATA]: r }, 1))
-                    return
-                }
                 return processCondition(val != null)
                     ? 0 // Removed as inactive
                     : processElement(element, {
@@ -215,7 +216,7 @@ const bind = (root) => {
             } else if (val instanceof Function) {
                 // Bind function for later
                 const fn = val
-                window[_id][val = $randomId()] = (target) => fn.call(target, cloneState(state))
+                window[_id][val = $randomId()] = (target) => fn.call(target, $cloneState(state))
                 $attr.set(element, name, `${_id}.${val}(this)`)
             } else if (val) { // Standard attribute
                 $attr.set(element, name, $escape('' + val, isRoot))
