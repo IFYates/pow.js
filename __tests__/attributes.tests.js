@@ -31,7 +31,7 @@ test.each([[false, 'false'], [0, '0'], [null, ''], [undefined, ''], ['', '']])('
   expect(document.body.innerHTML).toBe(`<div class="${expected}"></div>`)
 })
 
-test.each([[false, ' class="false"'], [0, ' class="0"'], [null, ''], [undefined, ''], ['', '']])('Attribute falsy templates on bound elements are removed', (value, expected) => {
+test.each([[false, ''], [0, ''], [null, ''], [undefined, ''], ['', '']])('Attribute falsy templates on bound elements are removed', (value, expected) => {
   document.body.innerHTML = '<div pow class="{{ value }}"></div>'
 
   pow.apply(document.body, { value })
