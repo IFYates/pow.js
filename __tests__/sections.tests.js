@@ -85,4 +85,12 @@ test('Can dynamically name sections', () => {
   expect(document.body.innerHTML).toMatch(/^<div id="\w+">One<\/div><div id="\w+">Three<\/div>$/)
 })
 
-// TODO: $section tests + multiple sections
+test('Can reference current section', () => {
+  document.body.innerHTML = '<div pow section="test">{{ ++$data.count }} <button onclick="{{ $section }}">Refresh</button></div>'
+
+  let count = 0
+  pow.apply(document.body, { count })
+
+  document.getElementsByTagName('button')[0].click()
+  expect(document.body.innerHTML).toMatch(/^<div id="\w+">2 <button onclick="[^"]+">Refresh<\/button><\/div>$/)
+})

@@ -38,7 +38,7 @@
                 <template pow array="pages">
                     <!-- Item with children -->
                     <template pow if="this.children">
-                        <pow:navitem if="id"></pow:navitem>
+                        <pow:navitem if="this.id"></pow:navitem>
                         <a pow else class="sidebar-link text-decoration-none p-2">
                             <i class="fa-fw {{ icon }} me-3"></i>
                             <span class="hide-on-collapse">{{ fn(name) }}</span>
@@ -48,7 +48,7 @@
                     </template>
 
                     <!-- Item without children -->
-                    <template pow else template="navitem"></template>
+                    <pow:navitem else></pow:navitem>
                 </template>
             </div>
         </nav>
@@ -81,12 +81,13 @@
 
     <!-- Display templates -->
     <template id="example">
-        <div class="example">
+        <div class="example" pow :section="$path">
             <pre pow if="$content.data" class="example-data"><code class="js"><param id="data" /></code></pre>
             <pre pow class="live-example" :style="this.live ? 'grid-row: span 2' : ''">{{ $content.code }}</pre>
-            <pre></pre>
+            <pre><!-- Populated by examples.js --></pre>
             <pre pow if="$content.extra" class="example-code">{{ $content.extra }}</pre>
             <pre pow if="this.live" class="example-live"></pre>
+            <button pow onclick="{{ $section }}" title="Reset this example"><i class="fa-fw fas fa-refresh me-3"></i></button>
         </div>
     </template>
     <template id="navitem">

@@ -91,9 +91,9 @@ const bind = (root) => {
                 // TODO: async support?
                 continue
             } else if (name == 'section' && value) { // Store render section
+                // TODO: allow unnamed section? `value = (value || $randomId())`
                 element.id = element.id || $randomId()
-                const copy = { element: $cloneNode(element), state: { ...state, $section: _sections[value] } }
-                _sections[value] = (data) => {
+                state.$section = _sections[value] = (data) => {
                     copy.state[P_DATA] = data ?? copy.state[P_DATA]
                     val = $cloneNode(copy.element)
                     return _exec(val, _ => {
@@ -101,6 +101,7 @@ const bind = (root) => {
                         processElement(val, copy.state, 1)
                     })
                 }
+                const copy = { element: $cloneNode(element), state: { ...state } }
                 continue
             }
 
@@ -146,10 +147,8 @@ const bind = (root) => {
                 $replace(element, `<${B_TEMPLATE} id="${val = $randomId()}"></${B_TEMPLATE}>`)
                 return promise.then(r => {
                     el = $selectChild(root, val)
-                    el.innerHTML = html
-                    state.$async = r // Undocumented; do not reference
-                    $attr.set(el.content.firstChild, name, '{{ $async }}')
-                    processElement(el, state, 1)
+                    el.innerHTML = html.replace(' ', ` ${name}="{{ $async }}" `)
+                    processElement(el, { ...state, $async: r }, 1)
                     if (elseId)
                         $replace($selectChild(root, elseId), '')
                 })

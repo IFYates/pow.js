@@ -60,6 +60,7 @@ const nav = {
             name: 'Features',
             icon: 'fas fa-cogs',
             children: [
+                { id: 'features-async', name: 'Async', visible: () => activeVersion >= 3.7 },
                 { id: 'features-interaction', name: 'Interactivity' },
                 { id: 'features-reactivity', name: 'Reactivity' },
                 { id: 'features-custom', name: 'Custom elements', visible: () => activeVersion >= 2.2 },

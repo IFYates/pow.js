@@ -53,13 +53,13 @@
         Root rendered {{ $data.count += 1 }} times.&lt;br />
         Last at {{ Date() }}
     &lt;/p>
-    &lt;p pow section="sub">
+    &lt;p pow section="sub1">
         Section rendered {{ $data.subCount += 1 }} times.&lt;br />
         Last at {{ Date() }}
     &lt;/p>
     
     &lt;button onclick="{{ refreshBody }}">Full refresh&lt;/button>
-    &lt;button onclick="{{ refreshSection.bind(this, 'sub') }}">Refresh section&lt;/button>
+    &lt;button onclick="{{ refreshSection.bind(this, 'sub1') }}">Refresh section&lt;/button>
 &lt;/body></template>
         <pre class="example-live" style="background-color:white"></pre>
     </pow:example>
@@ -77,7 +77,7 @@
     Root rendered {{ $data.count += 1 }} times.&lt;br />
     Last at {{ Date() }}
 &lt;/p>
-&lt;p pow section="sub">
+&lt;p pow data="$data" section="sub2">
     Section rendered {{ $data.subCount += 1 }} times.&lt;br />
     Last at {{ Date() }}&lt;br />
     &lt;button onclick="{{ $section }}">Refresh self&lt;/button>
