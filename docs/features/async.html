@@ -1,0 +1,48 @@
+<h1>Async</h1>
+
+<block>
+    <p class="full">
+        <pow:pow></pow:pow> can be used to load data asynchronously, using native <code class="js">async</code> functions
+        and <code class="js">Promise</code>s in placeholders, as long as it is the entire content of the placeholder.
+    </p>
+
+    <p>
+        The result will be displayed once resolved, after the rest of the template has been processed.
+    </p>
+    <pow:example live:="1">
+        <template id="data">{ s1: new Promise(resolve => setTimeout(() => resolve('One second'), 1000)), s2: new Promise(resolve => setTimeout(() => resolve('Two seconds'), 2000)), s3: new Promise(resolve => setTimeout(() => resolve('Three seconds'), 3000)) }</template>
+        <template id="code">&lt;div><span class="expr">{{ s1 }}</span>&lt;/div>
+&lt;div><span class="expr">{{ s2 }}</span>&lt;/div>
+&lt;div><span class="expr">{{ s3 }}</span>&lt;/div></template>
+    </pow:example>
+    
+    <p>
+        This also works with any of the <pow:nav id:="'bindings'">bindings</pow:nav>, with the
+        <span class="expr">$async</span> <pow:nav id:="'syntax'" hash:="'internal-values'">variable</pow:nav> containing
+        the last resolved asynchronous data.
+    </p>
+    <pow:example live:="1">
+        <template id="data">{ s1: new Promise(resolve => setTimeout(() => resolve('One second'), 1000)), s2: new Promise(resolve => setTimeout(() => resolve('Two seconds'), 2000)), s3: new Promise(resolve => setTimeout(() => resolve('Three seconds'), 3000)) }</template>
+        <template id="code">&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">s1</span>"><span class="expr">{{ $data }}</span>&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">if</span>="<span class="expr">s2</span>"><span class="expr">{{ $async }}</span>&lt;/div>
+&lt;span <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">s3</span>"><span class="expr">{{ value }}:</span>&lt;/div></template>
+    </pow:example>
+</block>
+
+<block id="async-else">
+    <h2><code class="attr">else</code></h2>
+
+    <p>
+        All sibling <pow:nav id:="'conditions'">conditional</pow:nav> bindings will be deferred until the asynchronous
+        data has been resolved, with any final <code class="attr">else</code> binding resolved first and removed after.<br />
+        The expected "else" functionality for asynchronous resolution can be achieved using a blank
+        <span class="attr">else if</span> binding.
+    </p>
+    <pow:example live:="1">
+        <template id="data">{ value: new Promise(resolve => setTimeout(() => resolve(1), 1000)) }</template>
+        <template id="code">&lt;div <span class="pow">pow</span> <span class="attr">data</span>="<span class="expr">value</span>" <span class="attr">if</span>="<span class="expr">$data == 1</span>">Value is 1&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else if</span>="<span class="expr">$async > 1</span>">Value more than 1&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else if</span>>Must be less than 1&lt;/div>
+&lt;div <span class="pow">pow</span> <span class="attr">else</span>>Evaluating value...&lt;/div></template>
+    </div>
+</block>
