@@ -31,7 +31,7 @@ test.each([[false, 'false'], [0, '0'], [null, ''], [undefined, ''], ['', '']])('
   expect(document.body.innerHTML).toBe(`<div class="${expected}"></div>`)
 })
 
-test.each([[false, ' class="false"'], [0, ' class="0"'], [null, ''], [undefined, ''], ['', '']])('Attribute falsy templates on bound elements are removed', (value, expected) => {
+test.each([[false, ''], [0, ' class="0"'], [null, ''], [undefined, ''], ['', '']])('Attribute falsy templates on bound elements are removed', (value, expected) => {
   document.body.innerHTML = '<div pow class="{{ value }}"></div>'
 
   pow.apply(document.body, { value })
@@ -55,12 +55,16 @@ test(':attributes on bound elements are resolved (moustache)', () => {
   expect(document.body.innerHTML).toBe('<div class="attribute"></div>')
 })
 
-test(':attributes on bound elements are resolved (multi-part moustache)', () => {
-  document.body.innerHTML = '<div pow :class="[{{ value }}]"></div>'
+test.each([
+  ['[attr{{ value }}', 'ibute]', '[attribute]'],
+  ['[{{ value }}]', 'attribute', '[attribute]'],
+  ['[{{ value }}]', null, '[]']
+])(':attributes on bound elements are resolved (multi-part moustache)', (template, value, expected) => {
+  document.body.innerHTML = `<div pow :class="${template}"></div>`
 
-  pow.apply(document.body, { value: 'attribute' })
+  pow.apply(document.body, { value })
 
-  expect(document.body.innerHTML).toBe('<div class="[attribute]"></div>')
+  expect(document.body.innerHTML).toBe(`<div class="${expected}"></div>`)
 })
 
 test(':attributes on unbound elements are not resolved', () => {
@@ -121,9 +125,9 @@ test('Empty attributes on bound elements are removed', () => {
 })
 
 test('Data attributes add data to current state', () => {
-  document.body.innerHTML = '<div pow data="child"><div pow before="{{ value }}" value:="1" after="{{ value }}">{{ value }}</div><div outside="{{ value }}">{{ value }}</div></div>'
+  document.body.innerHTML = '<div pow data="child"><div pow before="{{ value }}" value:="num" after="{{ value }}">{{ value }}</div><div outside="{{ value }}">{{ value }}</div></div>'
 
-  pow.apply(document.body, { child: { value: 2 } })
+  pow.apply(document.body, { child: { num: 1, value: 2 } })
 
   expect(document.body.innerHTML).toBe('<div><div before="2" after="1">1</div><div outside="2">2</div></div>')
 })
