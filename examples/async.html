@@ -2,18 +2,27 @@
 <html>
 
 <head>
+    <script>
+        window.fn = async (val, delay = 2000) => new Promise((resolve) => {
+            setTimeout(() => resolve(val), delay);
+        })
+    </script>
     <script type="module">
         import pow from '../src/pow.js'
+
+        const delay = async (data, delay) => new Promise((resolve) => {
+            setTimeout(() => resolve(data), delay)
+        })
 
         const data = {
             "url": "https://github.com/IFYates/pow.js",
             "title": "pow.js",
             "description": "An extremely small and lightweight templating framework.",
-            "tags": ["javascript", "templating", "framework"],
-            "creation": {
-                "author": "IFYates",
-                "date": "2024-12-09"
-            }
+            "tags": delay(["javascript", "templating", "framework"], 4000),
+            "creation": async () => await delay({
+                "author": async () => await delay("Ian Yates", 1000),
+                "date": delay.bind(null, "2024-12-09", 2000)
+            }, 1000)
         }
         pow.apply(document.body, data)
     </script>
@@ -23,12 +32,13 @@
     <h1>{{ title }}</h1>
     <h2>{{ description }}</h2>
     <p><a href="{{ url }}">See project page</a></p>
-    <p pow data="creation">
+    <p pow data="{{ creation() }}">
         Created by <em>{{ author }}</em> on {{ date }}
     </p>
+    <p pow else>Loading...</p>
     <p>
-        Tags ({{ tags.length }}):
-        <template pow array="tags">
+        Tags:
+        <template pow array="{{ tags }}">
             <span>[{{ $data }}]</span><span pow ifnot="$last">, </span>
         </template>
         <span pow else>

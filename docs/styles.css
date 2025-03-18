@@ -130,6 +130,7 @@ block {
 }
 
 div.example {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
     row-gap: 2px;
@@ -215,6 +216,15 @@ div.example pre.example-live iframe {
     width: 100%;
 }
 
+div.example > button {
+    position: absolute;
+    border: 0;
+    bottom: 0;
+    background-color: transparent;
+    color: white;
+    text-shadow: 0 -1px black, -1px 0 black, 0 1px black, 1px 0 black;
+}
+
 .element {
     position: relative;
 }
@@ -230,7 +240,6 @@ pre.example-data::before {
     z-index: 0;
     right: 8px;
     bottom: 3px;
-    font-size: 1.5rem;
     pointer-events: none;
 }
 
