@@ -1,6 +1,25 @@
 import pow from '../src/pow.js'
 
 window.fn = (value) => typeof value == 'function' ? value() : value
+window.pow_versions = [
+    '3.7',
+    '3.6',
+    '3.5',
+    '3.4',
+    '3.3',
+    '3.2',
+    '3.1',
+    '3.0',
+    '2.3',
+    '2.2',
+    '2.1',
+    '2.0',
+    '1.4',
+    '1.3',
+    '1.2',
+    '1.1',
+    '1.0'
+]
 
 const nav = {
     current: location.search?.match(/^\?\/([^\/]+)\/?$/) ? RegExp.$1 : 'home',
@@ -16,24 +35,7 @@ const nav = {
         return false
     },
 
-    versions: [
-        '3.6',
-        '3.5',
-        '3.4',
-        '3.3',
-        '3.2',
-        '3.1',
-        '3.0',
-        '2.3',
-        '2.2',
-        '2.1',
-        '2.0',
-        '1.4',
-        '1.3',
-        '1.2',
-        '1.1',
-        '1.0'
-    ],
+    versions: window.pow_versions,
 
     pages: [
         { id: 'home', name: 'Introduction', icon: 'fas fa-home' },
