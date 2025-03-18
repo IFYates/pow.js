@@ -113,7 +113,7 @@ const bind = (root) => {
                 val = implicitExpr ? state[P_DATA] : value
             } else if (val = MOUSTACHE_RE.exec(value)) {
                 // Treat value of a single moustache as an expression    
-                if (val[0].length + val.index == value.length) {
+                if (val[0].length == value.length) {
                     val = evalExpr(val[1])
                 } else {
                     // Parse all values

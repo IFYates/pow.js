@@ -55,12 +55,16 @@ test(':attributes on bound elements are resolved (moustache)', () => {
   expect(document.body.innerHTML).toBe('<div class="attribute"></div>')
 })
 
-test(':attributes on bound elements are resolved (multi-part moustache)', () => {
-  document.body.innerHTML = '<div pow :class="[{{ value }}{{ none }}]"></div>'
+test.each([
+  ['[attr{{ value }}', 'ibute]', '[attribute]'],
+  ['[{{ value }}]', 'attribute', '[attribute]'],
+  ['[{{ value }}]', null, '[]']
+])(':attributes on bound elements are resolved (multi-part moustache)', (template, value, expected) => {
+  document.body.innerHTML = `<div pow :class="${template}"></div>`
 
-  pow.apply(document.body, { value: 'attribute', none: null })
+  pow.apply(document.body, { value })
 
-  expect(document.body.innerHTML).toBe('<div class="[attribute]"></div>')
+  expect(document.body.innerHTML).toBe(`<div class="${expected}"></div>`)
 })
 
 test(':attributes on unbound elements are not resolved', () => {
