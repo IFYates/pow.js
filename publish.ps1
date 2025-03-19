@@ -13,9 +13,11 @@ $dest = "$PSScriptRoot/../ifyates.github.io/pow.js"
 $package = (ConvertFrom-Json (Get-Content "$PSScriptRoot/package.json" -Raw))
 $version = $package.version.Split('.')[0..1] -join '.'
 Remove-Item -Path "$dest/v$version" -Recurse -Force -ErrorAction Ignore
-Copy-Item -Path "$PSScriptRoot/dist" -Recurse -Destination "$dest/v$version"
+Copy-Item -Path "$PSScriptRoot/src" -Recurse -Destination "$dest/v$version"
+Copy-Item -Path "$PSScriptRoot/dist/*" -Recurse -Destination "$dest/v$version"
 Remove-Item -Path "$dest/latest" -Recurse -Force
-Copy-Item -Path "$PSScriptRoot/dist" -Recurse -Destination "$dest/latest"
+Copy-Item -Path "$PSScriptRoot/src" -Recurse -Destination "$dest/latest"
+Copy-Item -Path "$PSScriptRoot/dist/*" -Recurse -Destination "$dest/latest"
 
 # Documentation
 Remove-Item -Path "$dest/docs" -Recurse -Force
