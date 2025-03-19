@@ -79,7 +79,7 @@ test('Functions are not removed from unrelated binding', () => {
 
   const bind1 = document.getElementById('bind1')
   pow.apply(bind1, { fn: () => {} })
-  
+
   let bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
   expect(bindingKeys.length).toBe(1)
   expect(Object.keys(window[bindingKeys[0]]).length).toBe(1)
@@ -87,7 +87,7 @@ test('Functions are not removed from unrelated binding', () => {
 
   const bind2 = document.getElementById('bind2')
   pow.apply(bind2, { fn: () => {} })
-  
+
   bindingKeys = Object.keys(window).filter($ => $.startsWith('$pow_'))
   expect(bindingKeys.length).toBe(2)
   expect(Object.keys(window[bindingKeys[1]]).length).toBe(1)
@@ -102,11 +102,19 @@ test('Custom eval interpolation', () => {
   document.body.innerHTML = '[{{ text }}, {{ number }}, {{ fn }}]'
 
   const originalEval = pow._eval
-  
+
   pow._eval = () => 'eval'
   pow.apply(document.body, { text: 'Hello, world!', number: 123, fn: () => {} })
 
   pow._eval = originalEval
 
   expect(document.body.innerHTML).toBe(`[eval, eval, eval]`)
+})
+
+test('Interpolations containing HTML', () => {
+  document.body.innerHTML = '[{{ number > 5 && number < 10 ? "Yes" : "No" }}]'
+
+  pow.apply(document.body, { number: 8 })
+
+  expect(document.body.innerHTML).toBe('[Yes]')
 })
