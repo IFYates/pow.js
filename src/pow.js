@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.7.1
+ * @version 3.7.2
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
@@ -13,10 +13,9 @@ const $attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el
 const $cloneNode = (el) => el.cloneNode(1)
 const $cloneState = (state) => ({ ...state[P_DATA], ...state, [P_PARENT]: state[P_PARENT] && $cloneState(state[P_PARENT]) })
 const $escape = (text, skip) => skip || !text.replace ? text : text.replace(/({|p)({|ow)/g, '$1​$2​')
+const $fragment = (html) => document.createRange().createContextualFragment(html)
 const $randomId = _ => '_' + Math.random().toString(36).slice(2)
-const $replace = (el, html) => el?.isConnected ? el.outerHTML = html
-    // Replace items not in document DOM (TODO: find shorter syntax)
-    : el?.replaceWith(document.createRange().createContextualFragment(html))
+const $replace = (el, html) => el?.isConnected ? el.outerHTML = html : el?.replaceWith($fragment(html)) // Replace items not in document DOM
 const $selectChildren = (el, selector) => (el.content ?? el).querySelectorAll(selector), $selectChild = (el, id) => $selectChildren(el, '#' + id)[0]
 
 const bind = (root) => {
@@ -203,7 +202,7 @@ const bind = (root) => {
         // Parse inner HTML
         html = element.innerHTML.replace(MOUSTACHE_RE, (_, expr) => {
             const context = $cloneState(state)
-            const value = evalExpr(expr, context)
+            const value = evalExpr($fragment(expr).textContent, context)
             if (!value)
                 return value ?? ''
 
