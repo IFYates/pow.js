@@ -9,16 +9,22 @@ cloc src --by-file
 # Extra minification
 function Get-Minified ([Parameter(ValueFromPipeline=$true)][string]$InputObject) {
     $props = @(
-        #'apply'
+        'apply'
         'attributes'
         #'call'
+        #'entries'
+        #'filter'
         'innerHTML'
+        'length'
+        #'map'
+        #'name'
         'nextElementSibling'
         'outerHTML'
         #'refresh'
         'replace'
         'replaceWith'
         #'slice'
+        #'state'
     )
     $vars = ""
     for ($i = 0; $i -lt $props.Length; $i++) {

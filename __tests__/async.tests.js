@@ -93,3 +93,18 @@ test.each([[0, 0, 'none'], [1, 0, 'first'], [0, 1, 'second']])('Asynchronous att
     await resolveValue(valA)
     expect(document.body.innerHTML).toBe(`<div>[<span>${expected}</span>]</div>`)
 })
+
+test('Asynchronous supports table row', async () => {
+    document.body.innerHTML = '<table><tbody><tr pow array="{{ fn }}"><td>{{ $data }}</td></tr></tbody></table>'
+
+    var resolveValue
+    const fn = new Promise((resolve) => {
+        resolveValue = resolve
+    })
+    pow.apply(document.body, { fn })
+
+    expect(document.body.innerHTML).toMatch(/<table><tbody><template id="\w+"><\/template><\/tbody><\/table>/)
+
+    await resolveValue([1, 2, 3])
+    expect(document.body.innerHTML).toBe('<table><tbody><tr><td>1</td></tr><tr><td>2</td></tr><tr><td>3</td></tr></tbody></table>')
+})
