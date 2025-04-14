@@ -57,3 +57,13 @@ test('Custom elements work from templates', () => {
 
   expect(target.innerHTML).toBe('<div>Element</div>')
 })
+
+test.each([ [ 'testelement' ], [ 'Testelement' ], [ 'testElement' ] ])('Does not match capitals', (id) => {
+  document.body.innerHTML = `<div id="main"><pow:${id}></pow:${id}><template pow else>No match</template></div>'
+    + '<template id="TestElement">MATCH</template>`
+
+  const target = document.getElementById('main')
+  pow.apply(target)
+
+  expect(target.outerHTML).toBe('<div id="main">No match</div>')
+})
