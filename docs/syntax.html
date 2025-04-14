@@ -9,7 +9,7 @@
 </blockquote>
 
 <p>
-    <span pow template="pow"></span> uses "moustache" syntax to access data in the current context.
+    <pow:pow></pow:pow> uses "moustache" syntax to access data in the current context.
 </p>
 <pre class="block"><code pow stop class="js">{{ property }}</code></pre>
 <pre class="block"><code pow stop class="js">{{ child.property }}</code></pre>
@@ -42,7 +42,7 @@
 
 <p>
     If a function is used without any arguments, the output will be a bound function reference, which can be
-    used to <span pow template="nav" data="{ id: 'features-interaction', text: 'bind element events' }"></span>.
+    used to <pow:nav id:="'features-interaction'">bind element events</pow:nav>.
 </p>
 <pre class="block"><code pow stop class="js">{{ func }}</code></pre>
 

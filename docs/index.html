@@ -73,13 +73,21 @@
     <div id="preloader" style="display:none">
         <template pow array="pages">
             <div pow if="this.id && !this.url" id="pre-{{ id }}">
-                <html-import src="{{ id }}.html" replace></html-import></div>
+                <html-import src="{{ id }}.html" replace></html-import>
+            </div>
             <div pow array="this.children" ifnot="this.url" id="pre-{{ id }}">
-                <html-import src="{{ id.replace('-', '/').replaceAll('​', '') }}.html" replace></html-import></div>
+                <html-import src="{{ id.replace('-', '/').replaceAll('​', '') }}.html" replace></html-import>
+            </div>
         </template>
     </div>
 
     <!-- Display templates -->
+    <template id="note-warning">
+        <blockquote style="border-left-color:#f75">
+            <i class="fas fa-fw fa-triangle-exclamation"></i>
+            <param></param>
+        </blockquote>
+    </template>
     <template id="example">
         <div class="example" pow :section="$path">
             <pre pow if="$content.data" class="example-data"><code class="js"><param id="data" /></code></pre>
@@ -99,7 +107,7 @@
         </a>
     </template>
     <template id="pow"><code class="font-bold underline">pow💥</code></template>
-    <template id="pow.safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
+    <template id="pow-safe"><code class="underline"><span class="font-bold">pow💥</span>safe</code></template>
     <template id="nav"><a href="?/{{ this.id || $data }}/{{ this.hash ? '#' + this.hash : '' }}"
             onclick="{{ function _() { $root.navigate.call(this, this.id || $data) } }}">{{ this.text }}<param></a></template>
 </body>

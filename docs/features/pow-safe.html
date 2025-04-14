@@ -3,7 +3,7 @@
 <template pow if="version(1.1)">
     <blockquote>
         <pow:nav id:="'syntax'">Full expression support</pow:nav> requires a fully trusted browser environment. In
-        situations where this isn't possible, <template pow template="pow.safe"></template> can be used to replace
+        situations where this isn't possible, <pow:pow-safe></pow:pow-safe> can be used to replace
         dynamic expression parsing with some simpler logic.
     </blockquote>
 
@@ -53,7 +53,7 @@
     <template pow if="version(1.3)">
         <h3>Events</h3>
         <p>
-            <template pow template="pow.safe"></template> will also rebind element events, to remove any dynamic code:
+            <pow:pow-safe></pow:pow-safe> will also rebind element events, to remove any dynamic code:
         </p>
         <pre class="block">&lt;!-- Normal pow event binding -->
 &lt;button onclick="<span pow stop class="expr">{{ clicked }}</span>">&lt;/button></pre>
