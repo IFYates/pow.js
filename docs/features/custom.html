@@ -8,7 +8,8 @@
 
     <pow:note-warning>
         HTML element names are case-insensitive but template IDs are not, so it is advised to use
-        <a href="https://en.wikipedia.org/wiki/Letter_case#Kebab_case">kebab case <i class="fas fa-external-link-alt"></i></a> for template names.
+        <a href="https://en.wikipedia.org/wiki/Letter_case#Kebab_case">kebab-case
+            <i class="fa fa-fw fa-xs fa-external-link"></i></a> for template names.
     </pow:note-warning>
 
     <p>
@@ -34,8 +35,8 @@
 
     <template pow ifnot="version(3.0)">
         <p>
-            Because custom elements work in the same way as templates, the element content is parsed if there is no
-            matching template.
+            Because custom elements work in the same way as templates, the element content is parsed if there
+            is no matching template.
         </p>
         <div class="example">
             <pre class="live-example">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
@@ -46,8 +47,8 @@
     </template>
 
     <p>
-        <pow:nav id:="'bindings-templates'" hash:="'subcontent'">Subcontent</pow:nav> also works the same way as
-        templates.
+        <pow:nav id:="'bindings-templates'" hash:="'subcontent'">Subcontent</pow:nav> also works the same way
+        as templates.
     </p>
     <pow:example pow if="version(3.0)">
         <template id="code">&lt;<span class="pow">pow</span>:<span class="value">my-component</span>>
@@ -69,7 +70,8 @@
 
     <p>
         Because a custom element is a <code class="html">&lt;template&gt;</code> element with a <code
-            class="pow">pow</code> binding, other <pow:pow></pow:pow> binding attributes are directly supported,
+            class="pow">pow</code> binding, other <pow:pow></pow:pow>
+            <pow:nav id:="'bindings'">binding attributes</pow:nav> are directly supported,
             and <pow:nav id:="'bindings-conditions'" hash:="'else'">else</pow:nav> works the same.
     </p>
     <pow:example pow if="version(3.0)">
