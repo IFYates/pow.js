@@ -67,3 +67,13 @@ test.each([ [ 'testelement' ], [ 'Testelement' ], [ 'testElement' ] ])('Does not
 
   expect(target.outerHTML).toBe('<div id="main">No match</div>')
 })
+
+test('Can include complex subcontent', () => {
+  document.body.innerHTML = '<div id="main"><pow:test-element>Hello, <template pow>world!</template></pow:test-element></div>'
+    + '<template id="test-element"><div><param /></div></template>'
+
+  const target = document.getElementById('main')
+  pow.apply(target)
+
+  expect(target.innerHTML).toBe('<div>Hello, world!</div>')
+})

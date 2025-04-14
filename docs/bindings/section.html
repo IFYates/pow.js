@@ -17,21 +17,19 @@
         context or providing a new one for the section.
     </p>
 
-    <blockquote>
-        <i class="fas fa-fw fa-triangle-exclamation"></i> If two sections have the same name, the last one to be
-        processed will override the first.
-    </blockquote>
+    <pow:note-warning>
+        If two sections have the same name, the last one to be processed will override the first.
+    </pow:note-warning>
 
-    <blockquote>
-        <i class="fas fa-fw fa-circle-info"></i> If the parent section is refreshed, all child sections will also be
-        refreshed and lose any subsequent context.
-    </blockquote>
+    <pow:note-info>
+        If the parent section is refreshed, all child sections will also be refreshed and lose any subsequent context.
+    </pow:note-info>
 
-    <blockquote>
-        <i class="fas fa-fw fa-lightbulb"></i> The <span class="value">name</span> value is not parsed, though using an
-        <pow:nav id:="'attributes'" hash:="'interpolated'">interpolated attribute</pow:nav> will have the same
-        effect.
-    </blockquote>
+    <pow:note-idea>
+        The <span class="value">name</span> value is not parsed, though using an
+        <pow:nav id:="'attributes'" hash:="'interpolated'">interpolated attribute</pow:nav>
+        will have the same effect.
+    </pow:note-idea>
 
     <pow:example live:="1">
         <template id="code">

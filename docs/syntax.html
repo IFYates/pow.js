@@ -1,12 +1,10 @@
 <h1>Syntax</h1>
 
-<blockquote pow if="version(1.1)">
-    <i class="fas fa-fw fa-triangle-exclamation"></i> This page only covers core <span pow template="pow"></span>
-    functionality. If you are using
-    <span pow template="nav" data="'features-pow-safe'"><template><span pow
-                template="pow.safe"></span></template></span> refer to
+<pow:note-warning if="version(1.1)">
+    This page only covers core <pow:pow></pow:pow> functionality. If you are using
+    <pow:nav id:="'features-pow-safe'"><pow:pow-safe></pow:pow-safe></pow:nav> refer to
     that page instead, as it has a different support for expressions.
-</blockquote>
+</pow:note-warning>
 
 <p>
     <pow:pow></pow:pow> uses "moustache" syntax to access data in the current context.
@@ -75,12 +73,12 @@
 
 <h2 id="internal-values">Internal values</h2>
 <template pow if="version(1.0, 1.9)">
-    <blockquote>
+    <pow:note-info>
         The original design of <span pow template="pow"></span> only handled very basic expression parsing,
         so using a non-standard character to differentiate internal values from normal data was useful.<br />
         This does mean that some expressions are not possible, such as <code
             class="expr">*root.attr1 == *data.attr2</code>.
-    </blockquote>
+    </pow:note-info>
 
     <p>
         The accessible internal values are:
@@ -108,17 +106,17 @@
         are additional internal values available.
     </p>
 
-    <blockquote>
-        <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
+    <pow:note-warning>
+        If the data context contains a property with the same name as an internal value,
         the internal value <strong>will not be accessible</strong>.
-    </blockquote>
+    </pow:note-warning>
 </template>
 
 <template pow if="version(2.0)">
-    <blockquote>
+    <pow:note-info pow if="version(2.0, 2.9)">
         In order to make better use of the full expression support, the original design has been revised to use only
         standard characters and expose the internal values as normal properties.
-    </blockquote>
+    </pow:note-info>
 
     <p id="internal-values">
         The accessible internal values are:
@@ -143,10 +141,10 @@
         are additional internal values available.
     </p>
 
-    <blockquote>
-        <strong>Note:</strong> If the data context contains a property with the same name as an internal value,
+    <pow:note-warning>
+        If the data context contains a property with the same name as an internal value,
         the data value will need to be accessed through <code class="expr">$data</code> or <code class="js">this</code>.
-    </blockquote>
+    </pow:note-warning>
 </template>
 
 <block id="context">

@@ -6,11 +6,10 @@
         <code class="html"><span class="attr">template</span>="<span class="value">id</span>"</code>
     </p>
 
-    <!-- TODO: is this true? 'template' without 'pow' not being parsed in 3.1 -->
-    <blockquote>
-        Note: Reusable templates should always be stored outside of any bound elements, otherwise they will be modified
+    <pow:note-warning>
+        Reusable templates should always be stored outside of any bound elements, otherwise they will be modified
         along with other elements in the hierarchy.
-    </blockquote>
+    </pow:note-warning>
 
     <template pow if="version(2.0)">
         <p>

@@ -2,7 +2,7 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.7.2
+ * @version 3.7.3
  */
 
 import pow from "./pow.js"
