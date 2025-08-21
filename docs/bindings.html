@@ -2,7 +2,7 @@
 
 <block class="full">
     <p>
-        <template pow template="pow"></template> exposes two static methods for binding an element hierarchy:
+        <pow:pow></pow:pow> exposes two static methods for binding an element hierarchy:
     </p>
     <ul>
         <li><code class="js">pow.apply(element, data)</code> Applies the data to the given element hierarchy and returns
@@ -34,12 +34,12 @@
             <a href="#data"><code class="attr">data</code></a> Change the data context of the current element.
         </li>
         <li>
-            <template pow template="nav" data="'bindings-conditions'">
+            <pow:nav id:="'bindings-conditions'">
                 <code class="attr">if</code>
                 <code class="attr">ifnot</code>
                 <code class="attr">else</code>
                 <code pow ifnot="version(3.0)" class="attr">else-if</code>
-                <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></template>
+                <code pow ifnot="version(3.0)" class="attr">else-ifnot</code></pow:nav>
             Conditional elements.
         </li>
         <li>
@@ -74,12 +74,12 @@
             <a href="#stop"><code class="attr">stop</code></a> Disable further evaluation of this element hierarchy.
         </li>
         <li>
-            <template pow template="nav" data="'bindings-conditions'">
+            <pow:nav id:="'bindings-conditions'">
                 <code class="attr">if</code>
                 <code class="attr">ifnot</code>
                 <code class="attr">else</code>
                 <code class="attr">else-if</code>
-                <code class="attr">else-ifnot</code></template>
+                <code class="attr">else-ifnot</code></pow:nav>
             Conditional elements.
         </li>
         <li>
