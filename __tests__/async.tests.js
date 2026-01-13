@@ -108,3 +108,59 @@ test('Asynchronous supports table row', async () => {
     await resolveValue([1, 2, 3])
     expect(document.body.innerHTML).toBe('<table><tbody><tr><td>1</td></tr><tr><td>2</td></tr><tr><td>3</td></tr></tbody></table>')
 })
+
+const IF = '<div pow if="{{ fn }}">IF</div>'
+const DATA_TRUE = '<div pow else data="{ }">DATA</div>', DATA_FALSE = '<div pow else data="null">DATA</div>'
+const TEMPL_TRUE = '<div pow else template="unknown">X</div><template id="unknown">TEMPL</template>', TEMPL_FALSE = '<div pow else template="unknown">TEMPL</div>'
+const ELSE ='<div pow else>ELSE</div>'
+test('Asynchronous conditional chaining across binding types (IF)', async () => {
+    document.body.innerHTML = IF + DATA_TRUE + TEMPL_TRUE + ELSE
+
+    var resolveValue
+    const fn = new Promise((resolve) => {
+        resolveValue = resolve
+    })
+    pow.apply(document.body, { fn })
+    await resolveValue(true)
+
+    expect(document.body.innerHTML.substring(0, 13)).toBe('<div>IF</div>')
+})
+
+test('Asynchronous conditional chaining across binding types (DATA)', async () => {
+    document.body.innerHTML = IF + DATA_TRUE + TEMPL_TRUE + ELSE
+
+    var resolveValue
+    const fn = new Promise((resolve) => {
+        resolveValue = resolve
+    })
+    pow.apply(document.body, { fn })
+    await resolveValue(false)
+
+    expect(document.body.innerHTML.substring(0, 15)).toBe('<div>DATA</div>')
+})
+
+test('Asynchronous conditional chaining across binding types (TEMPLATE)', async () => {
+    document.body.innerHTML = IF + DATA_FALSE + TEMPL_TRUE + ELSE
+
+    var resolveValue
+    const fn = new Promise((resolve) => {
+        resolveValue = resolve
+    })
+    pow.apply(document.body, { fn })
+    await resolveValue(false)
+
+    expect(document.body.innerHTML.substring(0, 16)).toBe('<div>TEMPL</div>')
+})
+
+test('Asynchronous conditional chaining across binding types (ELSE)', async () => {
+    document.body.innerHTML = IF + DATA_FALSE + TEMPL_FALSE + ELSE
+
+    var resolveValue
+    const fn = new Promise((resolve) => {
+        resolveValue = resolve
+    })
+    pow.apply(document.body, { fn })
+    await resolveValue(false)
+
+    expect(document.body.innerHTML.substring(0, 15)).toBe('<div>ELSE</div>')
+})
