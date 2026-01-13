@@ -25,6 +25,15 @@ An extremely small and lightweight templating framework.
 * Fast enough to be used in a production environment
 * Deterministic output
 
+# Features
+* Dynamic content
+* Interpolated attributes
+* Conditional elements
+* Loops
+* Reusable templates and custom elements
+* Refreshable sections
+* Aynchronous support
+
 # Installation
 Get the [npm module](https://www.npmjs.com/package/pow-templating) or import directly from any javascript module:
 ```js
