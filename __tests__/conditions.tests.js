@@ -79,3 +79,39 @@ test.each([ [1], [2], [3] ])('Conditions work fully with template elements', (va
 
   expect(document.body.innerHTML).toBe(`${value}`)
 })
+
+const IF_TRUE = '<div pow if="true">IF</div>', IF_FALSE = '<div pow if="false">IF</div>'
+const DATA_TRUE = '<div pow else data="{ }">DATA</div>', DATA_FALSE = '<div pow else data="null">DATA</div>'
+const TEMPL_TRUE = '<div pow else template="unknown">X</div><template id="unknown">TEMPL</template>', TEMPL_FALSE = '<div pow else template="unknown">TEMPL</div>'
+const ELSE ='<div pow else>ELSE</div>'
+test('Chains condition across binding types (IF)', () => {
+  document.body.innerHTML = IF_TRUE + DATA_TRUE + TEMPL_TRUE + ELSE
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML.substring(0, 13)).toBe('<div>IF</div>')
+})
+
+test('Chains condition across binding types (DATA)', () => {
+  document.body.innerHTML = IF_FALSE + DATA_TRUE + TEMPL_TRUE + ELSE
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML.substring(0, 15)).toBe('<div>DATA</div>')
+})
+
+test('Chains condition across binding types (TEMPLATE)', () => {
+  document.body.innerHTML = IF_FALSE + DATA_FALSE + TEMPL_TRUE + ELSE
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML.substring(0, 16)).toBe('<div>TEMPL</div>')
+})
+
+test('Chains condition across binding types (ELSE)', () => {
+  document.body.innerHTML = IF_FALSE + DATA_FALSE + TEMPL_FALSE + ELSE
+
+  pow.apply(document.body)
+
+  expect(document.body.innerHTML.substring(0, 15)).toBe('<div>ELSE</div>')
+})
