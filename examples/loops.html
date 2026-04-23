@@ -62,6 +62,22 @@
     <div pow else>Empty array 1</div>
     <div pow array="[]">{{ $data }}</div>
     <div pow else>Empty array 2</div>
+    
+    <hr />
+
+    <h3>Using 'repeat="list"'</h3>
+    <div>
+        <div>There are {{ list.length }} item(s)</div>
+        <ol pow repeat="list">
+            <li pow data="item">
+                <template pow if="$first">The first item</template>
+                <template pow else-if="$last">The last item</template>
+                <template pow else>Item {{ $index + 1 }}</template>
+                is {{ text }}
+            </li>
+        </ol>
+    </div>
+
 </body>
 
 </html>

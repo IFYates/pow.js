@@ -2,6 +2,7 @@ import pow from '../src/pow.js'
 
 window.fn = (value) => typeof value == 'function' ? value() : value
 window.pow_versions = [
+    '3.8',
     '3.7',
     '3.6',
     '3.5',
@@ -48,7 +49,7 @@ const nav = {
             children: [
                 { id: 'bindings-data', name: () => activeVersion >= 2.0 ? 'data' : 'item' },
                 { id: 'bindings-conditions', name: 'if / ifnot / else' },
-                { id: 'bindings-loops', name: 'array' },
+                { id: 'bindings-loops', name: 'array / repeat' },
                 { id: 'bindings-section', name: 'section', visible: () => activeVersion >= 3.3 },
                 { id: 'bindings-stop', hash: 'stop', name: 'stop', visible: () => activeVersion >= 1.4 },
                 { id: 'bindings-templates', name: 'template', visible: () => activeVersion >= 1.2 },

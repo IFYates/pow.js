@@ -1,6 +1,9 @@
 <h1>Loops</h1>
 
 <block>
+    <h2 pow if="version(3.8)">
+        <code class="attr">array</code>
+    </h2>
     <p class="full">
         <strong>Syntax:</strong>
         <code class="html"><span class="attr">array</span>="<span class="expr">expression</span>"</code>
@@ -8,7 +11,7 @@
     </p>
 
     <p>
-        This binding will repeat the element hierarchy for each item in the array.
+        This binding will duplicate the entire element hierarchy for each item in the expression result, including the bound element.
     </p>
     <div class="example">
         <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
@@ -36,6 +39,40 @@
     <div class="example">
         <pre class="live-example">&lt;div>
     &lt;div <span class="pow">pow</span> <span class="attr">array</span>="<span class="expr">[]</span>">
+        Not rendered
+    &lt;/div>
+&lt;/div></pre>
+        <pre></pre>
+    </div>
+</block>
+
+<block pow if="version(3.8)">
+    <h2 pow if="version(3.0)">
+        <code class="attr">repeat</code>
+    </h2>
+    <p class="full">
+        <strong>Syntax:</strong>
+        <code class="html"><span class="attr">repeat</span>="<span class="expr">expression</span>"</code>
+        / <code class="attr">repeat</code>
+    </p>
+
+    <p>
+        As an alternative to <code class="attr">array</code>, <code class="attr">repeat</code> will duplicate only the children of the bound element for each item in the expression result.
+    </p>
+    <div class="example">
+        <pre class="example-data"><code class="js">{ list: [ 1, 2, 3 ] }</code></pre>
+        <pre class="live-example">&lt;div <span class="pow">pow</span> <span class="attr">repeat</span>="<span class="expr">list</span>">
+    &lt;div><span pow ifnot="version(2.0)" class="expr"><span pow stop>{{ *data }}</span></span><span pow if="version(2.0)" class="expr"><span pow stop>{{ $data }}</span></span>&lt;/div>
+&lt;/div></pre>
+        <pre></pre>
+    </div>
+
+    <p>
+        If the expresson evaluates to <code class="js">null</code> or an empty array, the bound element will be rendered without children.
+    </p>
+    <div class="example">
+        <pre class="live-example">&lt;div>
+    &lt;div class="style" <span class="pow">pow</span> <span class="attr">repeat</span>="<span class="expr">[]</span>">
         Not rendered
     &lt;/div>
 &lt;/div></pre>

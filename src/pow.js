@@ -2,11 +2,11 @@
  * @license MIT
  * @author IFYates <https://github.com/ifyates/pow.js>
  * @description A very small and lightweight templating framework.
- * @version 3.7.3
+ * @version 3.8.0
  */
 
 const ATTR_POW = 'pow', P_DATA = '$data', P_PARENT = '$parent', P_PATH = '$path', P_ROOT = '$root'
-const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_TEMPLATE = 'template', B_TRANSFORM = 'transform'
+const B_ARRAY = 'array', B_DATA = 'data', B_ELSE = 'else', B_IF = 'if', B_IFNOT = 'ifnot', B_REPEAT = 'repeat', B_TEMPLATE = 'template', B_TRANSFORM = 'transform'
 const MOUSTACHE_RE = /{{\s*(.*?)\s*}}/gs
 
 const $attr = { set: (el, name, value) => el.setAttribute(name, value), rem: (el, name) => el.removeAttribute(name) }
@@ -107,7 +107,7 @@ const bind = (root) => {
             }
 
             // Resolve value to expression or text
-            const isBinding = name == B_ARRAY | name == B_DATA | name == B_IF | name == B_IFNOT
+            const isBinding = name == B_ARRAY | name == B_DATA | name == B_IF | name == B_IFNOT | name == B_REPEAT
             const isInterpolatedAttribute = name[0] == ':', isDataAttribute = name.at(-1) == ':'
             const implicitExpr = isBinding | isInterpolatedAttribute | isDataAttribute
             MOUSTACHE_RE.lastIndex = 0
@@ -155,19 +155,24 @@ const bind = (root) => {
                 })
             }
 
-            if (name == B_ARRAY) { // Element loop
+            if (name == B_ARRAY | name == B_REPEAT) { // Element loop
                 val = !val | Array.isArray(val) ? val
                     : Object.entries(val).map(([key, value]) => ({ key, value }))
+                const template = name == B_REPEAT && [...element.children].map($cloneNode)
+                template && (element.innerHTML = '')
                 for (let i = 0; i < val?.length; ++i) {
-                    const child = $cloneNode(element)
-                    element.parentNode.insertBefore(child, element)
-                    processElement(child, {
-                        ...state, [P_PATH]: `${state[P_PATH]}.${value || B_ARRAY}[${i}]`, [P_DATA]: val[i],
+                    const childState = {
+                        ...state, [P_PATH]: `${state[P_PATH]}.${value || name}[${i}]`, [P_DATA]: val[i],
                         [P_PARENT]: state, $index: i, $first: !i, $last: i > val.length - 2, $array: val,
                         $prev: i ? val[i - 1] : '', $next: i < val.length - 1 ? val[i + 1] : ''
-                    })
+                    }
+                    for (const tmpl of template || [element]) {
+                        const child = $cloneNode(tmpl)
+                        template ? element.appendChild(child) : element.parentNode.insertBefore(child, element)
+                        processElement(child, childState)
+                    }
                 }
-                return processCondition(val?.length, 1)
+                return template ? processElement(element, state, isRoot) : processCondition(val?.length, 1)
             } else if (name == B_DATA) { // Data binding
                 return processCondition(val != null)
                     ? 0 // Removed as inactive

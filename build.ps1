@@ -4,7 +4,8 @@ $package = (ConvertFrom-Json (Get-Content ./package.json -Raw))
 (Get-Content ./src/pow.safe.js -Raw) -replace '@version\s+\d+\.\d+\.\d+',"@version $($package.version)" | Set-Content ./src/pow.safe.js -NoNewline
 
 # Count LOCs (winget install AlDanial.Cloc)
-cloc src --by-file
+C:\Users\IanYates\AppData\Local\Microsoft\WinGet\Packages\AlDanial.Cloc_Microsoft.Winget.Source_8wekyb3d8bbwe\cloc.exe src --by-file
+#cloc src --by-file
 
 # Extra minification
 function Get-Minified ([Parameter(ValueFromPipeline=$true)][string]$InputObject) {
