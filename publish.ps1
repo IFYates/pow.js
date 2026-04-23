@@ -24,6 +24,7 @@ Remove-Item -Path "$dest/docs" -Recurse -Force
 Copy-Item -Path "$PSScriptRoot/docs" -Recurse -Destination "$dest/docs"
 
 # NPM
+npm whoami # if not logged in, use: npm login
 if ($GoLive) {
     npm publish
 } else {
